@@ -1,0 +1,50 @@
+main {
+  margin: auto auto;
+  max-width: $login-form-width;
+}
+
+h1 {
+  color: $text-dark;
+}
+
+.loginform {
+
+  &__form {
+    border: 1px solid $backgound-dark;
+    background-color: $backgound-light;
+    @include background-shadow;
+  }
+
+  &__username:focus + &__usernameLbl,
+  &__password:focus+ &__passwordLbl,
+  &__username:not(:invalid) + &__usernameLbl,
+  &__password:not(:invalid) + &__passwordLbl {
+    @include form-lbl-show;
+  }
+
+  &__usernameLbl,
+  &__passwordLbl{
+    color: $text-dark;
+    transition: all .1s;
+    transform: translateY(-1.7rem) translateX(0.3rem) ;
+  }
+
+  &__btn {
+    background-color: $primary-color;
+    color: $text-light;
+
+    &:hover,
+    &:hover {
+      background-color: $primary-color-dark;
+      color: $text-light;
+    }
+
+    &:active,
+    &:focus {
+      background-color: $primary-color-dark;
+      color: $text-dark;
+    }
+
+  }
+
+}

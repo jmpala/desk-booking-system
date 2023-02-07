@@ -1,0 +1,11 @@
+@mixin background-shadow {
+  box-shadow: rgba(0, 0, 0, 0.3) 0 19px 38px, rgba(0, 0, 0, 0.22) 0 15px 12px;
+}
+
+@mixin form-input-error {
+  border: 1px solid red;
+}
+
+@mixin form-lbl-show {
+  transform: translateY(0) translateX(0.3rem);
+}

@@ -10,11 +10,9 @@ use Symfony\Component\Routing\Annotation\Route;
 class TestController extends AbstractController
 {
 
-    #[Route('/')]
+    #[Route('/', name: 'app_test_url')]
     public function testPage(LoggerInterface $logger): Response
     {
-        dump('testPage-flag');
-        $logger->error('testPage-flag');
         return $this->render('test.html.twig');
     }
 }
