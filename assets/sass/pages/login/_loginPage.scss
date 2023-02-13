@@ -7,6 +7,14 @@ h1 {
   color: $text-dark;
 }
 
+.error-display {
+  display: none;
+
+  &__show {
+    display: block;
+  }
+}
+
 .loginform {
 
   &__form {
@@ -16,7 +24,7 @@ h1 {
   }
 
   &__username:focus + &__usernameLbl,
-  &__password:focus+ &__passwordLbl,
+  &__password:focus + &__passwordLbl,
   &__username:not(:invalid) + &__usernameLbl,
   &__password:not(:invalid) + &__passwordLbl {
     @include form-lbl-show;
@@ -27,6 +35,10 @@ h1 {
     color: $text-dark;
     transition: all .1s;
     transform: translateY(-1.7rem) translateX(0.3rem) ;
+  }
+
+  &__error {
+    border: solid 2px $error-color;
   }
 
   &__btn {

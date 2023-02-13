@@ -14,19 +14,18 @@
 <main>
     <div class="container-md">
 
-        {% if error %}
-            <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-        {% endif %}
-
-        {% if app.user %}
-            <div class="mb-3">
-                You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
-            </div>
-        {% endif %}
-
         <div class="row vh-100 justify-content-center align-content-center">
             <h1 class="text-center">LBX Desk Sharing</h1>
-            <form class="loginform__form py-3 px-1 p-md-3 rounded-3" action="{{ path('app_login') }}" method="POST">
+            <form class="loginform__form py-3 px-1 p-md-3 rounded-3" action="{{ path('app_login') }}" method="post">
+
+                <div class="error-display {{ error ? 'error-display__show' : '' }} alert alert-danger">
+                    <ul class="m-0 p-0 px-2">
+                        {% if error %}
+                            <li>{{ error.messageKey|trans(error.messageData, 'security') }}</li>
+                        {% endif %}
+                    </ul>
+                </div>
+
                 <input type="text" id="email" name="email" value="{{ last_username }}" class="loginform__username rounded-2 w-100" required>
                 <label for="email" class="loginform__usernameLbl w-100">User Name</label>
                 <input type="password" id="password" name="password" class="loginform__password rounded-2 w-100" required>
