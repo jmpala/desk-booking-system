@@ -17,6 +17,13 @@
 
 ---
 
+## Map TODOs
+
+- [ ] recreate and understand the example https://codesandbox.io/s/pixi-viewport-drag-and-drop-wzr1cr?file=/src/Scene.js
+- [ ] base my app on this https://demo.deskradar.com/floor/59f9e011f9ffa7000fabd84e
+
+---
+
 - Webpack or Encore?
   - Encore + Yarn
   - CORS!!! in order encore to work
