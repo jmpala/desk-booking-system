@@ -24,6 +24,12 @@
 
 ---
 
+## Links
+
+- https://dbdiagram.io/home
+
+---
+
 - Webpack or Encore?
   - Encore + Yarn
   - CORS!!! in order encore to work
