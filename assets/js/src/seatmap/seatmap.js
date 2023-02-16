@@ -9,9 +9,9 @@ import {StageWrapper} from "./wrappers";
 import {config} from "./config";
 import {Layer} from "konva/lib/Layer";
 import {appEnvironment, layers, bookingStates} from "./enums";
-import {Rect} from "konva/lib/shapes/Rect";
 import {Text} from "konva/lib/shapes/Text";
 import {drawDebugLinesNode} from "./utils/debug";
+import {getAllBookables} from "./rest/restCalls";
 import {createNewBookableDesk} from "./bookables/bookablesFactory";
 
 const stage = new StageWrapper({
@@ -36,35 +36,40 @@ stage.add(appLayers[layers.UI]);
 // get all bookables from the DB
 
 // register elements to each layer
-const rec1 = createNewBookableDesk({
-    uuid: "123456789",
-    x: 100,
-    y: 100,
-    width: 100,
-    height: 100,
-    state: bookingStates.UNAVAILABLE,
-});
+(async (appLayers: Layer) => {
+    let $bookables = await getAllBookables();
 
+    $bookables.map(b => {
+        const booking = createNewBookableDesk({
+            uuid: b.id,
+            x: b.pos_x,
+            y: b.pos_y,
+            width: b.width,
+            height: b.height,
+            state: bookingStates.AVAILABLE,
+        })
+        appLayers[layers.ROOM].add(booking);
+        return booking;
+    })
 
-appLayers[layers.ROOM].add(rec1);
+    const text = new Text({
+        x: 10,
+        y: 10,
+        text: 'Hello World!',
+        fontSize: 30,
+        fontFamily: 'Calibri',
+        fill: 'green'
+    });
 
-const text = new Text({
-    x: 10,
-    y: 10,
-    text: 'Hello World!',
-    fontSize: 30,
-    fontFamily: 'Calibri',
-    fill: 'green'
-});
+    appLayers[layers.UI].add(text);
 
-appLayers[layers.UI].add(text);
-
-if (config.env === appEnvironment.DEBUG) {
-    const layer = appLayers[layers.ROOM];
-    const children = layer.children;
-    drawDebugLinesNode(layer);
-    children.forEach(c => drawDebugLinesNode(c));
-}
+    if (config.env === appEnvironment.DEBUG) {
+        const layer = appLayers[layers.ROOM];
+        const children = layer.children;
+        drawDebugLinesNode(layer);
+        children.forEach(c => drawDebugLinesNode(c));
+    }
+})(appLayers);
 
 // run the app
 stage.draw();

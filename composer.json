@@ -23,6 +23,7 @@
         "symfony/monolog-bundle": "^3.8",
         "symfony/runtime": "6.2.*",
         "symfony/security-bundle": "6.2.*",
+        "symfony/serializer": "6.2.*",
         "symfony/stopwatch": "6.2.*",
         "symfony/twig-bundle": "6.2.*",
         "symfony/validator": "6.2.*",
@@ -33,11 +34,13 @@
     }
     ,
     "require-dev": {
+        "doctrine/doctrine-fixtures-bundle": "^3.4",
         "roave/security-advisories": "dev-latest",
         "symfony/debug-bundle": "6.2.*",
         "symfony/maker-bundle": "^1.48",
         "symfony/var-dumper": "6.2.*",
-        "symfony/web-profiler-bundle": "6.2.*"
+        "symfony/web-profiler-bundle": "6.2.*",
+        "zenstruck/foundry": "^1.28"
     },
     "config": {
         "allow-plugins": {
