@@ -6,20 +6,22 @@ import {config} from "../config";
 import {Shape} from "konva/lib/Shape";
 import {Layer} from "konva/lib/Layer";
 
-export function drawDebugLinesNode(node: Node) {
-    console.log(node);
+export function drawDebugLinesNode(node: Node, color: ?string = null) {
+    const strokeColor = color ?? config.debug.boundaries.color;
     if (node instanceof Shape) {
-        node.stroke(config.debug.boundaries.color);
+        console.log("Shape", strokeColor);
+        node.stroke(strokeColor);
         node.strokeWidth(config.debug.boundaries.strokeWidth);
         return;
     }
 
     if (node instanceof Layer) {
+        console.log("Layer", strokeColor);
         const {x, y} = node.position();
         const {width, height} = node.size();
         const line = new Line({
             points: [x, y, width, y, width, height, x, height, x, y],
-            stroke: config.debug.boundaries.color,
+            stroke: strokeColor,
             strokeWidth: config.debug.boundaries.strokeWidth,
         });
         node.add(line);

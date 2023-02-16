@@ -8,38 +8,53 @@
 import {StageWrapper} from "./wrappers";
 import {config} from "./config";
 import {Layer} from "konva/lib/Layer";
-import {appEnvironment, layers, bookingStates} from "./enums";
+import {appEnvironment, bookingStates, layers} from "./enums";
 import {Text} from "konva/lib/shapes/Text";
 import {drawDebugLinesNode} from "./utils/debug";
 import {getAllBookables} from "./rest/restCalls";
 import {createNewBookableDesk} from "./bookables/bookablesFactory";
+import {Stage} from "konva/lib/Stage";
+import {Bookable} from "./bookables/bookables";
+import {Rect} from "konva/lib/shapes/Rect";
+import {showInformationModalOnClick} from "./bookables/bookableEvents";
 
 const stage = new StageWrapper({
     container: 'container',
-    width: config.app.width,
-    height: config.app.height,
+    width: window.innerWidth,
+    height: window.innerHeight,
     draggable: false,
 });
 
-// create layers
+// create layers and defining map size
 const appLayers = {
-    [layers.BACKGROUND]: new Layer().name(layers.BACKGROUND).zIndex(2).draggable(true).size({width: config.app.width, height: config.app.height}),
-    [layers.ROOM]: new Layer().name(layers.ROOM).zIndex(1).draggable(true).size({width: config.app.width, height: config.app.height}),
-    [layers.UI]: new Layer().name(layers.UI).zIndex(0).draggable(false).size({width: config.app.width, height: config.app.height}),
+    [layers.ROOM]: new Layer().name(layers.ROOM).draggable(true),
+    [layers.UI]: new Layer().name(layers.UI).draggable(false),
 };
 
 // layers order
-stage.add(appLayers[layers.BACKGROUND]);
 stage.add(appLayers[layers.ROOM]);
 stage.add(appLayers[layers.UI]);
 
-// get all bookables from the DB
-
 // register elements to each layer
-(async (appLayers: Layer) => {
+(async (stage: Stage, appLayers: Layer) => {
+
+    // creating office map
+    // TODO: map making functionality
+    let $officeFloor = new Rect({
+        x: 0,
+        y: 0,
+        width: config.app.map.size.width,
+        height: config.app.map.size.height,
+        fill: '#e3dbc3',
+        stroke: 'black',
+        strokeWidth: 1,
+    });
+
+    appLayers[layers.ROOM].add($officeFloor);
+
     let $bookables = await getAllBookables();
 
-    $bookables.map(b => {
+    $bookables = $bookables.map(b => {
         const booking = createNewBookableDesk({
             uuid: b.id,
             x: b.pos_x,
@@ -47,29 +62,28 @@ stage.add(appLayers[layers.UI]);
             width: b.width,
             height: b.height,
             state: bookingStates.AVAILABLE,
-        })
-        appLayers[layers.ROOM].add(booking);
+        });
+
+        showInformationModalOnClick(booking);
+        appLayers[layers.ROOM].add(booking.shape);
         return booking;
     })
 
     const text = new Text({
         x: 10,
         y: 10,
-        text: 'Hello World!',
+        text: 'Big Room',
         fontSize: 30,
-        fontFamily: 'Calibri',
-        fill: 'green'
+        fontFamily: 'Roboto',
+        fill: 'black'
     });
 
     appLayers[layers.UI].add(text);
 
     if (config.env === appEnvironment.DEBUG) {
-        const layer = appLayers[layers.ROOM];
-        const children = layer.children;
-        drawDebugLinesNode(layer);
-        children.forEach(c => drawDebugLinesNode(c));
+        $bookables.forEach(c => c instanceof Bookable ? drawDebugLinesNode(c.shape) : null);
     }
-})(appLayers);
+})(stage, appLayers);
 
 // run the app
 stage.draw();

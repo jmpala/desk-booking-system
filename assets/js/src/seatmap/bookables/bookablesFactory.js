@@ -5,17 +5,26 @@ import {Rect} from "konva/lib/shapes/Rect";
 import {bookingStates} from "../enums";
 import {config} from "../config";
 
-export function createNewBookableDesk({uuid, x , y, width, height, state}): Rect {
+type BookableDeskType = {
+  uuid: string,
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+  state: bookingStates,
+};
+
+export function createNewBookableDesk(x: BookableDeskType): BookableDesk {
   const desk = new BookableDesk();
-  desk.uuid = uuid;
-  desk.state = state;
+  desk.uuid = x.uuid;
+  desk.state = x.state;
   desk.shape = new Rect({
-    x, y,
-    width, height,
-    fill: getColorByState(state),
+    x: x.x, y: x.y,
+    width: x.width, height: x.height,
+    fill: getColorByState(x.state),
   });
 
-  return desk.shape;
+  return desk;
 }
 
 function getColorByState(state: bookingStates): string {

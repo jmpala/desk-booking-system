@@ -8,6 +8,19 @@ export const config = {
         width: 800,
         height: 600,
 
+        map: {
+            size: {
+                width: 1500,
+                height: 550,
+            },
+        },
+
+        ui: {
+            information_modal: {
+                dom_id: '#desk_information_modal',
+            }
+        },
+
         bookables: {
             state: {
                 [bookingStates.AVAILABLE]: 'green',
