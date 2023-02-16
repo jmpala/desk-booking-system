@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DataFixtures;
 
 use App\Factory\BookableFactory;
+use App\Factory\UserFactory;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
@@ -10,11 +13,29 @@ class AppFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
+        // START REGISTER USERS
+        UserFactory::createMany(10);
+
+        UserFactory::createOne([
+            'email' => 'user@user.com',
+        ]);
+
+        UserFactory::createOne([
+            'email' => 'tl@user.com',
+            'roles' => ['ROLE_TEAM_LEADER'],
+        ]);
+
+        UserFactory::createOne([
+            'email' => 'admin@user.com',
+            'roles' => ['ROLE_ADMIN'],
+        ]);
+        // END REGISTER USERS
+
         $offsetX = -100;
         $offsetY = 0;
 
         // Kinder Tisch
-        BookableFactory::createOn3e([
+        BookableFactory::createOne([
             'pos_x' => 100 + $offsetX,
             'pos_y' => 100 + $offsetY,
         ]);
@@ -83,4 +104,5 @@ class AppFixtures extends Fixture
 
         $manager->flush();
     }
+
 }

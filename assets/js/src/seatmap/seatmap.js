@@ -84,6 +84,3 @@ stage.add(appLayers[layers.UI]);
         $bookables.forEach(c => c instanceof Bookable ? drawDebugLinesNode(c.shape) : null);
     }
 })(stage, appLayers);
-
-// run the app
-stage.draw();
