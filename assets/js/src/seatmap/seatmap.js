@@ -59,6 +59,7 @@ stage.add(appLayers[layers.UI]);
             uuid: b.id,
             x: b.pos_x,
             y: b.pos_y,
+            category: b.category.code,
             width: b.width,
             height: b.height,
             state: bookingStates.AVAILABLE,

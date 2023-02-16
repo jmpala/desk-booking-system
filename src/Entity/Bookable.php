@@ -11,6 +11,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\MaxDepth;
 
 #[ORM\Entity(repositoryClass: BookableRepository::class)]
 class Bookable
@@ -55,6 +56,8 @@ class Bookable
 
     #[ORM\ManyToOne(inversedBy: 'bookables')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['bookable:read'])]
+    #[MaxDepth(2)]
     private ?Category $category = null;
 
     public function __construct()

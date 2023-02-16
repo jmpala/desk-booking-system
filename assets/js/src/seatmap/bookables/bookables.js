@@ -1,6 +1,6 @@
 "use strict";
 
-import {bookableCategory, bookingStates} from "../enums";
+import {bookingStates} from "../enums";
 import {Shape} from "konva/lib/Shape";
 
 type event = {
@@ -11,7 +11,7 @@ type event = {
 export class Bookable {
 
     uuid: string;
-    category: bookableCategory;
+    category: string;
     state: bookingStates;
     shape: Shape;
 
@@ -37,7 +37,6 @@ export class BookableDesk extends Bookable {
 
     constructor(state: bookingStates) {
         super(state);
-        this.category = bookableCategory.DESK;
     }
 }
 
@@ -45,7 +44,6 @@ export class BookableRoom extends Bookable {
 
     constructor(state: bookingStates) {
         super(state);
-        this.category = bookableCategory.ROOM;
     }
 }
 
@@ -53,6 +51,5 @@ export class BookableMeetingRoom extends BookableRoom {
 
     constructor(state: bookingStates) {
         super(state);
-        this.category = bookableCategory.MEETINGROOM;
     }
 }

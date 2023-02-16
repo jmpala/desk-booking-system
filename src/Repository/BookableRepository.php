@@ -39,6 +39,15 @@ class BookableRepository extends ServiceEntityRepository
         }
     }
 
+    public function getAllBookableAndRelatedCategories(): array
+    {
+        return $this->createQueryBuilder('b')
+            ->select('b', 'c')
+            ->leftJoin('b.category', 'c')
+            ->getQuery()
+            ->getResult();
+    }
+
 //    /**
 //     * @return Bookable[] Returns an array of Bookable objects
 //     */

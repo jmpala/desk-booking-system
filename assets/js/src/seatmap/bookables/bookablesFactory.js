@@ -12,12 +12,14 @@ type BookableDeskType = {
   width: number,
   height: number,
   state: bookingStates,
+  category: string,
 };
 
 export function createNewBookableDesk(x: BookableDeskType): BookableDesk {
   const desk = new BookableDesk();
   desk.uuid = x.uuid;
   desk.state = x.state;
+  desk.category = x.category;
   desk.shape = new Rect({
     x: x.x, y: x.y,
     width: x.width, height: x.height,

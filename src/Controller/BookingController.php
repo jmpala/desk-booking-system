@@ -30,7 +30,8 @@ class BookingController extends AbstractController
     #[Route('/api/booking', name: 'app_booking_retrieve_all', methods: ['GET'])]
     public function retrieveAllBookings(): Response
     {
-        return $this->json($this->bookableRepository->findAll(), 200, [], [
+        $res = $this->bookableRepository->getAllBookableAndRelatedCategories();
+        return $this->json($res, 200, [], [
             'groups' => ['bookable:read']
         ]);
     }

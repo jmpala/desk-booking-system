@@ -15,7 +15,7 @@ export function showInformationModalOnClick(bookable: Bookable): void {
         callback: (event) => {
             // Show different information depending on the category of the bookable.
             console.log(`Id: ${bookable.uuid}`);
-            console.log(`Category: ${bookable.category.toString()}`);
+            console.log(`Category: ${bookable.category}`);
             console.log(`State: ${bookable.state.toString()}`);
         }
     }]);

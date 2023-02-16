@@ -13,12 +13,6 @@ export const bookingStates = Object.freeze({
     BOOKEDBYUSER: Symbol("bookedbyuser"),
 });
 
-export const bookableCategory = Object.freeze({
-    DESK:   Symbol("desk"),
-    MEETINGROOM:  Symbol("meetingroom"),
-    PARKING: Symbol("parking"),
-});
-
 export const appEnvironment = Object.freeze({
     DEV:   Symbol("dev"),
     DEBUG:   Symbol("debug"),
