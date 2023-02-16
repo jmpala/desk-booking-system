@@ -7,10 +7,13 @@ namespace App\Entity;
 use App\Repository\UnavailableDatesRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 #[ORM\Entity(repositoryClass: UnavailableDatesRepository::class)]
 class UnavailableDates
 {
+    use TimestampableEntity;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -18,7 +21,7 @@ class UnavailableDates
 
     #[ORM\ManyToOne(inversedBy: 'unavailableDates')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Bookable $bookable_id = null;
+    private ?Bookable $bookable = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $start_date = null;
@@ -34,14 +37,14 @@ class UnavailableDates
         return $this->id;
     }
 
-    public function getBookableId(): ?Bookable
+    public function getBookable(): ?Bookable
     {
-        return $this->bookable_id;
+        return $this->bookable;
     }
 
-    public function setBookableId(?Bookable $bookable_id): self
+    public function setBookable(?Bookable $bookable): self
     {
-        $this->bookable_id = $bookable_id;
+        $this->bookable = $bookable;
 
         return $this;
     }

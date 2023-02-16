@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Repository\BookableRepository;
@@ -14,6 +16,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 class Bookable
 {
     use TimestampableEntity;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -52,7 +55,7 @@ class Bookable
 
     #[ORM\ManyToOne(inversedBy: 'bookables')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Category $category_id = null;
+    private ?Category $category = null;
 
     public function __construct()
     {
@@ -149,7 +152,7 @@ class Bookable
     {
         if (!$this->bookings->contains($booking)) {
             $this->bookings->add($booking);
-            $booking->setBookableId($this);
+            $booking->setBookable($this);
         }
 
         return $this;
@@ -159,8 +162,8 @@ class Bookable
     {
         if ($this->bookings->removeElement($booking)) {
             // set the owning side to null (unless already changed)
-            if ($booking->getBookableId() === $this) {
-                $booking->setBookableId(null);
+            if ($booking->getBookable() === $this) {
+                $booking->setBookable(null);
             }
         }
 
@@ -179,7 +182,7 @@ class Bookable
     {
         if (!$this->unavailableDates->contains($unavailableDate)) {
             $this->unavailableDates->add($unavailableDate);
-            $unavailableDate->setBookableId($this);
+            $unavailableDate->setBookable($this);
         }
 
         return $this;
@@ -189,22 +192,22 @@ class Bookable
     {
         if ($this->unavailableDates->removeElement($unavailableDate)) {
             // set the owning side to null (unless already changed)
-            if ($unavailableDate->getBookableId() === $this) {
-                $unavailableDate->setBookableId(null);
+            if ($unavailableDate->getBookable() === $this) {
+                $unavailableDate->setBookable(null);
             }
         }
 
         return $this;
     }
 
-    public function getCategoryId(): ?Category
+    public function getCategory(): ?Category
     {
-        return $this->category_id;
+        return $this->category;
     }
 
-    public function setCategoryId(?Category $category_id): self
+    public function setCategory(?Category $category): self
     {
-        $this->category_id = $category_id;
+        $this->category = $category;
 
         return $this;
     }

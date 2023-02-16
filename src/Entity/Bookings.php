@@ -7,10 +7,13 @@ namespace App\Entity;
 use App\Repository\BookingsRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 #[ORM\Entity(repositoryClass: BookingsRepository::class)]
 class Bookings
 {
+    use TimestampableEntity;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -18,11 +21,11 @@ class Bookings
 
     #[ORM\ManyToOne(inversedBy: 'bookings')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?User $user_id = null;
+    private ?User $user = null;
 
     #[ORM\ManyToOne(inversedBy: 'bookings')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Bookable $bookable_id = null;
+    private ?Bookable $bookable = null;
 
     #[ORM\Column(length: 255)]
     private ?string $confirmation = null;
@@ -41,26 +44,26 @@ class Bookings
         return $this->id;
     }
 
-    public function getUserId(): ?User
+    public function getUser(): ?User
     {
-        return $this->user_id;
+        return $this->user;
     }
 
-    public function setUserId(?User $user_id): self
+    public function setUser(?User $user): self
     {
-        $this->user_id = $user_id;
+        $this->user = $user;
 
         return $this;
     }
 
-    public function getBookableId(): ?Bookable
+    public function getBookable(): ?Bookable
     {
-        return $this->bookable_id;
+        return $this->bookable;
     }
 
-    public function setBookableId(?Bookable $bookable_id): self
+    public function setBookable(?Bookable $bookable): self
     {
-        $this->bookable_id = $bookable_id;
+        $this->bookable = $bookable;
 
         return $this;
     }

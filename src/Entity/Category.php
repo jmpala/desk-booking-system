@@ -8,10 +8,13 @@ use App\Repository\CategoryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
 class Category
 {
+    use TimestampableEntity;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -72,7 +75,7 @@ class Category
     {
         if (!$this->bookables->contains($bookable)) {
             $this->bookables->add($bookable);
-            $bookable->setCategoryId($this);
+            $bookable->setCategory($this);
         }
 
         return $this;
@@ -82,8 +85,8 @@ class Category
     {
         if ($this->bookables->removeElement($bookable)) {
             // set the owning side to null (unless already changed)
-            if ($bookable->getCategoryId() === $this) {
-                $bookable->setCategoryId(null);
+            if ($bookable->getCategory() === $this) {
+                $bookable->setCategory(null);
             }
         }
 
