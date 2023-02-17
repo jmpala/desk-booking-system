@@ -47,7 +47,7 @@ class BookingsRepository extends ServiceEntityRepository
             ->where('DATE(b.start_date) = :date AND DATE(b.end_date) = :date')
             ->setParameter('date', $date->format('Y-m-d'))
             ->getQuery()
-            ->getArrayResult();
+            ->getResult();
     }
 
 //    /**

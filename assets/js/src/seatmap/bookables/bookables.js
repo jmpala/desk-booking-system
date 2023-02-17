@@ -10,10 +10,24 @@ type event = {
 
 export class Bookable {
 
-    uuid: string;
-    category: string;
-    state: bookingStates;
     shape: Shape;
+    bookableId: number;
+    bookableCode: string;
+    bookableDescription: string;
+    bookableCategory: string;
+    userId: number;
+    userName: string;
+    isBooked: boolean;
+    bookingId: number;
+    bookingConfirmationCode: string;
+    bookingStartDate: Date;
+    bookingEndDate: Date;
+    bookingCreatedAt: Date;
+    isDisabled: boolean;
+    disabledFromDate: Date;
+    disabledToDate: Date;
+    disabledNotes: string;
+
 
     constructor(state: bookingStates) {
         if (new.target === Bookable) {

@@ -39,6 +39,17 @@ class UnavailableDatesRepository extends ServiceEntityRepository
         }
     }
 
+    public function getUnavailableDatesByDate(\DateTime $date): array
+    {
+        return  $this->createQueryBuilder('u')
+            ->select('u', 'bk')
+            ->leftJoin('u.bookable', 'bk')
+            ->where('DATE(u.start_date) = :date AND DATE(u.end_date) = :date')
+            ->setParameter('date', $date)
+            ->getQuery()
+            ->getResult();
+    }
+
 //    /**
 //     * @return UnavailableDates[] Returns an array of UnavailableDates objects
 //     */

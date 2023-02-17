@@ -11,7 +11,7 @@ import {Layer} from "konva/lib/Layer";
 import {appEnvironment, bookingStates, layers} from "./enums";
 import {Text} from "konva/lib/shapes/Text";
 import {drawDebugLinesNode} from "./utils/debug";
-import {getAllBookables} from "./rest/restCalls";
+import {getSeatmapStausByDate, getBookingsFromDate} from "./rest/restCalls";
 import {createNewBookableDesk} from "./bookables/bookablesFactory";
 import {Stage} from "konva/lib/Stage";
 import {Bookable} from "./bookables/bookables";
@@ -52,18 +52,10 @@ stage.add(appLayers[layers.UI]);
 
     appLayers[layers.ROOM].add($officeFloor);
 
-    let $bookables = await getAllBookables();
+    let $seatmapStatus = await getSeatmapStausByDate();
 
-    $bookables = $bookables.map(b => {
-        const booking = createNewBookableDesk({
-            uuid: b.id,
-            x: b.pos_x,
-            y: b.pos_y,
-            category: b.category.code,
-            width: b.width,
-            height: b.height,
-            state: bookingStates.AVAILABLE,
-        });
+    $seatmapStatus.bookables = $seatmapStatus.bookables.map(b => {
+        const booking = createNewBookableDesk(b);
 
         showInformationModalOnClick(booking);
         appLayers[layers.ROOM].add(booking.shape);
@@ -82,6 +74,6 @@ stage.add(appLayers[layers.UI]);
     appLayers[layers.UI].add(text);
 
     if (config.env === appEnvironment.DEBUG) {
-        $bookables.forEach(c => c instanceof Bookable ? drawDebugLinesNode(c.shape) : null);
+        $seatmapStatus.bookables.forEach(c => c instanceof Bookable ? drawDebugLinesNode(c.shape, 'black') : null);
     }
-})(stage, appLayers);
+})(stage, appLayers)

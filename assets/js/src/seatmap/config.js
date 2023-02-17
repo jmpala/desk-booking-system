@@ -23,10 +23,10 @@ export const config = {
 
         bookables: {
             state: {
-                [bookingStates.AVAILABLE]: 'green',
-                [bookingStates.UNAVAILABLE]: 'grey',
-                [bookingStates.BOOKED]: 'red',
-                [bookingStates.BOOKEDBYUSER]: 'blue',
+                [bookingStates.AVAILABLE]: '#bada55',
+                [bookingStates.UNAVAILABLE]: '#5a5a5a',
+                [bookingStates.BOOKED]: '#d51961',
+                [bookingStates.BOOKEDBYUSER]: '#3399ff',
             }
         }
     },
