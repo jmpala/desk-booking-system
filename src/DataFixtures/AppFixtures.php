@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\DataFixtures;
 
 use App\Factory\BookableFactory;
+use App\Factory\BookingsFactory;
 use App\Factory\CategoryFactory;
 use App\Factory\UserFactory;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -17,7 +18,7 @@ class AppFixtures extends Fixture
         // START REGISTER USERS
         UserFactory::createMany(10);
 
-        UserFactory::createOne([
+        $user1 = UserFactory::createOne([
             'email' => 'user@user.com',
         ]);
 
@@ -51,7 +52,7 @@ class AppFixtures extends Fixture
         $offsetY = 0;
 
         // Kinder Tisch
-        BookableFactory::createOne([
+        $desk1 = BookableFactory::createOne([
             'pos_x' => 100 + $offsetX,
             'pos_y' => 100 + $offsetY,
             'category' => $entityDesk,
@@ -131,6 +132,14 @@ class AppFixtures extends Fixture
             'category' => $entitySDesk,
         ]);
         // END BOOKABLES
+
+
+        // START BOOKING
+        BookingsFactory::createOne([
+            'bookable' => $desk1,
+            'user' => $user1,
+        ]);
+        // END BOOKING
 
         $manager->flush();
     }

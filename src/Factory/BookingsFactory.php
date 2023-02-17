@@ -49,8 +49,8 @@ final class BookingsFactory extends ModelFactory
         return [
             'booked_at' => self::faker()->dateTime(),
             'confirmation' => self::faker()->text(255),
-            'end_date' => self::faker()->dateTime(),
-            'start_date' => self::faker()->dateTime(),
+            'start_date' => new \DateTime(),
+            'end_date' => new \DateTime(),
         ];
     }
 

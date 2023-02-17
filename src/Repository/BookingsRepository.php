@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Bookings;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -37,6 +38,16 @@ class BookingsRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    public function getBookingsWithBookable(DateTime $date): array {
+        return $this->createQueryBuilder('b')
+            ->select('b', 'bk')
+            ->leftJoin('b.bookable', 'bk')
+            ->where('DATE(b.start_date) = :date AND DATE(b.end_date) = :date')
+            ->setParameter('date', $date->format('Y-m-d'))
+            ->getQuery()
+            ->getArrayResult();
     }
 
 //    /**

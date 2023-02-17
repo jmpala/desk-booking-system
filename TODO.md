@@ -42,3 +42,26 @@
 
 - implement security (https://symfonycasts.com/screencast/symfony-security/install) or Documentation?
 - Vue and Map component
+
+---
+
+## Desk statuses
+
+- Available:
+  - there is no booking on "bookings" table, neither on "unavailable_dates" table
+- Unavailable:
+  - there is a date on "unavailable_dates" table
+- Booked:
+  - there is a booking on "bookings" table
+- Booked by me:
+  - there is a booking on "bookings" table and the user is the owner of the booking
+
+// are there any bookings made?
+SELECT * FROM b
+WHERE :date BETWEEN b.start AND b.end
+LJ bk
+
+// are there any unavailable dates for bookables?
+SELECT * FROM u
+WHERE :date BETWEEN u.start AND u.end
+LJ bk
