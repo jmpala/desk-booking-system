@@ -8,7 +8,7 @@ import {getColorByState} from "../utils";
 import {bookingStates, layers} from "../enums";
 import {Layer} from "konva/lib/Layer";
 
-export function createSeatmapCaption(backLayer: Layer): Group {
+export function createSeatmapCaption(): Group {
   const x: number = window.innerWidth - config.app.ui.seatmapCaption.size.width;
   const y: number = config.app.height - config.app.ui.seatmapCaption.size.height
   const width: number = config.app.ui.seatmapCaption.size.width;
@@ -126,6 +126,33 @@ function _createCaptionTextWithReferenceColor(params: CaptionTextWithReferenceCo
 
   container.add(textUI);
   container.add(squareColorUI);
+
+  return container;
+}
+
+type seatMapTitleConfiguration = {
+  title: string,
+  x: number,
+  y: number,
+  fontSize: number,
+  padding?: number,
+};
+
+export function createSeatmapTitle(params: seatMapTitleConfiguration): Group {
+  const container: Group = new Group();
+
+  const padding: number = params.padding ?? 0;
+
+  const text = new Text({
+    x: params.x + padding,
+    y: params.y + padding,
+    text: params.title,
+    fontSize: params.fontSize,
+    fontFamily: 'Roboto',
+    fill: 'black'
+  });
+
+  container.add(text);
 
   return container;
 }

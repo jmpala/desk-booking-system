@@ -1,23 +1,15 @@
 "use strict";
 
-// - The objects should have x, y, width, height and category
-// - the category defines characteristics of the object
-// - the object needs states like [selected, unselected, disabled]
-
-
 import {StageWrapper} from "./wrappers";
 import {config} from "./config";
 import {Layer} from "konva/lib/Layer";
-import {appEnvironment, layers} from "./enums";
-import {Text} from "konva/lib/shapes/Text";
-import {drawDebugLinesNode} from "./utils/debug";
+import {layers} from "./enums";
 import {getSeatmapStausByDate} from "./rest/restCalls";
 import {createNewBookableDesk} from "./bookables/bookablesFactory";
 import {Stage} from "konva/lib/Stage";
-import {Bookable} from "./bookables/bookables";
 import {Rect} from "konva/lib/shapes/Rect";
 import {showInformationModalOnClick} from "./bookables/bookableEvents";
-import {createSeatmapCaption} from "./ui/componentsFactory";
+import {createSeatmapCaption, createSeatmapTitle} from "./ui/componentsFactory";
 
 const stage = new StageWrapper({
     container: 'container',
@@ -63,19 +55,13 @@ stage.add(appLayers[layers.UI]);
         return booking;
     })
 
-    const text = new Text({
-        x: 10,
-        y: 10,
-        text: 'Big Room',
+    // Adding UI components
+    appLayers[layers.UI].add(createSeatmapTitle({
+        title: 'Big Room',
+        x: 0, y: 0,
         fontSize: 30,
-        fontFamily: 'Roboto',
-        fill: 'black'
-    });
-
-    appLayers[layers.UI].add(text);
+        padding: 20,
+    }));
     appLayers[layers.UI].add(createSeatmapCaption(appLayers[layers.ROOM]));
 
-    if (config.env === appEnvironment.DEBUG) {
-        $seatmapStatus.bookables.forEach(c => c instanceof Bookable ? drawDebugLinesNode(c.shape, 'black') : null);
-    }
 })(stage, appLayers)

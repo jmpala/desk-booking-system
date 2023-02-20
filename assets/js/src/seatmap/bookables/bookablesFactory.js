@@ -39,6 +39,8 @@ export function createNewBookableDesk(x: BookableDeskType): BookableDesk {
     width: x.shapeWidth,
     height: x.shapeHeight,
     fill: getColorByState(bookingStates.AVAILABLE),
+    stroke: "black",
+    strokeWidth: 1,
   });
   desk.bookableId = x.bookableId;
   desk.bookableCode = x.bookableCode;
