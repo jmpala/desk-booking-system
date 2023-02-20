@@ -15,8 +15,8 @@ export class Bookable {
     bookableCode: string;
     bookableDescription: string;
     bookableCategory: string;
-    userId: number;
     userName: string;
+    isBookedByLoggedUser: boolean;
     isBooked: boolean;
     bookingId: number;
     bookingConfirmationCode: string;

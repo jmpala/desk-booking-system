@@ -16,9 +16,9 @@ type BookableDeskType = {
   bookableCode: string;
   bookableDescription: string;
   bookableCategory: string;
-  userId: number;
   userName: string;
   isBooked: boolean;
+  isBookedByLoggedUser: boolean;
   bookingId: number;
   bookingConfirmationCode: string;
   bookingStartDate: Date;
@@ -44,8 +44,8 @@ export function createNewBookableDesk(x: BookableDeskType): BookableDesk {
   desk.bookableCode = x.bookableCode;
   desk.bookableDescription = x.bookableDescription;
   desk.bookableCategory = x.bookableCategory;
-  desk.userId = x.userId;
   desk.userName = x.userName;
+  desk.isBookedByLoggedUser = x.isBookedByLoggedUser;
 
   desk.isBooked = x.isBooked;
   if (desk.isBooked) {
@@ -55,6 +55,10 @@ export function createNewBookableDesk(x: BookableDeskType): BookableDesk {
     desk.bookingEndDate = x.bookingEndDate;
     desk.bookingCreatedAt = x.bookingCreatedAt;
     desk.shape.fill(getColorByState(bookingStates.BOOKED));
+
+    if (desk.isBookedByLoggedUser) {
+      desk.shape.fill(getColorByState(bookingStates.BOOKEDBYUSER));
+    }
   }
 
   desk.isDisabled = x.isDisabled;
