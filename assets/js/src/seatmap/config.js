@@ -18,6 +18,18 @@ export const config = {
         ui: {
             information_modal: {
                 dom_id: '#desk_information_modal',
+            },
+
+            seatmapCaption: {
+                size: {
+                    width: 200,
+                    height: 150,
+                },
+                position: {
+                    x: 0,
+                    y: 0,
+                },
+                backgroundColor: '#efc050',
             }
         },
 

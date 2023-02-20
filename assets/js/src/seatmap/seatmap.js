@@ -8,20 +8,21 @@
 import {StageWrapper} from "./wrappers";
 import {config} from "./config";
 import {Layer} from "konva/lib/Layer";
-import {appEnvironment, bookingStates, layers} from "./enums";
+import {appEnvironment, layers} from "./enums";
 import {Text} from "konva/lib/shapes/Text";
 import {drawDebugLinesNode} from "./utils/debug";
-import {getSeatmapStausByDate, getBookingsFromDate} from "./rest/restCalls";
+import {getSeatmapStausByDate} from "./rest/restCalls";
 import {createNewBookableDesk} from "./bookables/bookablesFactory";
 import {Stage} from "konva/lib/Stage";
 import {Bookable} from "./bookables/bookables";
 import {Rect} from "konva/lib/shapes/Rect";
 import {showInformationModalOnClick} from "./bookables/bookableEvents";
+import {createSeatmapCaption} from "./ui/componentsFactory";
 
 const stage = new StageWrapper({
     container: 'container',
     width: window.innerWidth,
-    height: window.innerHeight,
+    height: config.app.map.size.height,
     draggable: false,
 });
 
@@ -72,6 +73,7 @@ stage.add(appLayers[layers.UI]);
     });
 
     appLayers[layers.UI].add(text);
+    appLayers[layers.UI].add(createSeatmapCaption(appLayers[layers.ROOM]));
 
     if (config.env === appEnvironment.DEBUG) {
         $seatmapStatus.bookables.forEach(c => c instanceof Bookable ? drawDebugLinesNode(c.shape, 'black') : null);

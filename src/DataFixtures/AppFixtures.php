@@ -19,7 +19,11 @@ class AppFixtures extends Fixture
         UserFactory::createMany(10);
 
         $user1 = UserFactory::createOne([
-            'email' => 'user@user.com',
+            'email' => 'user01@user.com',
+        ]);
+
+        $user2 = UserFactory::createOne([
+            'email' => 'user02@user.com',
         ]);
 
         UserFactory::createOne([
@@ -58,7 +62,7 @@ class AppFixtures extends Fixture
             'category' => $entityDesk,
         ]);
 
-        BookableFactory::createOne([
+        $desk2 = BookableFactory::createOne([
             'pos_x' => 300 + $offsetX,
             'pos_y' => 100 + $offsetY,
             'category' => $entityDesk,
@@ -138,6 +142,11 @@ class AppFixtures extends Fixture
         BookingsFactory::createOne([
             'bookable' => $desk1,
             'user' => $user1,
+        ]);
+
+        BookingsFactory::createOne([
+            'bookable' => $desk2,
+            'user' => $user2,
         ]);
         // END BOOKING
 

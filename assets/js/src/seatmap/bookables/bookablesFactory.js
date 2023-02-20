@@ -2,9 +2,9 @@
 
 import {BookableDesk} from "./bookables";
 import {bookingStates} from "../enums";
-import {config} from "../config";
 import {Shape} from "konva/lib/Shape";
 import {Rect} from "konva/lib/shapes/Rect";
+import {getColorByState} from "../utils";
 
 type BookableDeskType = {
   shapeX: number;
@@ -70,19 +70,4 @@ export function createNewBookableDesk(x: BookableDeskType): BookableDesk {
   }
 
   return desk;
-}
-
-function getColorByState(state: bookingStates): string {
-  switch (state) {
-    case bookingStates.AVAILABLE:
-      return config.app.bookables.state[bookingStates.AVAILABLE];
-    case bookingStates.UNAVAILABLE:
-      return config.app.bookables.state[bookingStates.UNAVAILABLE];
-    case bookingStates.BOOKED:
-      return config.app.bookables.state[bookingStates.BOOKED];
-    case bookingStates.BOOKEDBYUSER:
-      return config.app.bookables.state[bookingStates.BOOKEDBYUSER];
-    default:
-      throw new Error(`Booking state ${state} is not registered`);
-  }
 }

@@ -4,6 +4,8 @@ import {Shape} from "konva/lib/Shape";
 import {Stage} from "konva/lib/Stage";
 import Konva from "konva/lib";
 import {Node} from "konva/lib/Node";
+import {bookingStates} from "./enums";
+import {config} from "./config";
 
 export function drawDebugBoundaries(stage: Stage) {
     const size = stage.getSize();
@@ -66,4 +68,19 @@ export function getStageFromNode(node: Node): Stage {
         parent = parent.getParent();
     }
     throw new Error('No stage found');
+}
+
+export function getColorByState(state: bookingStates): string {
+    switch (state) {
+        case bookingStates.AVAILABLE:
+            return config.app.bookables.state[bookingStates.AVAILABLE];
+        case bookingStates.UNAVAILABLE:
+            return config.app.bookables.state[bookingStates.UNAVAILABLE];
+        case bookingStates.BOOKED:
+            return config.app.bookables.state[bookingStates.BOOKED];
+        case bookingStates.BOOKEDBYUSER:
+            return config.app.bookables.state[bookingStates.BOOKEDBYUSER];
+        default:
+            throw new Error(`Booking state ${state} is not registered`);
+    }
 }
