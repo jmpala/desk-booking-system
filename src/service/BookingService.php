@@ -10,10 +10,12 @@ use App\dto\SeatmapStatusDTO;
 use App\Repository\BookableRepository;
 use App\Repository\BookingsRepository;
 use App\Repository\UnavailableDatesRepository;
+use Symfony\Bundle\SecurityBundle\Security;
 
 class BookingService
 {
     public function __construct(
+        private Security $security,
         private BookableRepository $bookableRepository,
         private BookingsRepository $bookingRepository,
         private UnavailableDatesRepository $unavailableDatesRepository,
@@ -50,10 +52,19 @@ class BookingService
             $seatmapStatusDTO->addBookable($bookableInformationDTO);
         }
 
+        $user = $this->security->getUser();
+        $userUdentifier = '';
+        if ($user) {
+            $userUdentifier = $user->getUserIdentifier();
+        }
+
         // We set the state of bookables that are booked
         foreach ($bookings as $booking) {
             foreach ($seatmapStatusDTO->getBookables() as $bookableInformationDTO) {
                 if ($bookableInformationDTO->getBookableId() === $booking->getBookable()->getId()) {
+                    if ($booking->getUser()->getUserIdentifier() === $userUdentifier) {
+                        $bookableInformationDTO->setIsBookedByLoggedUser(true);
+                    }
                     $bookableInformationDTO->populateWithBookingEntity($booking);
                 }
             }

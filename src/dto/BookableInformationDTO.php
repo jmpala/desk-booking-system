@@ -38,13 +38,13 @@ class BookableInformationDTO
     private ?string $bookableCategory = null;
 
     #[Groups(['seatmapStatusDTO:read'])]
-    private ?int $userId = null;
-
-    #[Groups(['seatmapStatusDTO:read'])]
     private ?string $userName = null;
 
     #[Groups(['seatmapStatusDTO:read'])]
     private bool $isBooked = false;
+
+    #[Groups(['seatmapStatusDTO:read'])]
+    private bool $isBookedByLoggedUser = false;
 
     #[Groups(['seatmapStatusDTO:read'])]
     private ?int $bookingId = null;
@@ -74,11 +74,12 @@ class BookableInformationDTO
     private ?string $disabledNotes = null;
 
     public function populateWithBookingEntity(Bookings $entity): static {
+        $this->isBooked = true;
         $this->bookingId = $entity->getId();
         $this->bookingConfirmationCode = $entity->getConfirmation();
         $this->bookingStartDate = DateTime::createFromInterface($entity->getStartDate());
         $this->bookingEndDate = DateTime::createFromInterface($entity->getEndDate());
-        $this->bookedAt = DateTime::createFromInterface($entity->getBookedAt());
+        $this->userName = $entity->getUser()->getUserIdentifier();
         return $this;
     }
 
@@ -228,22 +229,6 @@ class BookableInformationDTO
     public function setBookableCategory(?string $bookableCategory): void
     {
         $this->bookableCategory = $bookableCategory;
-    }
-
-    /**
-     * @return int|null
-     */
-    public function getUserId(): ?int
-    {
-        return $this->userId;
-    }
-
-    /**
-     * @param int|null $userId
-     */
-    public function setUserId(?int $userId): void
-    {
-        $this->userId = $userId;
     }
 
     /**
@@ -420,6 +405,22 @@ class BookableInformationDTO
     public function setDisabledNotes(?string $disabledNotes): void
     {
         $this->disabledNotes = $disabledNotes;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isBookedByLoggedUser(): bool
+    {
+        return $this->isBookedByLoggedUser;
+    }
+
+    /**
+     * @param bool $isBookedByLoggedUser
+     */
+    public function setIsBookedByLoggedUser(bool $isBookedByLoggedUser): void
+    {
+        $this->isBookedByLoggedUser = $isBookedByLoggedUser;
     }
 
 }
