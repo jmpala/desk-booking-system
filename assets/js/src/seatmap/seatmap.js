@@ -9,7 +9,8 @@ import {createSeatmapCaption, createSeatmapTitle} from "./components/ui/componen
 import {createMainRoom} from "./components/rooms/mainRoom";
 import {AppState} from "./app/AppState";
 import {Bookable} from "./app/model/bookables";
-import {unselectBookableLayerOnClickEvent} from "./domEvents/layerEvents";
+import {boundToOffsetMapOnDragmoveEvent} from "./domEvents/layerEvents";
+import {unselectBookableLayerOnClickEvent} from "./domEvents/stageEvents";
 
 const app = new AppState();
 
@@ -26,15 +27,16 @@ const appLayers = {
     [layers.UI]: new Layer().name(layers.UI).draggable(false),
 };
 
+boundToOffsetMapOnDragmoveEvent(appLayers[layers.ROOM]);
 // layers order
 stage.add(appLayers[layers.ROOM]);
 stage.add(appLayers[layers.UI]);
 
 // register elements to each layer
 (async (stage: Stage, appLayers: Layer) => {
+    unselectBookableLayerOnClickEvent(stage, app);
 
     appLayers[layers.ROOM].add(createMainRoom());
-    unselectBookableLayerOnClickEvent(stage, app);
 
     const bookables = await updateStateByDate(new Date().toISOString());
 
