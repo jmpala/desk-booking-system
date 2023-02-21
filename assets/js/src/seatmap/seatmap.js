@@ -12,7 +12,12 @@ import {Bookable} from "./app/model/bookables";
 import {boundToOffsetMapOnDragmoveEvent} from "./domEvents/layerEvents";
 import {unselectBookableLayerOnClickEvent} from "./domEvents/stageEvents";
 
-const app = new AppState();
+export const app = new AppState();
+
+const datePicker = document.getElementById('datePicker');
+if (!datePicker) {
+    throw new Error('Date picker not found, please check your DOM, this component needs one!!!');
+}
 
 const stage = new Stage({
     container: config.domElement,
@@ -27,6 +32,12 @@ const appLayers = {
     [layers.UI]: new Layer().name(layers.UI).draggable(false),
 };
 
+datePicker.addEventListener('change', async e => {
+    e.preventDefault();
+    e.stopPropagation();
+    updateStateByDate(new Date(e.target.value).toISOString());
+});
+
 boundToOffsetMapOnDragmoveEvent(appLayers[layers.ROOM]);
 // layers order
 stage.add(appLayers[layers.ROOM]);
@@ -38,13 +49,7 @@ stage.add(appLayers[layers.UI]);
 
     appLayers[layers.ROOM].add(createMainRoom());
 
-    const bookables = await updateStateByDate(new Date().toISOString());
-
-    bookables.forEach(b => {
-        showInformationModalOnClickEvent(b);
-        selectSelfOnTheAppOnClickEvent(b, app);
-        appLayers[layers.ROOM].add(b.shape);
-    });
+    await updateStateByDate(new Date().toISOString());
 
     // Adding UI components
     appLayers[layers.UI].add(createSeatmapTitle({
@@ -57,7 +62,14 @@ stage.add(appLayers[layers.UI]);
 
 })(stage, appLayers)
 
-async function updateStateByDate(date: Date): Array<Bookable> {
+async function updateStateByDate(date: Date): void {
     await app.updateStateByDate(date);
-    return app.getBookings();
+    const bookables: Array<Bookable> = app.getBookings();
+    bookables.forEach(b => {
+        showInformationModalOnClickEvent(b);
+        selectSelfOnTheAppOnClickEvent(b, app);
+        appLayers[layers.ROOM].add(b.shape);
+    });
 }
+
+
