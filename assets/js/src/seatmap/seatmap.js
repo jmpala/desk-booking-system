@@ -4,11 +4,12 @@ import {config} from "./config";
 import {Layer} from "konva/lib/Layer";
 import {layers} from "./app/enums";
 import {Stage} from "konva/lib/Stage";
-import {showInformationModalOnClick} from "./domEvents/bookableEvents";
+import {selectSelfOnTheAppOnClickEvent, showInformationModalOnClickEvent} from "./domEvents/bookableEvents";
 import {createSeatmapCaption, createSeatmapTitle} from "./components/ui/componentsFactory";
 import {createMainRoom} from "./components/rooms/mainRoom";
 import {AppState} from "./app/AppState";
 import {Bookable} from "./app/model/bookables";
+import {unselectBookableLayerOnClickEvent} from "./domEvents/layerEvents";
 
 const app = new AppState();
 
@@ -33,11 +34,13 @@ stage.add(appLayers[layers.UI]);
 (async (stage: Stage, appLayers: Layer) => {
 
     appLayers[layers.ROOM].add(createMainRoom());
+    unselectBookableLayerOnClickEvent(stage, app);
 
-    const bookables = await updateStateByDate(new Date().toISOString())
+    const bookables = await updateStateByDate(new Date().toISOString());
 
     bookables.forEach(b => {
-        showInformationModalOnClick(b);
+        showInformationModalOnClickEvent(b);
+        selectSelfOnTheAppOnClickEvent(b, app);
         appLayers[layers.ROOM].add(b.shape);
     });
 

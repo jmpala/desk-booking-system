@@ -2,8 +2,9 @@
 
 import {Bookable} from "../app/model/bookables";
 import {config} from "../config";
+import {AppState} from "../app/AppState";
 
-export function showInformationModalOnClick(bookable: Bookable): void {
+export function showInformationModalOnClickEvent(bookable: Bookable): void {
     const modal = document.querySelector(`${config.app.ui.information_modal.dom_id}`);
 
     if (modal == null) {
@@ -13,8 +14,18 @@ export function showInformationModalOnClick(bookable: Bookable): void {
     bookable.setEventListeners([{
         event: "click",
         callback: (event) => {
-            // Show different zinformation depending on the category of the bookable.
-            console.log(bookable);
+          event.cancelBubble = true;
+          console.log(bookable);
+        }
+    }]);
+}
+
+export function selectSelfOnTheAppOnClickEvent(bookable: Bookable, app: AppState): void {
+bookable.setEventListeners([{
+        event: "click",
+        callback: (event) => {
+          event.cancelBubble = true;
+          app.setSelectedBooking(bookable);
         }
     }]);
 }

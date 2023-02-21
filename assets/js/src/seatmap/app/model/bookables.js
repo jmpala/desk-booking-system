@@ -42,6 +42,16 @@ export class Bookable {
             this.shape.on(e.event, e.callback);
         });
     }
+
+    selectBookable(): void {
+        this.shape.stroke('black');
+        this.shape.strokeWidth(5);
+    }
+
+    unselectBookable(): void {
+        this.shape.stroke('black');
+        this.shape.strokeWidth(1);
+    }
 }
 
 export class BookableDesk extends Bookable {

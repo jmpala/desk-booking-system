@@ -26,4 +26,13 @@ export class AppState {
     return this._bookings;
   }
 
+  setSelectedBooking(booking: ?Bookable): void {
+    if (this._selectedBooking) {
+      this._selectedBooking.unselectBookable();
+    }
+    this._selectedBooking = booking;
+    if (this._selectedBooking) {
+      this._selectedBooking.selectBookable();
+    }
+  }
 }
