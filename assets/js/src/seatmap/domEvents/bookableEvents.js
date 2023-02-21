@@ -25,7 +25,30 @@ bookable.setEventListeners([{
         event: "click",
         callback: (event) => {
           event.cancelBubble = true;
+
+          if (bookable.isDisabled || bookable.isBooked || bookable.isBookedByLoggedUser) {
+            return alertUserOnUnavailableBookings(bookable);
+          }
+
           app.setSelectedBooking(bookable);
         }
     }]);
+}
+
+function alertUserOnUnavailableBookings(bookable: Bookable): void {
+  if (bookable.isDisabled) {
+    return alert(`This <<bookable>> is disabled, from ${extractDateFromDateIsoString(bookable.disabledFromDate)} to ${extractDateFromDateIsoString(bookable.disabledToDate)}. The reason/s is/are: ${bookable.disabledNotes}, for more information please contact the administrator.`);
+  }
+
+  if (bookable.isBookedByLoggedUser) {
+    return alert(`This <<bookable>> is already booked by you, from ${extractDateFromDateIsoString(bookable.bookingStartDate)} to ${extractDateFromDateIsoString(bookable.bookingEndDate)}.`);
+  }
+
+  if (bookable.isBooked) {
+    return alert(`This <<bookable>> is already booked, from ${extractDateFromDateIsoString(bookable.bookingStartDate)} to ${extractDateFromDateIsoString(bookable.bookingEndDate)} by ${bookable.userName}.`);
+  }
+}
+
+function extractDateFromDateIsoString(date: Date): string {
+  return date.toISOString().split("T")[0];
 }

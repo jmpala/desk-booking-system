@@ -37,8 +37,8 @@ function jsonToArrayOfBookables(json: ReturnedGetSeatmapStausByDateRESTType): Re
     if (bookable.isBooked) {
       bookable.bookingId = b.bookingId;
       bookable.bookingConfirmationCode = b.bookingConfirmationCode;
-      bookable.bookingStartDate = b.bookingStartDate;
-      bookable.bookingEndDate = b.bookingEndDate;
+      bookable.bookingStartDate = new Date(b.bookingStartDate);
+      bookable.bookingEndDate = new Date(b.bookingEndDate);
       bookable.bookingCreatedAt = b.bookingCreatedAt;
       bookable.shape.fill(getColorByState(bookingStates.BOOKED));
 
@@ -49,8 +49,8 @@ function jsonToArrayOfBookables(json: ReturnedGetSeatmapStausByDateRESTType): Re
 
     bookable.isDisabled = b.isDisabled;
     if (bookable.isDisabled) {
-      bookable.disabledFromDate = b.disabledFromDate;
-      bookable.disabledToDate = b.disabledToDate;
+      bookable.disabledFromDate = new Date(b.disabledFromDate);
+      bookable.disabledToDate = new Date(b.disabledToDate);
       bookable.disabledNotes = b.disabledNotes;
       bookable.shape.fill(getColorByState(bookingStates.UNAVAILABLE));
     }
