@@ -97,8 +97,8 @@ class BookableInformationDTO
 
     public function populateWithUnavailableDatesEntity(UnavailableDates $unavailableDates): static {
         $this->isDisabled = true;
-        $this->disabledFromDate = DateTime::createFromInterface($unavailableDates->getFromDate());
-        $this->disabledToDate = DateTime::createFromInterface($unavailableDates->getToDate());
+        $this->disabledFromDate = DateTime::createFromInterface($unavailableDates->getStartDate());
+        $this->disabledToDate = DateTime::createFromInterface($unavailableDates->getEndDate());
         $this->disabledNotes = $unavailableDates->getNotes();
         return $this;
     }

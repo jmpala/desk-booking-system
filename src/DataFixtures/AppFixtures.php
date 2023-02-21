@@ -7,9 +7,12 @@ namespace App\DataFixtures;
 use App\Factory\BookableFactory;
 use App\Factory\BookingsFactory;
 use App\Factory\CategoryFactory;
+use App\Factory\UnavailableDatesFactory;
 use App\Factory\UserFactory;
+use App\Repository\UnavailableDatesRepository;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
+use DoctrineExtensions\Query\Mysql\Date;
 
 class AppFixtures extends Fixture
 {
@@ -49,7 +52,6 @@ class AppFixtures extends Fixture
             'name' => 'Standing Desk',
         ]);
         // END CATEGORY
-
 
         // START BOOKABLES
         $offsetX = -100;
@@ -124,18 +126,28 @@ class AppFixtures extends Fixture
         ]);
 
         // Verstellbarer Tisch
-        BookableFactory::createOne([
+        $stand1 = BookableFactory::createOne([
             'pos_x' => 150 + $offsetX,
             'pos_y' => 450 + $offsetY,
             'category' => $entitySDesk,
         ]);
 
-        BookableFactory::createOne([
+        $stand2 = BookableFactory::createOne([
             'pos_x' => 350 + $offsetX,
             'pos_y' => 450 + $offsetY,
             'category' => $entitySDesk,
         ]);
         // END BOOKABLES
+
+
+        // START DISABLED BOOKABLES
+        UnavailableDatesFactory::createOne([
+            'bookable' => $stand1,
+            'start_date' => (new \DateTime())->modify('+1 day'),
+            'end_date' => (new \DateTime())->modify('+1 day'),
+            'notes' => 'Stand1 is not available',
+        ]);
+        // END DISABLED BOOKABLES
 
 
         // START BOOKING

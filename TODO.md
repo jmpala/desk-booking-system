@@ -4,7 +4,7 @@
 
 1. [ ] Main screen should be more clear on what it is for UX/UI
 2. [x] Map should represent the office plan as if (big room)
-3. [ ] Map should show which desk is selected
+3. [x] Map should show which desk is selected
 4. [ ] It could be useful to see who booked the desk direct on the "Karte"
 5. [x] Legend of desk states
 6. [ ] Table desk easy names
