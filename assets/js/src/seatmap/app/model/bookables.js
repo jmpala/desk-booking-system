@@ -46,6 +46,7 @@ export class Bookable {
     selectBookable(): void {
         this.shape.stroke('black');
         this.shape.strokeWidth(5);
+        this.shape.moveToTop();
     }
 
     unselectBookable(): void {
