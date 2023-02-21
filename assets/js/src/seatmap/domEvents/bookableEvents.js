@@ -1,6 +1,6 @@
 "use strict";
 
-import {Bookable} from "./bookables";
+import {Bookable} from "../app/model/bookables";
 import {config} from "../config";
 
 export function showInformationModalOnClick(bookable: Bookable): void {
@@ -13,7 +13,7 @@ export function showInformationModalOnClick(bookable: Bookable): void {
     bookable.setEventListeners([{
         event: "click",
         callback: (event) => {
-            // Show different information depending on the category of the bookable.
+            // Show different zinformation depending on the category of the bookable.
             console.log(bookable);
         }
     }]);

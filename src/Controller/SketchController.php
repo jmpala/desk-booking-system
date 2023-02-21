@@ -39,15 +39,11 @@ class SketchController extends AbstractController
     }
 
     #[Route('/sketch/{date}', name: 'app_sketch_gettodaysbookings')]
-    public function getTodaysBookings2(string $date): Response {
-
-        $format = 'Y-m-d';
-        $date = \DateTime::createFromFormat($format, $date);
-
-        if (!$date) {
-            throw new \Exception('Invalid date format');
-        }
-
-        return $this->json($this->bookingService->retrieveSeatsStatusPerDate($date), 200, [], ['groups' => 'seatmapStatusDTO:read']);
+    public function getTodaysBookings2(\DateTime $date): Response {
+        return $this->json(
+            $this->bookingService->retrieveSeatsStatusPerDate($date),
+            200,
+            [],
+            ['groups' => 'seatmapStatusDTO:read']);
     }
 }

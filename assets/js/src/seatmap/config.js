@@ -1,9 +1,10 @@
 "use strict";
 
-import {appEnvironment, bookingStates} from "./enums";
+import {appEnvironment, bookingStates} from "./app/enums";
 
 export const config = {
     env: appEnvironment.DEBUG,
+    domElement: '#container',
     app: {
         width: 800,
         height: 600,

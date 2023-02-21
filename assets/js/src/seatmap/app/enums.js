@@ -6,7 +6,7 @@ export const layers = Object.freeze({
     UI: Symbol("ui"),
 });
 
-export const bookingStates = Object.freeze({
+export const  bookingStates = Object.freeze({
     AVAILABLE:   Symbol("available"),
     UNAVAILABLE:  Symbol("unavailable"),
     BOOKED: Symbol("booked"),

@@ -1,18 +1,19 @@
 "use strict";
 
-import {StageWrapper} from "./wrappers";
 import {config} from "./config";
 import {Layer} from "konva/lib/Layer";
-import {layers} from "./enums";
-import {getSeatmapStausByDate} from "./rest/restCalls";
-import {createNewBookableDesk} from "./bookables/bookablesFactory";
+import {layers} from "./app/enums";
 import {Stage} from "konva/lib/Stage";
-import {Rect} from "konva/lib/shapes/Rect";
-import {showInformationModalOnClick} from "./bookables/bookableEvents";
-import {createSeatmapCaption, createSeatmapTitle} from "./ui/componentsFactory";
+import {showInformationModalOnClick} from "./domEvents/bookableEvents";
+import {createSeatmapCaption, createSeatmapTitle} from "./components/ui/componentsFactory";
+import {createMainRoom} from "./components/rooms/mainRoom";
+import {AppState} from "./app/AppState";
+import {Bookable} from "./app/model/bookables";
 
-const stage = new StageWrapper({
-    container: 'container',
+const app = new AppState();
+
+const stage = new Stage({
+    container: config.domElement,
     width: window.innerWidth,
     height: config.app.map.size.height,
     draggable: false,
@@ -31,29 +32,14 @@ stage.add(appLayers[layers.UI]);
 // register elements to each layer
 (async (stage: Stage, appLayers: Layer) => {
 
-    // creating office map
-    // TODO: map making functionality
-    let $officeFloor = new Rect({
-        x: 0,
-        y: 0,
-        width: config.app.map.size.width,
-        height: config.app.map.size.height,
-        fill: '#e3dbc3',
-        stroke: 'black',
-        strokeWidth: 1,
+    appLayers[layers.ROOM].add(createMainRoom());
+
+    const bookables = await updateStateByDate(new Date().toISOString())
+
+    bookables.forEach(b => {
+        showInformationModalOnClick(b);
+        appLayers[layers.ROOM].add(b.shape);
     });
-
-    appLayers[layers.ROOM].add($officeFloor);
-
-    let $seatmapStatus = await getSeatmapStausByDate();
-
-    $seatmapStatus.bookables = $seatmapStatus.bookables.map(b => {
-        const booking = createNewBookableDesk(b);
-
-        showInformationModalOnClick(booking);
-        appLayers[layers.ROOM].add(booking.shape);
-        return booking;
-    })
 
     // Adding UI components
     appLayers[layers.UI].add(createSeatmapTitle({
@@ -65,3 +51,8 @@ stage.add(appLayers[layers.UI]);
     appLayers[layers.UI].add(createSeatmapCaption(appLayers[layers.ROOM]));
 
 })(stage, appLayers)
+
+async function updateStateByDate(date: Date): Array<Bookable> {
+    await app.updateStateByDate(date);
+    return app.getBookings();
+}

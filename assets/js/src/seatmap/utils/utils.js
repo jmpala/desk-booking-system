@@ -4,8 +4,8 @@ import {Shape} from "konva/lib/Shape";
 import {Stage} from "konva/lib/Stage";
 import Konva from "konva/lib";
 import {Node} from "konva/lib/Node";
-import {bookingStates} from "./enums";
-import {config} from "./config";
+import {bookingStates} from "../app/enums";
+import {config} from "../config";
 
 export function drawDebugBoundaries(stage: Stage) {
     const size = stage.getSize();

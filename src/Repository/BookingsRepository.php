@@ -44,7 +44,7 @@ class BookingsRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('b')
             ->select('b', 'bk')
             ->leftJoin('b.bookable', 'bk')
-            ->where('DATE(b.start_date) = :date AND DATE(b.end_date) = :date')
+            ->where('DATE(b.start_date) = DATE(:date) AND DATE(b.end_date) = DATE(:date)')
             ->setParameter('date', $date->format('Y-m-d'))
             ->getQuery()
             ->getResult();

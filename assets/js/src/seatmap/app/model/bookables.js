@@ -30,9 +30,6 @@ export class Bookable {
 
 
     constructor(state: bookingStates) {
-        if (new.target === Bookable) {
-            throw new TypeError("Cannot construct bookable instances directly");
-        }
         this.state = state;
     }
 

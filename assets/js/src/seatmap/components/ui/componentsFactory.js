@@ -2,11 +2,10 @@
 
 import {Rect} from "konva/lib/shapes/Rect";
 import {Group} from "konva/lib/Group";
-import {config} from "../config";
+import {config} from "../../config";
 import {Text} from "konva/lib/shapes/Text";
-import {getColorByState} from "../utils";
-import {bookingStates, layers} from "../enums";
-import {Layer} from "konva/lib/Layer";
+import {getColorByState} from "../../utils/utils";
+import {bookingStates} from "../../app/enums";
 
 export function createSeatmapCaption(): Group {
   const x: number = window.innerWidth - config.app.ui.seatmapCaption.size.width;
