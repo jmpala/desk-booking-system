@@ -3,6 +3,7 @@
 import {Bookable} from "../app/model/bookables";
 import {config} from "../config";
 import {AppState} from "../app/AppState";
+import {extractDateFromDateIsoString} from "../utils/utils";
 
 export function showInformationModalOnClickEvent(bookable: Bookable): void {
     const modal = document.querySelector(`${config.app.ui.information_modal.dom_id}`);
@@ -49,6 +50,3 @@ function alertUserOnUnavailableBookings(bookable: Bookable): void {
   }
 }
 
-function extractDateFromDateIsoString(date: Date): string {
-  return date.toISOString().split("T")[0];
-}

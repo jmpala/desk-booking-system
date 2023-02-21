@@ -62,30 +62,35 @@ class AppFixtures extends Fixture
             'pos_x' => 100 + $offsetX,
             'pos_y' => 100 + $offsetY,
             'category' => $entityDesk,
+            'code' => 'desk-01',
         ]);
 
         $desk2 = BookableFactory::createOne([
             'pos_x' => 300 + $offsetX,
             'pos_y' => 100 + $offsetY,
             'category' => $entityDesk,
+            'code' => 'desk-02',
         ]);
 
         BookableFactory::createOne([
             'pos_x' => 500 + $offsetX,
             'pos_y' => 100 + $offsetY,
             'category' => $entityDesk,
+            'code' => 'desk-03',
         ]);
 
         BookableFactory::createOne([
             'pos_x' => 100 + $offsetX,
             'pos_y' => 200 + $offsetY,
             'category' => $entityDesk,
+            'code' => 'desk-04',
         ]);
 
         BookableFactory::createOne([
             'pos_x' => 300 + $offsetX,
             'pos_y' => 200 + $offsetY,
             'category' => $entityDesk,
+            'code' => 'desk-05',
         ]);
 
         // Wahre Entwickler Tisch
@@ -93,36 +98,42 @@ class AppFixtures extends Fixture
             'pos_x' => 1000 + $offsetX,
             'pos_y' => 100 + $offsetY,
             'category' => $entityDesk,
+            'code' => 'desk-06',
         ]);
 
         BookableFactory::createOne([
             'pos_x' => 1200 + $offsetX,
             'pos_y' => 100 + $offsetY,
             'category' => $entityDesk,
+            'code' => 'desk-07',
         ]);
 
         BookableFactory::createOne([
             'pos_x' => 1400 + $offsetX,
             'pos_y' => 100 + $offsetY,
             'category' => $entityDesk,
+            'code' => 'desk-08',
         ]);
 
         BookableFactory::createOne([
             'pos_x' => 1000 + $offsetX,
             'pos_y' => 200 + $offsetY,
             'category' => $entityDesk,
+            'code' => 'desk-09',
         ]);
 
         BookableFactory::createOne([
             'pos_x' => 1200 + $offsetX,
             'pos_y' => 200 + $offsetY,
             'category' => $entityDesk,
+            'code' => 'desk-10',
         ]);
 
         BookableFactory::createOne([
             'pos_x' => 1400 + $offsetX,
             'pos_y' => 200 + $offsetY,
             'category' => $entityDesk,
+            'code' => 'desk-11',
         ]);
 
         // Verstellbarer Tisch
@@ -130,12 +141,14 @@ class AppFixtures extends Fixture
             'pos_x' => 150 + $offsetX,
             'pos_y' => 450 + $offsetY,
             'category' => $entitySDesk,
+            'code' => 'desk-12',
         ]);
 
         $stand2 = BookableFactory::createOne([
             'pos_x' => 350 + $offsetX,
             'pos_y' => 450 + $offsetY,
             'category' => $entitySDesk,
+            'code' => 'desk-13',
         ]);
         // END BOOKABLES
 
@@ -145,7 +158,7 @@ class AppFixtures extends Fixture
             'bookable' => $stand1,
             'start_date' => (new \DateTime())->modify('+1 day'),
             'end_date' => (new \DateTime())->modify('+1 day'),
-            'notes' => 'Stand1 is not available',
+            'notes' => 'Needing maintenance',
         ]);
         // END DISABLED BOOKABLES
 

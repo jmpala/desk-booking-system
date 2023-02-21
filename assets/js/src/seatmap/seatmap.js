@@ -5,7 +5,7 @@ import {Layer} from "konva/lib/Layer";
 import {layers} from "./app/enums";
 import {Stage} from "konva/lib/Stage";
 import {selectSelfOnTheAppOnClickEvent, showInformationModalOnClickEvent} from "./domEvents/bookableEvents";
-import {createSeatmapCaption, createSeatmapTitle} from "./components/ui/componentsFactory";
+import {createSeatmapCaption, createSeatmapTitle} from "./components/ui/seatmapCaptionFactory";
 import {createMainRoom} from "./components/rooms/mainRoom";
 import {AppState} from "./app/AppState";
 import {Bookable} from "./app/model/bookables";
@@ -18,6 +18,7 @@ const datePicker = document.getElementById('datePicker');
 if (!datePicker) {
     throw new Error('Date picker not found, please check your DOM, this component needs one!!!');
 }
+datePicker.value = new Date().toISOString().split('T')[0];
 
 const stage = new Stage({
     container: config.domElement,
@@ -65,11 +66,9 @@ stage.add(appLayers[layers.UI]);
 async function updateStateByDate(date: Date): void {
     await app.updateStateByDate(date);
     const bookables: Array<Bookable> = app.getBookings();
-    bookables.forEach(b => {
+    bookables.forEach((b: Bookable) => {
         showInformationModalOnClickEvent(b);
         selectSelfOnTheAppOnClickEvent(b, app);
-        appLayers[layers.ROOM].add(b.shape);
+        appLayers[layers.ROOM].add(b.container);
     });
 }
-
-

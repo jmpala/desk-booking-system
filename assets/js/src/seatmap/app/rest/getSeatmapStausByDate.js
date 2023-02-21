@@ -5,6 +5,8 @@ import {Shape} from "konva/lib/Shape";
 import {Rect} from "konva/lib/shapes/Rect";
 import {getColorByState} from "../../utils/utils";
 import {bookingStates} from "../enums";
+import {Group} from "konva/lib/Group";
+import {createBookableInformationLabels} from "../../components/ui/bookableInformatioLabelsFactory";
 
 export async function getSeatmapStausByDate(date: Date): ReturnedGetSeatmapStausByDateType {
   const res = await fetch(`/sketch/${date}`);
@@ -26,6 +28,8 @@ function jsonToArrayOfBookables(json: ReturnedGetSeatmapStausByDateRESTType): Re
       stroke: "black",
       strokeWidth: 1,
     });
+    bookable.container = new Group();
+    bookable.container.add(bookable.shape);
     bookable.bookableId = b.bookableId;
     bookable.bookableCode = b.bookableCode;
     bookable.bookableDescription = b.bookableDescription;
@@ -53,6 +57,11 @@ function jsonToArrayOfBookables(json: ReturnedGetSeatmapStausByDateRESTType): Re
       bookable.disabledToDate = new Date(b.disabledToDate);
       bookable.disabledNotes = b.disabledNotes;
       bookable.shape.fill(getColorByState(bookingStates.UNAVAILABLE));
+    }
+
+    const labels = createBookableInformationLabels(bookable);
+    if (labels) {
+      bookable.container.add(labels);
     }
 
     return bookable;

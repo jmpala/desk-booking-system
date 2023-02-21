@@ -84,3 +84,7 @@ export function getColorByState(state: bookingStates): string {
             throw new Error(`Booking state ${state} is not registered`);
     }
 }
+
+export function extractDateFromDateIsoString(date: Date): string {
+    return date.toISOString().split("T")[0];
+}

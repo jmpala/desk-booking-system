@@ -2,6 +2,7 @@
 
 import {bookingStates} from "../enums";
 import {Shape} from "konva/lib/Shape";
+import {Group} from "konva/lib/Group";
 
 type event = {
     event: string,
@@ -11,6 +12,7 @@ type event = {
 export class Bookable {
 
     shape: Shape;
+    container: Group;
     bookableId: number;
     bookableCode: string;
     bookableDescription: string;
@@ -46,7 +48,7 @@ export class Bookable {
     selectBookable(): void {
         this.shape.stroke('black');
         this.shape.strokeWidth(5);
-        this.shape.moveToTop();
+        this.container.moveToTop();
     }
 
     unselectBookable(): void {
