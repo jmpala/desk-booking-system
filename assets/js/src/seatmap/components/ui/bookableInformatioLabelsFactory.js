@@ -11,20 +11,26 @@ const fontSize: number = 12;
 const fontFamily: string = 'Roboto, sans-serif';
 
 
+/**
+ *  Creates the information ui-labels for the bookable object
+ *
+ * @param bookable
+ * @returns {Group}
+ */
 export function createBookableInformationLabels(bookable: Bookable): Group {
 
   if (!bookable.isBooked && !bookable.isDisabled) {
-    return createLabelsForAvailableBookable(bookable);
+    return _createLabelsForAvailableBookable(bookable);
   } else if (bookable.isBookedByLoggedUser) {
-    return createLabelsForBookedByLoggedUser(bookable);
+    return _createLabelsForBookedByLoggedUser(bookable);
   } else if (bookable.isBooked) {
-    return createLabelsForBookedBookable(bookable);
+    return _createLabelsForBookedBookable(bookable);
   } else if (bookable.isDisabled) {
-    return createLabelsForDisabledBookable(bookable);
+    return _createLabelsForDisabledBookable(bookable);
   }
 }
 
-function createLabelsForAvailableBookable(bookable: Bookable): Group {
+function _createLabelsForAvailableBookable(bookable: Bookable): Group {
   const container = new Group();
 
   const deskNameLabel = new Text({
@@ -54,7 +60,7 @@ function createLabelsForAvailableBookable(bookable: Bookable): Group {
   return container;
 }
 
-function createLabelsForBookedByLoggedUser(bookable: Bookable): Group {
+function _createLabelsForBookedByLoggedUser(bookable: Bookable): Group {
   const container = new Group();
 
   const deskNameLabel = new Text({
@@ -105,7 +111,7 @@ function createLabelsForBookedByLoggedUser(bookable: Bookable): Group {
   return container;
 }
 
-function createLabelsForBookedBookable(bookable: Bookable): Group {
+function _createLabelsForBookedBookable(bookable: Bookable): Group {
   const container = new Group();
 
   const deskNameLabel = new Text({
@@ -156,7 +162,7 @@ function createLabelsForBookedBookable(bookable: Bookable): Group {
   return container;
 }
 
-function createLabelsForDisabledBookable(bookable: Bookable): Group {
+function _createLabelsForDisabledBookable(bookable: Bookable): Group {
   const container = new Group();
 
   const deskNameLabel = new Text({

@@ -3,8 +3,16 @@
 import {Stage} from "konva/lib/Stage";
 import {AppState} from "../app/AppState";
 
-export function unselectBookableLayerOnClickEvent(stage: Stage, app: AppState): void {
+
+/**
+ * Bounds the {@param stage} to the {@param appState} so when the stage
+ * recieved a click event, deselects the selected bookable
+ *
+ * @param stage
+ * @param appState
+ */
+export function deselectBookableOnClickEvent(stage: Stage, appState: AppState): void {
   stage.addEventListener("click", (event) => {
-    app.setSelectedBooking(null);
+    appState.setSelectedBooking(null);
   });
 }

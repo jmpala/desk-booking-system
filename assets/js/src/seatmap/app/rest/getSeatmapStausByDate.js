@@ -8,13 +8,27 @@ import {bookingStates} from "../enums";
 import {Group} from "konva/lib/Group";
 import {createBookableInformationLabels} from "../../components/ui/bookableInformatioLabelsFactory";
 
-export async function getSeatmapStausByDate(date: Date): ReturnedGetSeatmapStausByDateType {
+
+/**
+ * Retrieves all the bookable elements for a given date by calling the internal REST API
+ *
+ * @param date
+ * @returns {Promise<getSeatmapStausByDateResponse>}
+ */
+export async function getSeatmapStausByDate(date: Date): getSeatmapStausByDateResponse {
   const res = await fetch(`/sketch/${date}`);
   const json = await res.json();
-  return jsonToArrayOfBookables(json);
+  return _jsonToArrayOfBookables(json);
 }
 
-function jsonToArrayOfBookables(json: ReturnedGetSeatmapStausByDateRESTType): ReturnedGetSeatmapStausByDateType {
+/**
+ * Converts the json response into an array of Bookable objects
+ *
+ * @param json
+ * @returns {RESTCallResponse}
+ * @private
+ */
+function _jsonToArrayOfBookables(json: RESTCallResponse): getSeatmapStausByDateResponse {
   json.bookables = json.bookables.map((b: BookablesType) => {
 
     const bookable = new Bookable();
@@ -28,12 +42,15 @@ function jsonToArrayOfBookables(json: ReturnedGetSeatmapStausByDateRESTType): Re
       stroke: "black",
       strokeWidth: 1,
     });
+
     bookable.container = new Group();
     bookable.container.add(bookable.shape);
+
     bookable.bookableId = b.bookableId;
     bookable.bookableCode = b.bookableCode;
     bookable.bookableDescription = b.bookableDescription;
     bookable.bookableCategory = b.bookableCategory;
+
     bookable.userName = b.userName;
     bookable.isBookedByLoggedUser = b.isBookedByLoggedUser;
 
@@ -44,10 +61,11 @@ function jsonToArrayOfBookables(json: ReturnedGetSeatmapStausByDateRESTType): Re
       bookable.bookingStartDate = new Date(b.bookingStartDate);
       bookable.bookingEndDate = new Date(b.bookingEndDate);
       bookable.bookingCreatedAt = b.bookingCreatedAt;
-      bookable.shape.fill(getColorByState(bookingStates.BOOKED));
 
       if (bookable.isBookedByLoggedUser) {
         bookable.shape.fill(getColorByState(bookingStates.BOOKEDBYUSER));
+      } else {
+        bookable.shape.fill(getColorByState(bookingStates.BOOKED));
       }
     }
 
@@ -59,6 +77,7 @@ function jsonToArrayOfBookables(json: ReturnedGetSeatmapStausByDateRESTType): Re
       bookable.shape.fill(getColorByState(bookingStates.UNAVAILABLE));
     }
 
+    // TODO: this is UI, do not do it here
     const labels = createBookableInformationLabels(bookable);
     if (labels) {
       bookable.container.add(labels);
@@ -70,16 +89,26 @@ function jsonToArrayOfBookables(json: ReturnedGetSeatmapStausByDateRESTType): Re
   return json;
 }
 
-type ReturnedGetSeatmapStausByDateRESTType = {
+/**
+ * The response from the REST API, as it is
+ */
+type RESTCallResponse = {
   date: Date,
   bookables: Array<BookablesType>
 }
 
-export type ReturnedGetSeatmapStausByDateType = {
+/**
+ * Converted response from the REST API, after mapping
+ * {@link BookablesType} to {@link Bookable}
+ */
+export type getSeatmapStausByDateResponse = {
   date: Date,
   bookables: Array<Bookable>
 }
 
+/**
+ * Declaration of a bookable returned from the REST API
+ */
 type BookablesType = {
   shapeX: number;
   shapeY: number;
@@ -103,3 +132,4 @@ type BookablesType = {
   disabledToDate: Date;
   disabledNotes: string;
 };
+

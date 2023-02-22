@@ -1,4 +1,6 @@
 "use strict";
 
-import {app} from "../seatmap/seatmap.js";
+import "bootstrap/dist/js/bootstrap.bundle.js";
+
+import {appState} from "../seatmap/seatmap.js";
 

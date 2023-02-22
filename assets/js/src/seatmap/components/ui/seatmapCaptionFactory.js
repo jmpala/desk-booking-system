@@ -7,9 +7,15 @@ import {Text} from "konva/lib/shapes/Text";
 import {getColorByState} from "../../utils/utils";
 import {bookingStates} from "../../app/enums";
 
+
+/**
+ * Returns a Konva Group with the infomration caption for the seatmap
+ *
+ * @returns {Group}
+ */
 export function createSeatmapCaption(): Group {
   const x: number = window.innerWidth - config.app.ui.seatmapCaption.size.width;
-  const y: number = config.app.height - config.app.ui.seatmapCaption.size.height
+  const y: number = config.app.height - config.app.ui.seatmapCaption.size.height;
   const width: number = config.app.ui.seatmapCaption.size.width;
   const height: number = config.app.ui.seatmapCaption.size.height;
   const fill: number = config.app.ui.seatmapCaption.backgroundColor;
@@ -96,6 +102,13 @@ type CaptionTextWithReferenceColorConfiguration = {
   position: number,
 };
 
+/**
+ * Creates a text with a square color reference for the seatmap caption
+ *
+ * @param params
+ * @returns {Group}
+ * @private
+ */
 function _createCaptionTextWithReferenceColor(params: CaptionTextWithReferenceColorConfiguration): Group {
 
   const padding: number = params.padding ?? 0;
@@ -137,6 +150,12 @@ type seatMapTitleConfiguration = {
   padding?: number,
 };
 
+/**
+ * Creates the title for the seatmap component
+ *
+ * @param params
+ * @returns {Group}
+ */
 export function createSeatmapTitle(params: seatMapTitleConfiguration): Group {
   const container: Group = new Group();
 

@@ -4,7 +4,13 @@ import {config} from "../config";
 import {Layer} from "konva/lib/Layer";
 
 
-export function boundToOffsetMapOnDragmoveEvent(layer: Layer): void {
+/**
+ * Bounds the drag of the map to an offset, preventing the map from being
+ * dragged out of the viewport
+ *
+ * @param layer
+ */
+export function preventMapOutOfBoundsOnDragmoveEvent(layer: Layer): void {
   const offset = 10;
   layer.on('dragmove', (e) => {
     e.cancelBubble = true;

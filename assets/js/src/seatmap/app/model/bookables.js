@@ -4,11 +4,10 @@ import {bookingStates} from "../enums";
 import {Shape} from "konva/lib/Shape";
 import {Group} from "konva/lib/Group";
 
-type event = {
-    event: string,
-    callback: Function,
-}
 
+/**
+ * Represents a bookable object inside the booking system
+ */
 export class Bookable {
 
     shape: Shape;
@@ -57,23 +56,10 @@ export class Bookable {
     }
 }
 
-export class BookableDesk extends Bookable {
-
-    constructor(state: bookingStates) {
-        super(state);
-    }
-}
-
-export class BookableRoom extends Bookable {
-
-    constructor(state: bookingStates) {
-        super(state);
-    }
-}
-
-export class BookableMeetingRoom extends BookableRoom {
-
-    constructor(state: bookingStates) {
-        super(state);
-    }
+/**
+ * Generic event object used to set event listeners on bookable objects
+ */
+type event = {
+    event: string,
+    callback: Function,
 }
