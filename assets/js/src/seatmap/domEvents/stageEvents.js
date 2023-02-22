@@ -2,6 +2,7 @@
 
 import {Stage} from "konva/lib/Stage";
 import {AppState} from "../app/AppState";
+import {config} from "../config";
 
 
 /**
@@ -14,5 +15,18 @@ import {AppState} from "../app/AppState";
 export function deselectBookableOnClickEvent(stage: Stage, appState: AppState): void {
   stage.addEventListener("click", (event) => {
     appState.setSelectedBooking(null);
+  });
+}
+
+/**
+ * Resizes the {@param stage} to the parent container's size
+ *
+ * @param stage
+ */
+export function resizeStageOnWindowResizeEvent(stage: Stage): void {
+  window.addEventListener("resize", () => {
+    const container = document.querySelector(config.domElement).getBoundingClientRect();
+    stage.width(container.width);
+    stage.draw();
   });
 }

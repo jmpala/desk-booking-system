@@ -10,7 +10,7 @@ import {createMainRoom} from "./components/rooms/mainRoom";
 import {AppState} from "./app/AppState";
 import {Bookable} from "./app/model/bookables";
 import {preventMapOutOfBoundsOnDragmoveEvent} from "./domEvents/layerEvents";
-import {deselectBookableOnClickEvent} from "./domEvents/stageEvents";
+import {deselectBookableOnClickEvent, resizeStageOnWindowResizeEvent} from "./domEvents/stageEvents";
 
 
 // Setting up the date picker
@@ -29,27 +29,35 @@ datePicker.addEventListener('change', async e => {
 
 export const appState = new AppState();
 
+const parentContainer = document.querySelector(config.domElement).getBoundingClientRect();
+if (!parentContainer) {
+    throw new Error(`Parent container not found, please check your DOM, this component needs an id="${parentContainer}"`);
+}
+const stage = new Stage({
+    container: config.domElement,
+    x: 0,
+    y: 0,
+    width: parentContainer.width,
+    height: config.app.height,
+    draggable: false,
+});
+deselectBookableOnClickEvent(stage, appState);
+resizeStageOnWindowResizeEvent(stage);
+
 // create layers and defining map size
 const appLayers = {
     [layers.ROOM]: new Layer().name(layers.ROOM).draggable(true),
     [layers.UI]: new Layer().name(layers.UI).draggable(false),
 };
-preventMapOutOfBoundsOnDragmoveEvent(appLayers[layers.ROOM]);
-
-const stage = new Stage({
-    container: config.domElement,
-    width: window.innerWidth,
-    height: config.app.map.size.height,
-    draggable: false,
-});
 // layers order
 stage.add(appLayers[layers.ROOM]);
 stage.add(appLayers[layers.UI]);
-deselectBookableOnClickEvent(stage, appState);
+preventMapOutOfBoundsOnDragmoveEvent(appLayers[layers.ROOM], stage);
 
 // register elements to each layer
 (async (stage: Stage, appLayers: Layer) => {
     appLayers[layers.ROOM].add(createMainRoom());
+    console.log(appLayers[layers.ROOM])
 
     await updateSeatmap(new Date().toISOString());
 
@@ -60,7 +68,7 @@ deselectBookableOnClickEvent(stage, appState);
         fontSize: 30,
         padding: 20,
     }));
-    appLayers[layers.UI].add(createSeatmapCaption(appLayers[layers.ROOM]));
+    appLayers[layers.UI].add(createSeatmapCaption(stage));
 
 })(stage, appLayers)
 

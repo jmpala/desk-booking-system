@@ -2,6 +2,7 @@
 
 import {config} from "../config";
 import {Layer} from "konva/lib/Layer";
+import {Stage} from "konva/lib/Stage";
 
 
 /**
@@ -10,7 +11,7 @@ import {Layer} from "konva/lib/Layer";
  *
  * @param layer
  */
-export function preventMapOutOfBoundsOnDragmoveEvent(layer: Layer): void {
+export function preventMapOutOfBoundsOnDragmoveEvent(layer: Layer, stage: Stage): void {
   const offset = 10;
   layer.on('dragmove', (e) => {
     e.cancelBubble = true;
@@ -21,22 +22,31 @@ export function preventMapOutOfBoundsOnDragmoveEvent(layer: Layer): void {
     const xw = target.x() + config.app.map.size.width;
     const yh = target.y() + config.app.map.size.height;
 
-    console.log(x, y, xw, yh)
+    const xFSide = stage.width();
+    const yFSide = config.app.height;
 
-    if (x - offset >= 0) {
-      target.x(offset)
+    if (config.app.map.size.width <= xFSide) {
+      target.x(xFSide / 2 - config.app.map.size.width / 2);
+    } else {
+      if (x > offset) {
+        target.x(offset)
+      }
+
+      if (xw < xFSide - offset) {
+        target.x(xFSide - config.app.map.size.width - offset)
+      }
     }
 
-    if (y - offset >= 0) {
-      target.y(offset)
-    }
+    if (config.app.map.size.height <= yFSide) {
+      target.y(yFSide / 2 - config.app.map.size.height / 2);
+    } else {
+      if (y > offset) {
+        target.y(offset)
+      }
 
-    if (window.innerWidth >= xw + offset) {
-      target.x(window.innerWidth - config.app.map.size.width - offset)
-    }
-
-    if (config.app.map.size.height >= yh + offset) {
-      target.y(config.app.map.size.height - config.app.map.size.height - offset)
+      if (yh < yFSide - offset) {
+        target.y(yFSide - config.app.map.size.height - offset)
+      }
     }
   });
 }

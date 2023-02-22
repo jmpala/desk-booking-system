@@ -6,6 +6,7 @@ import {config} from "../../config";
 import {Text} from "konva/lib/shapes/Text";
 import {getColorByState} from "../../utils/utils";
 import {bookingStates} from "../../app/enums";
+import {Stage} from "konva/lib/Stage";
 
 
 /**
@@ -13,8 +14,8 @@ import {bookingStates} from "../../app/enums";
  *
  * @returns {Group}
  */
-export function createSeatmapCaption(): Group {
-  const x: number = window.innerWidth - config.app.ui.seatmapCaption.size.width;
+export function createSeatmapCaption(stage: Stage): Group {
+  const x: number = stage.width() - config.app.ui.seatmapCaption.size.width;
   const y: number = config.app.height - config.app.ui.seatmapCaption.size.height;
   const width: number = config.app.ui.seatmapCaption.size.width;
   const height: number = config.app.ui.seatmapCaption.size.height;
@@ -77,7 +78,7 @@ export function createSeatmapCaption(): Group {
   }));
 
   window.addEventListener("resize", () => {
-    container.x(window.innerWidth - config.app.ui.seatmapCaption.size.width);
+    container.x(stage.width() - config.app.ui.seatmapCaption.size.width);
   });
 
   container.addEventListener('pointerenter',e => {

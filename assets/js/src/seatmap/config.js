@@ -4,7 +4,7 @@ import {appEnvironment, bookingStates} from "./app/enums";
 
 export const config = {
     env: appEnvironment.DEBUG,
-    domElement: '#container',
+    domElement: '#konva-container',
     app: {
         width: 800,
         height: 600,
@@ -24,7 +24,7 @@ export const config = {
             seatmapCaption: {
                 size: {
                     width: 200,
-                    height: 150,
+                    height: 100,
                 },
                 position: {
                     x: 0,
