@@ -160,6 +160,13 @@ class AppFixtures extends Fixture
             'end_date' => (new \DateTime())->modify('+1 day'),
             'notes' => 'Needing maintenance',
         ]);
+
+        UnavailableDatesFactory::createOne([
+            'bookable' => $stand1,
+            'start_date' => new \DateTime(),
+            'end_date' => new \DateTime(),
+            'notes' => 'Needing maintenance',
+        ]);
         // END DISABLED BOOKABLES
 
 

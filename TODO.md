@@ -5,15 +5,15 @@
 1. [ ] Main screen should be more clear on what it is for UX/UI
 2. [x] Map should represent the office plan as if (big room)
 3. [x] Map should show which desk is selected
-4. [ ] It could be useful to see who booked the desk direct on the "Karte"
+4. [x] It could be useful to see who booked the desk direct on the "Karte"
 5. [x] Legend of desk states
-6. [ ] Table desk easy names
+6. [x] Table desk easy names
 7. [ ] Table Date German format (no sence for hour)
 8. [ ] Confirmation message not good enought (Reservation Number)
 9. [ ] Filter delete bookings that are in the past
 10. [ ] For Plannning filer should be on the table, it has nothing to do with map
 11. [ ] map can have a list where users can be selected for the new booking
-12. [ ] user availability should be a flag on table
+12. [x] user availability should be a flag on table (implemented on its own table)
 
 ---
 
