@@ -2,7 +2,7 @@
 
 import {config} from "./config";
 import {Layer} from "konva/lib/Layer";
-import {layers} from "./app/enums";
+import {bookingStates, layers} from "./app/enums";
 import {Stage} from "konva/lib/Stage";
 import {handleBookableSelectionOnClickEvent, showBookableDebugInformationOnClickEvent} from "./domEvents/bookableEvents";
 import {createSeatmapCaption, createSeatmapTitle} from "./components/ui/seatmapCaptionFactory";
@@ -11,6 +11,7 @@ import {AppState} from "./app/AppState";
 import {Bookable} from "./app/model/bookables";
 import {preventMapOutOfBoundsOnDragmoveEvent} from "./domEvents/layerEvents";
 import {deselectBookableOnClickEvent, resizeStageOnWindowResizeEvent} from "./domEvents/stageEvents";
+import {getColorByState} from "./utils/utils";
 
 
 // Setting up the date picker
@@ -20,12 +21,18 @@ if (!datePicker) {
     throw new Error(`Date picker not found, please check your DOM, this component needs an id="${datePiclerId}"`);
 }
 datePicker.value = new Date().toISOString().split('T')[0];
-
 datePicker.addEventListener('change', async e => {
     e.stopPropagation();
     updateSeatmap(new Date(e.target.value).toISOString());
 });
 
+const submitBtn = document.querySelector('#konva-submit');
+if (!submitBtn) {
+    throw new Error(`Submit Button not found, please check your DOM, this component needs an id="${submitBtn}"`);
+}
+submitBtn.value = 'Please, select booking';
+submitBtn.style.color = getColorByState(bookingStates.UNAVAILABLE);
+submitBtn.disabled = true;
 
 export const appState = new AppState();
 

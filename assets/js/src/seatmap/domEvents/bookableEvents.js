@@ -2,7 +2,8 @@
 
 import {Bookable} from "../app/model/bookables";
 import {AppState} from "../app/AppState";
-import {extractDateFromDateIsoString} from "../utils/utils";
+import {extractDateFromDateIsoString, getColorByState} from "../utils/utils";
+import {bookingStates} from "../app/enums";
 
 
 /**
@@ -28,19 +29,20 @@ export function showBookableDebugInformationOnClickEvent(bookable: Bookable): vo
  * @param app
  */
 export function handleBookableSelectionOnClickEvent(bookable: Bookable, app: AppState): void {
-bookable.setEventListeners([{
-        event: "click",
-        callback: (event) => {
-          event.cancelBubble = true;
+  bookable.setEventListeners([{
+    event: "click",
+    callback: (event) => {
+      event.cancelBubble = true;
 
-          if (bookable.isDisabled || bookable.isBooked || bookable.isBookedByLoggedUser) {
-            app.setSelectedBooking(null);
-            return _showAlert(bookable);
-          }
+      if (bookable.isDisabled || bookable.isBooked || bookable.isBookedByLoggedUser) {
+        app.setSelectedBooking(null);
+        return _showAlert(bookable);
+      }
 
-          app.setSelectedBooking(bookable);
-        }
-    }]);
+      _changeButton('Start new booking', getColorByState(bookingStates.AVAILABLE));
+      app.setSelectedBooking(bookable);
+    }
+  }]);
 }
 
 /**
@@ -51,15 +53,25 @@ bookable.setEventListeners([{
  */
 function _showAlert(bookable: Bookable): void {
   if (bookable.isDisabled) {
+    _changeButton('Can not be booked', getColorByState(bookingStates.UNAVAILABLE), true);
     return alert(`This <<bookable>> is disabled, from ${extractDateFromDateIsoString(bookable.disabledFromDate)} to ${extractDateFromDateIsoString(bookable.disabledToDate)}. The reason/s is/are: ${bookable.disabledNotes}, for more information please contact the administrator.`);
   }
 
   if (bookable.isBookedByLoggedUser) {
+    _changeButton('Modify booking', getColorByState(bookingStates.BOOKEDBYUSER), false);
     return alert(`This <<bookable>> is already booked by you, from ${extractDateFromDateIsoString(bookable.bookingStartDate)} to ${extractDateFromDateIsoString(bookable.bookingEndDate)}.`);
   }
 
   if (bookable.isBooked) {
+    _changeButton('Already booked', getColorByState(bookingStates.BOOKED), true);
     return alert(`This <<bookable>> is already booked, from ${extractDateFromDateIsoString(bookable.bookingStartDate)} to ${extractDateFromDateIsoString(bookable.bookingEndDate)} by ${bookable.userName}.`);
   }
 }
 
+function _changeButton(message: string, color: string, disable: boolean): void {
+  const submitbtn = document.querySelector('#konva-submit');
+  submitbtn.value = message;
+  submitbtn.style.backgroundColor = color;
+  submitbtn.style.color = "black";
+  submitbtn.disabled = disable;
+}

@@ -6,8 +6,23 @@
     {{ encore_entry_script_tags('sketch') }}
 {% endblock %}
 
+{% block stylesheets %}
+    {{ encore_entry_link_tags('sketch') }}
+{% endblock %}
+
 {% block body %}
-    <input id="datePicker" type="date">
-    <div id="container"></div>
-    <div id="desk_information_modal"></div>
+    <div class="container">
+        <h1 class="text-center">Seatmap Component</h1>
+    </div>
+    <div class="container">
+        <input id="datePicker" type="date">
+        <div id="konva-container" style="border: 1px solid black"></div>
+        <div class="row text-center">
+            <form class="col-12" action="">
+                <input type="hidden" id="bookableId">
+                <input type="hidden" id="bookingStartDate">
+                <input type="button" id="konva-submit" class="btn btn-lg btn-primary" value="">
+            </form>
+        </div>
+    </div>
 {% endblock %}
