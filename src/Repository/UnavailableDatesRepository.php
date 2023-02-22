@@ -44,7 +44,7 @@ class UnavailableDatesRepository extends ServiceEntityRepository
         return  $this->createQueryBuilder('u')
             ->select('u', 'bk')
             ->leftJoin('u.bookable', 'bk')
-            ->where('DATE(u.start_date) = :date AND DATE(u.end_date) = :date')
+            ->where('DATE(u.start_date) = DATE(:date) AND DATE(u.end_date) = DATE(:date)')
             ->setParameter('date', $date)
             ->getQuery()
             ->getResult();
