@@ -48,10 +48,10 @@ class Bookable
     #[Groups(['bookable:read'])]
     private ?int $height = null;
 
-    #[ORM\OneToMany(mappedBy: 'bookable_id', targetEntity: Bookings::class)]
+    #[ORM\OneToMany(mappedBy: 'bookable', targetEntity: Bookings::class)]
     private Collection $bookings;
 
-    #[ORM\OneToMany(mappedBy: 'bookable_id', targetEntity: UnavailableDates::class)]
+    #[ORM\OneToMany(mappedBy: 'bookable', targetEntity: UnavailableDates::class)]
     private Collection $unavailableDates;
 
     #[ORM\ManyToOne(inversedBy: 'bookables')]

@@ -38,7 +38,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     private ?string $plainPassword = null;
 
-    #[ORM\OneToMany(mappedBy: 'user_id', targetEntity: Bookings::class)]
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Bookings::class)]
     private Collection $bookings;
 
     public function __construct()

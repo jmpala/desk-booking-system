@@ -29,7 +29,7 @@ class Category
     #[Groups(['bookable:read'])]
     private ?string $name = null;
 
-    #[ORM\OneToMany(mappedBy: 'category_id', targetEntity: Bookable::class)]
+    #[ORM\OneToMany(mappedBy: 'category', targetEntity: Bookable::class)]
     private Collection $bookables;
 
     public function __construct()
