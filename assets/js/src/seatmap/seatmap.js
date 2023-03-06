@@ -15,10 +15,10 @@ import {getColorByState} from "./utils/utils";
 
 
 // Setting up the date picker
-const datePiclerId = 'datePicker';
-const datePicker = document.getElementById(datePiclerId);
+const datePickerDomId = 'datePicker';
+const datePicker = document.getElementById(datePickerDomId);
 if (!datePicker) {
-    throw new Error(`Date picker not found, please check your DOM, this component needs an id="${datePiclerId}"`);
+    throw new Error(`Date picker not found, please check your DOM, this component needs an id="${datePickerDomId}"`);
 }
 datePicker.value = new Date().toISOString().split('T')[0];
 datePicker.addEventListener('change', async e => {
