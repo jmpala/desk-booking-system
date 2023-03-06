@@ -1,7 +1,6 @@
 "use strict";
 
 import {Bookable} from "./model/bookables";
-import {getSeatmapStausByDate} from "./rest/getSeatmapStausByDate";
 import type {getSeatmapStausByDateResponse} from "./rest/getSeatmapStausByDate";
 
 /**
@@ -23,14 +22,12 @@ export class AppState {
   /**
    * Updates the state of the app by fetching the bookings for the given date
    *
-   * @param date
    * @returns {Promise<void>}
+   * @param getSeatmapStausByDateResponse
    */
-  async updateStateByDate(date: Date): void {
-    // TODO: should the REST call be done here?
-    const res: getSeatmapStausByDateResponse = await getSeatmapStausByDate(date);
-    this._bookings = res.bookables;
-    this._selectedDate = date;
+  updateStateWithNewSeatmapstate(newSeatmapState: getSeatmapStausByDateResponse): void {
+    this._bookings = newSeatmapState.bookables;
+    this._selectedDate = newSeatmapState.date;
   }
 
   /**

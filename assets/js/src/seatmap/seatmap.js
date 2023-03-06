@@ -12,6 +12,8 @@ import {Bookable} from "./app/model/bookables";
 import {preventMapOutOfBoundsOnDragmoveEvent} from "./domEvents/layerEvents";
 import {deselectBookableOnClickEvent, resizeStageOnWindowResizeEvent} from "./domEvents/stageEvents";
 import {getColorByState} from "./utils/utils";
+import {getSeatmapStausByDate} from "./app/rest/getSeatmapStausByDate";
+import type {getSeatmapStausByDateResponse} from "./app/rest/getSeatmapStausByDate";
 
 
 // Setting up the date picker
@@ -86,7 +88,8 @@ preventMapOutOfBoundsOnDragmoveEvent(appLayers[layers.ROOM], stage);
  * @returns {Promise<void>}
  */
 async function updateSeatmap(date: Date): void {
-    await appState.updateStateByDate(date);
+    const updatedSeatmap: getSeatmapStausByDateResponse = await getSeatmapStausByDate(date);
+    await appState.updateStateWithNewSeatmapstate(updatedSeatmap);
     const bookables: Array<Bookable> = appState.getBookings();
     bookables.forEach((b: Bookable) => {
         showBookableDebugInformationOnClickEvent(b);
