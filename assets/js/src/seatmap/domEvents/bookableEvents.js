@@ -39,7 +39,7 @@ export function handleBookableSelectionOnClickEvent(bookable: Bookable, app: App
         return _showAlert(bookable);
       }
 
-      _changeButton(bookable, 'Start new booking', getColorByState(bookingStates.AVAILABLE));
+      _changeButton(bookable, _createStatusLabel(bookable), getColorByState(bookingStates.AVAILABLE));
       app.setSelectedBooking(bookable);
     }
   }]);
@@ -53,18 +53,21 @@ export function handleBookableSelectionOnClickEvent(bookable: Bookable, app: App
  */
 function _showAlert(bookable: Bookable): void {
   if (bookable.isDisabled) {
-    _changeButton(bookable, 'Can not be booked', getColorByState(bookingStates.UNAVAILABLE), true);
-    return alert(`This <<bookable>> is disabled, from ${extractDateFromDateIsoString(bookable.disabledFromDate)} to ${extractDateFromDateIsoString(bookable.disabledToDate)}. The reason/s is/are: ${bookable.disabledNotes}, for more information please contact the administrator.`);
+    _changeButton(bookable, _createStatusLabel(bookable), getColorByState(bookingStates.UNAVAILABLE), true);
+    // return alert(`This <<bookable>> is disabled, from ${extractDateFromDateIsoString(bookable.disabledFromDate)} to ${extractDateFromDateIsoString(bookable.disabledToDate)}. The reason/s is/are: ${bookable.disabledNotes}, for more information please contact the administrator.`);
+    return;
   }
 
   if (bookable.isBookedByLoggedUser) {
-    _changeButton(bookable, 'Modify booking', getColorByState(bookingStates.BOOKEDBYUSER), false);
-    return alert(`This <<bookable>> is already booked by you, from ${extractDateFromDateIsoString(bookable.bookingStartDate)} to ${extractDateFromDateIsoString(bookable.bookingEndDate)}.`);
+    _changeButton(bookable, _createStatusLabel(bookable), getColorByState(bookingStates.BOOKEDBYUSER), false);
+    // return alert(`This <<bookable>> is already booked by you, from ${extractDateFromDateIsoString(bookable.bookingStartDate)} to ${extractDateFromDateIsoString(bookable.bookingEndDate)}.`);
+    return;
   }
 
   if (bookable.isBooked) {
-    _changeButton(bookable, 'Already booked', getColorByState(bookingStates.BOOKED), true);
-    return alert(`This <<bookable>> is already booked, from ${extractDateFromDateIsoString(bookable.bookingStartDate)} to ${extractDateFromDateIsoString(bookable.bookingEndDate)} by ${bookable.userName}.`);
+    _changeButton(bookable, _createStatusLabel(bookable), getColorByState(bookingStates.BOOKED), true);
+    // return alert(`This <<bookable>> is already booked, from ${extractDateFromDateIsoString(bookable.bookingStartDate)} to ${extractDateFromDateIsoString(bookable.bookingEndDate)} by ${bookable.userName}.`);
+    return;
   }
 }
 
@@ -83,4 +86,20 @@ function _changeButton(bookable: Bookable, message: string, color: string, disab
   submitbtn.style.backgroundColor = color;
   submitbtn.style.color = "black";
   submitbtn.disabled = disable;
+}
+
+function _createStatusLabel(bookable: Bookable): string {
+  if (bookable.isDisabled) {
+    return `${bookable.bookableCode} disabled till ${extractDateFromDateIsoString(bookable.disabledToDate)}`;
+  }
+
+  if (bookable.isBookedByLoggedUser) {
+    return `Edit ${bookable.bookableCode} booked by you`;
+  }
+
+  if (bookable.isBooked) {
+    return `${bookable.bookableCode} booked till ${extractDateFromDateIsoString(bookable.bookingEndDate)}`;
+  }
+
+  return `Book ${bookable.bookableCode}`;
 }
