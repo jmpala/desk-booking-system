@@ -32,8 +32,9 @@ const submitBtn = document.querySelector('#konva-submit');
 if (!submitBtn) {
     throw new Error(`Submit Button not found, please check your DOM, this component needs an id="${submitBtn}"`);
 }
-submitBtn.value = 'Please, select booking';
-submitBtn.style.color = getColorByState(bookingStates.UNAVAILABLE);
+submitBtn.innerHTML = 'Please, select booking';
+submitBtn.href = "javascript:void(0)";
+submitBtn.style.backgroundColor = getColorByState(bookingStates.UNAVAILABLE);
 submitBtn.disabled = true;
 
 export const appState = new AppState();

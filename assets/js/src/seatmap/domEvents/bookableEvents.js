@@ -39,7 +39,7 @@ export function handleBookableSelectionOnClickEvent(bookable: Bookable, app: App
         return _showAlert(bookable);
       }
 
-      _changeButton('Start new booking', getColorByState(bookingStates.AVAILABLE));
+      _changeButton(bookable, 'Start new booking', getColorByState(bookingStates.AVAILABLE));
       app.setSelectedBooking(bookable);
     }
   }]);
@@ -53,24 +53,33 @@ export function handleBookableSelectionOnClickEvent(bookable: Bookable, app: App
  */
 function _showAlert(bookable: Bookable): void {
   if (bookable.isDisabled) {
-    _changeButton('Can not be booked', getColorByState(bookingStates.UNAVAILABLE), true);
+    _changeButton(bookable, 'Can not be booked', getColorByState(bookingStates.UNAVAILABLE), true);
     return alert(`This <<bookable>> is disabled, from ${extractDateFromDateIsoString(bookable.disabledFromDate)} to ${extractDateFromDateIsoString(bookable.disabledToDate)}. The reason/s is/are: ${bookable.disabledNotes}, for more information please contact the administrator.`);
   }
 
   if (bookable.isBookedByLoggedUser) {
-    _changeButton('Modify booking', getColorByState(bookingStates.BOOKEDBYUSER), false);
+    _changeButton(bookable, 'Modify booking', getColorByState(bookingStates.BOOKEDBYUSER), false);
     return alert(`This <<bookable>> is already booked by you, from ${extractDateFromDateIsoString(bookable.bookingStartDate)} to ${extractDateFromDateIsoString(bookable.bookingEndDate)}.`);
   }
 
   if (bookable.isBooked) {
-    _changeButton('Already booked', getColorByState(bookingStates.BOOKED), true);
+    _changeButton(bookable, 'Already booked', getColorByState(bookingStates.BOOKED), true);
     return alert(`This <<bookable>> is already booked, from ${extractDateFromDateIsoString(bookable.bookingStartDate)} to ${extractDateFromDateIsoString(bookable.bookingEndDate)} by ${bookable.userName}.`);
   }
 }
 
-function _changeButton(message: string, color: string, disable: boolean): void {
+function _changeButton(bookable: Bookable, message: string, color: string, disable: boolean): void {
   const submitbtn = document.querySelector('#konva-submit');
-  submitbtn.value = message;
+  submitbtn.href = "javascript:void(0)";
+
+  if (bookable.isBookedByLoggedUser) {
+    submitbtn.href = "/booking/" + bookable.bookingId;
+  }
+  else if (!bookable.isBooked && !bookable.isDisabled) {
+    submitbtn.href = "/booking/new";
+  }
+
+  submitbtn.innerHTML = message;
   submitbtn.style.backgroundColor = color;
   submitbtn.style.color = "black";
   submitbtn.disabled = disable;
