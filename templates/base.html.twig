@@ -19,7 +19,7 @@
     </head>
     <body class="d-flex flex-column min-vh-100">
 
-        <nav class="navbar navbar-dark bg-dark navbar-expand-md sticky-top">
+        <nav class="navbar navbar-dark bg-dark navbar-expand-md">
             <div class="container justify-content-center">
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
                     <span class="navbar-toggler-icon"></span>
@@ -47,7 +47,9 @@
             </div>
         </nav>
 
-        {% block body %}{% endblock %}
+        <div class="container">
+            {% block body %}{% endblock %}
+        </div>
 
         <footer class="bg-dark text-light mt-auto">
             <div class="container">
