@@ -18,15 +18,6 @@ class BookingController extends AbstractController
     {
     }
 
-    // #[Route('/', name: 'app_booking', methods: ['GET'])]
-    public function index(): Response
-    {
-        return $this->render('booking/index.html.twig', [
-            'controller_name' => 'BookingController',
-        ]);
-    }
-
-
     #[Route('/booking/new', name: 'app_booking_retrieve_one', methods: ['GET'])]
     public function showNewBookingPage(Request $request): Response
     {
