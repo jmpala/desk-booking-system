@@ -72,4 +72,22 @@ class BookableRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+    public function checkAvailabilityByDate(int $id, \DateTime $from, \DateTime $to): array
+    {
+        return $this->createQueryBuilder('bk')
+            ->select('bk', 'c', 'ud', 'b')
+            ->leftJoin('bk.category', 'c')
+            ->leftJoin('bk.unavailableDates', 'ud')
+            ->leftJoin('bk.bookings', 'b')
+            ->where('bk.id = :id AND (
+                                                DATE(:from) BETWEEN DATE(ud.start_date) AND DATE(ud.end_date)
+                                                OR DATE(:to) BETWEEN DATE(ud.start_date) AND DATE(ud.end_date)
+                                                OR DATE(:from) BETWEEN DATE(b.start_date) AND DATE(b.end_date)
+                                                OR DATE(:to) BETWEEN DATE(b.start_date) AND DATE(b.end_date))')
+            ->setParameter('from', $from)
+            ->setParameter('to', $to)
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getResult();
+    }
 }

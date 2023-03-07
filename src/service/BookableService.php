@@ -23,4 +23,10 @@ class BookableService
     {
         return $this->bookableRepository->getAllBookableAndRelatedCategories();
     }
+
+
+    public function checkAvailabilityByDate(int $id, \DateTime $from, \DateTime $to): array
+    {
+        return $this->bookableRepository->checkAvailabilityByDate($id, $from, $to);
+    }
 }

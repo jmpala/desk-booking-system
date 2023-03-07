@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\service\BookableService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -19,6 +20,19 @@ class BookingAPIController extends AbstractController
     public function retrieveAllBookings(): Response
     {
         $res = $this->bookableService->getAllBookableAndRelatedCategories();
+        return $this->json($res, 200, [], [
+            'groups' => ['bookable:read']
+        ]);
+    }
+
+
+    #[Route('/api/booking/{id}/availability', name: 'app_booking_check_availability_by_date', methods: ['POST'])]
+    public function checkAvailabilityByDate(Request $request, int $id): Response
+    {
+        $data = json_decode($request->getContent(), true);
+        $from = new \DateTime($data['from']);
+        $to = new \DateTime($data['to']);
+        $res = $this->bookableService->checkAvailabilityByDate($id,$from, $to);
         return $this->json($res, 200, [], [
             'groups' => ['bookable:read']
         ]);
