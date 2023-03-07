@@ -33,6 +33,7 @@ Encore
     .addEntry('base', './assets/js/src/base/base.js')
     .addEntry('login', './assets/js/src/login/login.js')
     .addEntry('overview', './assets/js/src/overview/overview.js')
+    .addEntry('newBooking', './assets/js/src/booking/newBooking.js')
 
     .addEntry('sketch', './assets/js/src/sketch/script.js')
 

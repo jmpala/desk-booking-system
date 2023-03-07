@@ -4,24 +4,21 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Repository\BookableRepository;
-use App\Repository\BookingsRepository;
+use App\service\BookableService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\SerializerInterface;
 
 class BookingController extends AbstractController
 {
     public function __construct(
-        private SerializerInterface $serializer,
-        private BookingsRepository $bookingsRepository,
-        private BookableRepository $bookableRepository,
+        private BookableService $bookableService
     )
     {
     }
 
-    #[Route('/', name: 'app_booking', methods: ['GET'])]
+    // #[Route('/', name: 'app_booking', methods: ['GET'])]
     public function index(): Response
     {
         return $this->render('booking/index.html.twig', [
@@ -29,14 +26,30 @@ class BookingController extends AbstractController
         ]);
     }
 
-    #[Route('/api/booking', name: 'app_booking_retrieve_all', methods: ['GET'])]
-    public function retrieveAllBookings(): Response
+
+    #[Route('/booking/new', name: 'app_booking_retrieve_one', methods: ['GET'])]
+    public function showNewBookingPage(Request $request): Response
     {
-        $res = $this->bookableRepository->getAllBookableAndRelatedCategories();
-        return $this->json($res, 200, [], [
-            'groups' => ['bookable:read']
+        $bookableId = (int) $request->query->get('id');
+        $todaysDate = new \DateTime();
+
+        /* @var array<\App\Entity\Bookable> $allBookables */
+        $allBookables = $this->bookableService->getAllBookableAndRelatedCategories();
+
+        /* @var array<\App\Entity\Bookable> $selectedBookable */
+        $selectedBookable = array_filter($allBookables, fn ($b) => $b->getId() === $bookableId);
+
+        if (!empty($selectedBookable)) {
+            $selectedBookable = $selectedBookable[array_key_first($selectedBookable)];
+        } else {
+            $selectedBookable = $allBookables[array_key_first($allBookables)];
+        }
+
+        return $this->render('booking/new/createBooking.html.twig',[
+            'todaysDate' => $todaysDate,
+            'selectedBookable' => $selectedBookable,
+            'allBookables' => $allBookables
         ]);
     }
-
 
 }
