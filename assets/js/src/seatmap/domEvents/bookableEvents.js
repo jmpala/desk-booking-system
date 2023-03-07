@@ -4,6 +4,7 @@ import {Bookable} from "../app/model/bookables";
 import {AppState} from "../app/AppState";
 import {extractDateFromDateIsoString, getColorByState} from "../utils/utils";
 import {bookingStates} from "../app/enums";
+import {config} from "../config";
 
 
 /**
@@ -76,10 +77,10 @@ function _changeButton(bookable: Bookable, message: string, color: string, disab
   submitbtn.href = "javascript:void(0)";
 
   if (bookable.isBookedByLoggedUser) {
-    submitbtn.href = "/booking/" + bookable.bookingId;
+    submitbtn.href = config.urls.editBooking + bookable.bookingId;
   }
   else if (!bookable.isBooked && !bookable.isDisabled) {
-    submitbtn.href = "/booking/new";
+    submitbtn.href = config.urls.newBooking + bookable.bookableId;
   }
 
   submitbtn.innerHTML = message;
