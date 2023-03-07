@@ -36,7 +36,6 @@
   - Retrieve generated assets with Twig
   - Crash course yarn
 - Security + login
-
 - Fixtures & Foundry
 - Session
 
