@@ -26,6 +26,13 @@
     </div>
 
     <form class="form border border-primary bg-light rounded p-3" id="newBookingForm" action="" method="post">
+
+        <div class="error-display alert alert-danger" id="errorArea">
+            <ul class="m-0 p-0 px-2" id="errorList">
+
+            </ul>
+        </div>
+
         <div class="form-floating m-3">
             <select class="form-select" name="bookable" id="allBookables">
 
@@ -37,11 +44,11 @@
             <label for="allBookables">Available Bookables</label>
         </div>
         <div class="form-floating m-3">
-            <input class="form-control" type="date" id="fromDate" value="Y-m-d" min="{{ todaysDate | date('Y-m-d') }}">
+            <input class="form-control" type="date" id="fromDate" value="{{ todaysDate | date('Y-m-d') }}" min="{{ todaysDate | date('Y-m-d') }}">
             <label for="fromDate">From Date</label>
         </div>
         <div class="form-floating m-3">
-            <input class="form-control" type="date" id="toDate">
+            <input class="form-control" type="date" id="toDate" min="{{ todaysDate | date('Y-m-d') }}">
             <label for="toDate">To Date</label>
         </div>
         <div class="row justify-content-center m-3">

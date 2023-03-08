@@ -8,6 +8,7 @@ use App\Repository\UnavailableDatesRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: UnavailableDatesRepository::class)]
 class UnavailableDates
@@ -17,6 +18,7 @@ class UnavailableDates
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['bookable:read'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'unavailableDates')]
@@ -24,12 +26,15 @@ class UnavailableDates
     private ?Bookable $bookable = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Groups(['bookable:read'])]
     private ?\DateTimeInterface $start_date = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Groups(['bookable:read'])]
     private ?\DateTimeInterface $end_date = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Groups(['bookable:read'])]
     private ?string $notes = null;
 
     public function getId(): ?int

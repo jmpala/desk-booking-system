@@ -8,6 +8,7 @@ use App\Repository\BookingsRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: BookingsRepository::class)]
 class Bookings
@@ -17,6 +18,7 @@ class Bookings
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['bookable:read'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'bookings')]
@@ -31,9 +33,11 @@ class Bookings
     private ?string $confirmation = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Groups(['bookable:read'])]
     private ?\DateTimeInterface $start_date = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Groups(['bookable:read'])]
     private ?\DateTimeInterface $end_date = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]

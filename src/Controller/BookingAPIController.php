@@ -29,11 +29,19 @@ class BookingAPIController extends AbstractController
     #[Route('/api/booking/{id}/availability', name: 'app_booking_check_availability_by_date', methods: ['POST'])]
     public function checkAvailabilityByDate(Request $request, int $id): Response
     {
-        $data = json_decode($request->getContent(), true);
+        $data = json_decode(
+            $request->getContent(),
+            true,
+            512,
+            JSON_THROW_ON_ERROR
+        );
         $from = new \DateTime($data['from']);
         $to = new \DateTime($data['to']);
-        $res = $this->bookableService->checkAvailabilityByDate($id,$from, $to);
-        return $this->json($res, 200, [], [
+
+        // TODO: implement a DTO
+        $isAvailable = $this->bookableService->checkAvailabilityByDate($id,$from, $to);
+
+        return $this->json($isAvailable, 200, [], [
             'groups' => ['bookable:read']
         ]);
     }
