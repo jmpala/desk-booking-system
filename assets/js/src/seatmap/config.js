@@ -44,8 +44,8 @@ export const config = {
         }
     },
     urls: {
-        editBooking: "/booking/edit?id=",
-        newBooking: "/booking/new?id=",
+        editBooking: "/booking/edit",
+        newBooking: "/booking/new",
     },
     debug: {
         boundaries: {

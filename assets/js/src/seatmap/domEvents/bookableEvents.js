@@ -74,13 +74,16 @@ function _showAlert(bookable: Bookable): void {
 
 function _changeButton(bookable: Bookable, message: string, color: string, disable: boolean): void {
   const submitbtn = document.querySelector('#konva-submit');
+  const datePicker = document.getElementById('datePicker');
+
   submitbtn.href = "javascript:void(0)";
 
   if (bookable.isBookedByLoggedUser) {
-    submitbtn.href = config.urls.editBooking + bookable.bookingId;
+    submitbtn.href = config.urls.editBooking + "?id=";
   }
   else if (!bookable.isBooked && !bookable.isDisabled) {
-    submitbtn.href = config.urls.newBooking + bookable.bookableId;
+    submitbtn.href = config.urls.newBooking + "?id=" + bookable.bookableId;
+    submitbtn.href += datePicker.value ? `&date=${datePicker.value}` : "";
   }
 
   submitbtn.innerHTML = message;

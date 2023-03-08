@@ -22,7 +22,7 @@ class BookingController extends AbstractController
     public function showNewBookingPage(Request $request): Response
     {
         $bookableId = (int) $request->query->get('id');
-        $todaysDate = new \DateTime();
+        $todaysDate = new \DateTime($request->query->get('date')) ?? new \DateTime();
 
         /* @var array<\App\Entity\Bookable> $allBookables */
         $allBookables = $this->bookableService->getAllBookableAndRelatedCategories();
