@@ -72,21 +72,21 @@ class AppFixtures extends Fixture
             'code' => 'desk-02',
         ]);
 
-        BookableFactory::createOne([
+        $desk3 = BookableFactory::createOne([
             'pos_x' => 500 + $offsetX,
             'pos_y' => 100 + $offsetY,
             'category' => $entityDesk,
             'code' => 'desk-03',
         ]);
 
-        BookableFactory::createOne([
+        $desk4 = BookableFactory::createOne([
             'pos_x' => 100 + $offsetX,
             'pos_y' => 200 + $offsetY,
             'category' => $entityDesk,
             'code' => 'desk-04',
         ]);
 
-        BookableFactory::createOne([
+        $desk5 = BookableFactory::createOne([
             'pos_x' => 300 + $offsetX,
             'pos_y' => 200 + $offsetY,
             'category' => $entityDesk,
@@ -94,7 +94,7 @@ class AppFixtures extends Fixture
         ]);
 
         // Wahre Entwickler Tisch
-        BookableFactory::createOne([
+        $desk6 = BookableFactory::createOne([
             'pos_x' => 1000 + $offsetX,
             'pos_y' => 100 + $offsetY,
             'category' => $entityDesk,
@@ -155,6 +155,20 @@ class AppFixtures extends Fixture
 
         // START DISABLED BOOKABLES
         UnavailableDatesFactory::createOne([
+            'bookable' => $desk3,
+            'start_date' => (new \DateTime())->modify('-5 day'),
+            'end_date' => (new \DateTime())->modify('-1 day'),
+            'notes' => 'Broken table leg',
+        ]);
+
+        UnavailableDatesFactory::createOne([
+            'bookable' => $desk4,
+            'start_date' => (new \DateTime())->modify('-2 day'),
+            'end_date' => (new \DateTime())->modify('+2 day'),
+            'notes' => 'Waiting for parts',
+        ]);
+
+        UnavailableDatesFactory::createOne([
             'bookable' => $stand1,
             'start_date' => (new \DateTime())->modify('+1 day'),
             'end_date' => (new \DateTime())->modify('+1 day'),
@@ -171,6 +185,21 @@ class AppFixtures extends Fixture
 
 
         // START BOOKING
+
+        BookingsFactory::createOne([
+            'bookable' => $desk5,
+            'user' => $user1,
+            'start_date' => (new \DateTime())->modify('-1 day'),
+            'end_date' => (new \DateTime())->modify('+1 day'),
+        ]);
+
+        BookingsFactory::createOne([
+            'bookable' => $desk6,
+            'user' => $user1,
+            'start_date' => (new \DateTime())->modify('-5 day'),
+            'end_date' => (new \DateTime())->modify('-1 day'),
+        ]);
+
         BookingsFactory::createOne([
             'bookable' => $desk1,
             'user' => $user1,
