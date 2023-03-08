@@ -16,17 +16,7 @@ import {getSeatmapStausByDate} from "./app/rest/getSeatmapStausByDate";
 import type {getSeatmapStausByDateResponse} from "./app/rest/getSeatmapStausByDate";
 
 
-// Setting up the date picker
-const datePickerDomId = 'datePicker';
-const datePicker = document.getElementById(datePickerDomId);
-if (!datePicker) {
-    throw new Error(`Date picker not found, please check your DOM, this component needs an id="${datePickerDomId}"`);
-}
-datePicker.value = new Date().toISOString().split('T')[0];
-datePicker.addEventListener('change', async e => {
-    e.stopPropagation();
-    updateSeatmap(new Date(e.target.value).toISOString());
-});
+export const appState = new AppState();
 
 const submitBtn = document.querySelector('#konva-submit');
 if (!submitBtn) {
@@ -37,7 +27,34 @@ submitBtn.href = "javascript:void(0)";
 submitBtn.style.backgroundColor = getColorByState(bookingStates.UNAVAILABLE);
 submitBtn.disabled = true;
 
-export const appState = new AppState();
+// Setting up the date picker
+const datePickerDomId = 'datePicker';
+const datePicker = document.getElementById(datePickerDomId);
+if (!datePicker) {
+    throw new Error(`Date picker not found, please check your DOM, this component needs an id="${datePickerDomId}"`);
+}
+datePicker.value = new Date().toISOString().split('T')[0];
+datePicker.addEventListener('change', async e => {
+    e.stopPropagation();
+    const selectedDate = new Date(e.target.value);
+    const today = (new Date()).toISOString().split('T')[0];
+
+    if (selectedDate < new Date(today)) {
+        submitBtn.href = "javascript:void(0)";
+        submitBtn.innerHTML = "Watching Past Bookings";
+        submitBtn.style.backgroundColor = getColorByState(bookingStates.UNAVAILABLE);
+        submitBtn.style.color = "black";
+        appState.isReadonly = true;
+    } else {
+        submitBtn.innerHTML = 'Please, select booking';
+        submitBtn.href = "javascript:void(0)";
+        submitBtn.style.backgroundColor = getColorByState(bookingStates.UNAVAILABLE);
+        submitBtn.disabled = true;
+        appState.isReadonly = false;
+    }
+
+    updateSeatmap(selectedDate.toISOString());
+});
 
 const parentContainer = document.querySelector(config.domElement).getBoundingClientRect();
 if (!parentContainer) {

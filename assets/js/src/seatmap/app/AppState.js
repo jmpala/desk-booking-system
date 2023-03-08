@@ -15,6 +15,8 @@ export class AppState {
 
   _bookings: Array<Bookable> = [];
 
+  isReadonly: boolean = false;
+
   AppState(date: Date) {
     this._selectedDate = date;
   }

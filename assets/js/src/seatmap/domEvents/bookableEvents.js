@@ -28,6 +28,7 @@ export function showBookableDebugInformationOnClickEvent(bookable: Bookable): vo
  *
  * @param bookable
  * @param app
+ * @param blockSelection
  */
 export function handleBookableSelectionOnClickEvent(bookable: Bookable, app: AppState): void {
   bookable.setEventListeners([{
@@ -37,10 +38,10 @@ export function handleBookableSelectionOnClickEvent(bookable: Bookable, app: App
 
       if (bookable.isDisabled || bookable.isBooked || bookable.isBookedByLoggedUser) {
         app.setSelectedBooking(null);
-        return _showAlert(bookable);
+        return _showAlert(bookable, app.isReadonly);
       }
 
-      _changeButton(bookable, _createStatusLabel(bookable), getColorByState(bookingStates.AVAILABLE));
+      _changeButton(bookable, _createStatusLabel(bookable), getColorByState(bookingStates.AVAILABLE), false, app.isReadonly);
       app.setSelectedBooking(bookable);
     }
   }]);
@@ -50,29 +51,27 @@ export function handleBookableSelectionOnClickEvent(bookable: Bookable, app: App
  * Show an alert with the information of the bookable
  *
  * @param bookable
+ * @param isreadOnly
  * @private
  */
-function _showAlert(bookable: Bookable): void {
+function _showAlert(bookable: Bookable, isreadOnly: boolean): void {
   if (bookable.isDisabled) {
-    _changeButton(bookable, _createStatusLabel(bookable), getColorByState(bookingStates.UNAVAILABLE), true);
-    // return alert(`This <<bookable>> is disabled, from ${extractDateFromDateIsoString(bookable.disabledFromDate)} to ${extractDateFromDateIsoString(bookable.disabledToDate)}. The reason/s is/are: ${bookable.disabledNotes}, for more information please contact the administrator.`);
+    _changeButton(bookable, _createStatusLabel(bookable), getColorByState(bookingStates.UNAVAILABLE), true, isreadOnly);
     return;
   }
 
   if (bookable.isBookedByLoggedUser) {
-    _changeButton(bookable, _createStatusLabel(bookable), getColorByState(bookingStates.BOOKEDBYUSER), false);
-    // return alert(`This <<bookable>> is already booked by you, from ${extractDateFromDateIsoString(bookable.bookingStartDate)} to ${extractDateFromDateIsoString(bookable.bookingEndDate)}.`);
+    _changeButton(bookable, _createStatusLabel(bookable), getColorByState(bookingStates.BOOKEDBYUSER), false, isreadOnly);
     return;
   }
 
   if (bookable.isBooked) {
-    _changeButton(bookable, _createStatusLabel(bookable), getColorByState(bookingStates.BOOKED), true);
-    // return alert(`This <<bookable>> is already booked, from ${extractDateFromDateIsoString(bookable.bookingStartDate)} to ${extractDateFromDateIsoString(bookable.bookingEndDate)} by ${bookable.userName}.`);
+    _changeButton(bookable, _createStatusLabel(bookable), getColorByState(bookingStates.BOOKED), true, isreadOnly);
     return;
-  }
+  }4
 }
 
-function _changeButton(bookable: Bookable, message: string, color: string, disable: boolean): void {
+function _changeButton(bookable: Bookable, message: string, color: string, disable: boolean, isReadOnly: boolean): void {
   const submitbtn = document.querySelector('#konva-submit');
   const datePicker = document.getElementById('datePicker');
 
@@ -84,6 +83,15 @@ function _changeButton(bookable: Bookable, message: string, color: string, disab
   else if (!bookable.isBooked && !bookable.isDisabled) {
     submitbtn.href = config.urls.newBooking + "?id=" + bookable.bookableId;
     submitbtn.href += datePicker.value ? `&date=${datePicker.value}` : "";
+  }
+
+  if (isReadOnly) {
+    submitbtn.href = "javascript:void(0)";
+    submitbtn.innerHTML = "Watching Past Bookings";
+    submitbtn.style.backgroundColor = getColorByState(bookingStates.UNAVAILABLE);
+    submitbtn.style.color = "black";
+    submitbtn.disabled = isReadOnly;
+    return;
   }
 
   submitbtn.innerHTML = message;
