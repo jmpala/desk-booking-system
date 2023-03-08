@@ -39,39 +39,22 @@ class UnavailableDatesRepository extends ServiceEntityRepository
         }
     }
 
+    /**
+     * Retrives all unavailale date that overlap the given date
+     *
+     * @param \DateTime $date
+     *
+     * @return array
+     */
     public function getUnavailableDatesByDate(\DateTime $date): array
     {
         return  $this->createQueryBuilder('u')
             ->select('u', 'bk')
             ->leftJoin('u.bookable', 'bk')
-            ->where('DATE(u.start_date) = DATE(:date) AND DATE(u.end_date) = DATE(:date)')
+            ->where('DATE(:date) BETWEEN DATE(u.start_date) AND DATE(u.end_date)')
             ->setParameter('date', $date)
             ->getQuery()
             ->getResult();
     }
 
-//    /**
-//     * @return UnavailableDates[] Returns an array of UnavailableDates objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('u')
-//            ->andWhere('u.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('u.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
-
-//    public function findOneBySomeField($value): ?UnavailableDates
-//    {
-//        return $this->createQueryBuilder('u')
-//            ->andWhere('u.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
 }

@@ -40,38 +40,21 @@ class BookingsRepository extends ServiceEntityRepository
         }
     }
 
+    /**
+     * Retrieves all bookings that overlap the given date
+     *
+     * @param \DateTime $date
+     *
+     * @return array
+     */
     public function getBookingsWithBookable(DateTime $date): array {
         return $this->createQueryBuilder('b')
             ->select('b', 'bk')
             ->leftJoin('b.bookable', 'bk')
-            ->where('DATE(b.start_date) = DATE(:date) AND DATE(b.end_date) = DATE(:date)')
+            ->where('DATE(:date) BETWEEN DATE(b.start_date)  AND DATE(b.end_date)')
             ->setParameter('date', $date->format('Y-m-d'))
             ->getQuery()
             ->getResult();
     }
 
-//    /**
-//     * @return Bookings[] Returns an array of Bookings objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('b')
-//            ->andWhere('b.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('b.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
-
-//    public function findOneBySomeField($value): ?Bookings
-//    {
-//        return $this->createQueryBuilder('b')
-//            ->andWhere('b.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
 }
