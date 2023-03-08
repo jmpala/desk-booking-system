@@ -43,7 +43,7 @@ let selectedUnavailablePeriods: period[] = [];
 
 
 fromDateDOMElement.addEventListener("change", limitMinimunToDate);
-bookingFrom.addEventListener("change", validateButtonSate);
+bookingFrom.addEventListener("change", checkFormSate);
 submitBtn.addEventListener('click', checkAvailabilityBeforeSubmit);
 
 /**
@@ -62,7 +62,7 @@ function limitMinimunToDate(): void {
 /**
  * Submit button is only enabled if both dates are set
  */
-function validateButtonSate(e: Event): void {
+function checkFormSate(e: Event): void {
 
   if (e.target !== availableBookables
     && e.target !== fromDateDOMElement
@@ -75,9 +75,11 @@ function validateButtonSate(e: Event): void {
   if (checkIfSelectedDatesAreValid()
     || e.target === availableBookables) {
     clearErrorMessages();
+    clearInputErrors();
     selectedUnavailablePeriods = [];
     submitBtn.disabled = false;
   } else {
+    showErrorsOnInputsIfAny();
     submitBtn.disabled = true;
   }
 }
@@ -100,6 +102,8 @@ async function checkAvailabilityBeforeSubmit(e: Event): void {
 
   showBookingsOrUnavailableDates(isAvailable);
   setUnavailablePeriods(isAvailable);
+
+  showErrorsOnInputsIfAny();
 }
 
 
@@ -228,4 +232,43 @@ function checkIfSelectedDatesAreValid(): boolean {
  */
 function checkIfPeriodsOverlap(period1: period, period2: period): boolean {
   return period1.from <= period2.to && period1.to >= period2.from;
+}
+
+
+/**
+ * Shows the users which input-date is overlapping with an unavailable period (invalid)
+ */
+function showErrorsOnInputsIfAny() {
+  const startDate: period = {
+    from: new Date(fromDateDOMElement.value),
+    to: new Date(fromDateDOMElement.value),
+  };
+  const isStartDateOverlapping: boolean = selectedUnavailablePeriods.reduce((acc, period) => {
+    return acc || checkIfPeriodsOverlap(startDate, period);
+  }, false);
+
+  if (isStartDateOverlapping) {
+    fromDateDOMElement.classList.add('is-invalid');
+  }
+
+  const endDate: period = {
+    from: new Date(toDateDOMElement.value),
+    to: new Date(toDateDOMElement.value),
+  };
+  const isEndDateOverlapping: boolean = selectedUnavailablePeriods.reduce((acc, period) => {
+    return acc || checkIfPeriodsOverlap(endDate, period);
+  }, false);
+
+  if (isEndDateOverlapping) {
+    toDateDOMElement.classList.add('is-invalid');
+  }
+}
+
+
+/**
+ * Clears the errors applied to the input-date elements
+ */
+function clearInputErrors() {
+  fromDateDOMElement.classList.remove('is-invalid');
+  toDateDOMElement.classList.remove('is-invalid');
 }
