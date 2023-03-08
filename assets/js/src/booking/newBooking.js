@@ -22,6 +22,12 @@ type isAvailableAPIData = {
 }
 
 
+type period = {
+  from: Date,
+  to: Date,
+}
+
+
 const dateDisplayFormat = 'en-GB';
 
 
@@ -33,12 +39,12 @@ const submitBtn: HTMLElement = document.getElementById("submitBtn");
 const errorArea: HTMLElement = document.getElementById("errorArea");
 const errorList: HTMLElement = document.getElementById("errorList");
 
+let selectedUnavailablePeriods: period[] = [];
+
 
 fromDateDOMElement.addEventListener("change", limitMinimunToDate);
-fromDateDOMElement.addEventListener("change", validateButtonSate);
-toDateDOMElement.addEventListener("change", validateButtonSate);
+bookingFrom.addEventListener("change", validateButtonSate);
 submitBtn.addEventListener('click', checkAvailabilityBeforeSubmit);
-
 
 /**
  * Limits the minimum date of "To Date" not to be before "From Date"
@@ -56,9 +62,20 @@ function limitMinimunToDate(): void {
 /**
  * Submit button is only enabled if both dates are set
  */
-function validateButtonSate(): void {
-  if (fromDateDOMElement.value && toDateDOMElement.value) {
+function validateButtonSate(e: Event): void {
+
+  if (e.target !== availableBookables
+    && e.target !== fromDateDOMElement
+    && e.target !== toDateDOMElement) {
+    return;
+  }
+
+  e.stopPropagation();
+
+  if (checkIfSelectedDatesAreValid()
+    || e.target === availableBookables) {
     clearErrorMessages();
+    selectedUnavailablePeriods = [];
     submitBtn.disabled = false;
   } else {
     submitBtn.disabled = true;
@@ -71,17 +88,18 @@ function validateButtonSate(): void {
  */
 async function checkAvailabilityBeforeSubmit(e: Event): void {
   e.preventDefault();
-  const id = availableBookables.value;
-  const fromDate: Date = new Date(fromDateDOMElement.value);
-  const toDate: Date = new Date(toDateDOMElement.value);
+  const id: number = availableBookables.value;
+  const from: Date = new Date(fromDateDOMElement.value);
+  const to: Date = new Date(toDateDOMElement.value);
 
-  const isAvailable: isAvailableAPIData = await isBookableAvailabilityBySelectedDatesRESTCall(id, fromDate, toDate);
+  const isAvailable: isAvailableAPIData = await isBookableAvailabilityBySelectedDatesRESTCall(id, from, to);
 
   if (isAvailable['isAvailable']) {
     return bookingFrom.submit();
   }
 
   showBookingsOrUnavailableDates(isAvailable);
+  setUnavailablePeriods(isAvailable);
 }
 
 
@@ -129,6 +147,30 @@ function showBookingsOrUnavailableDates(isAvailable: isAvailableAPIData): void {
 
 
 /**
+ * Resets and keeps track of the selected bookable unavailable periods
+ *
+ * @param isAvailable
+ */
+function setUnavailablePeriods(isAvailable: isAvailableAPIData): void {
+  selectedUnavailablePeriods = [];
+
+  isAvailable.unavailableDates.forEach(unavailableDate => {
+    selectedUnavailablePeriods.push({
+      from: new Date(unavailableDate.from),
+      to: new Date(unavailableDate.to),
+    });
+  });
+
+  isAvailable.bookings.forEach(booking => {
+    selectedUnavailablePeriods.push({
+      from: new Date(booking.from),
+      to: new Date(booking.to),
+    });
+  });
+}
+
+
+/**
  * Clears the error messages setted by showBookingsOrUnavailableDates()
  */
 function clearErrorMessages(): void {
@@ -146,4 +188,44 @@ function clearErrorMessages(): void {
  */
 function sanitizeDisplayDate(date: string): string {
   return new Date(date).toLocaleDateString(dateDisplayFormat);
+}
+
+
+/**
+ * Checks if the selected dates are not empty and if they are not overlapping
+ * with any unavailable periods returned by the API
+ *
+ * @returns {boolean}
+ */
+function checkIfSelectedDatesAreValid(): boolean {
+  const isEmpty: boolean = fromDateDOMElement.value === '' || toDateDOMElement.value === '';
+  if (isEmpty) {
+    return false;
+  }
+
+  const selectedPeriod: period = {
+    from: new Date(fromDateDOMElement.value),
+    to: new Date(toDateDOMElement.value),
+  };
+
+  const isUnavailable: boolean = selectedUnavailablePeriods.reduce((acc, period) => {
+    return acc || checkIfPeriodsOverlap(selectedPeriod, period);
+  }, false);
+  if (isUnavailable) {
+    return false;
+  }
+
+  return true;
+}
+
+
+/**
+ * Checks if two periods are overlapping
+ *
+ * @param period1
+ * @param period2
+ * @returns {boolean}
+ */
+function checkIfPeriodsOverlap(period1: period, period2: period): boolean {
+  return period1.from <= period2.to && period1.to >= period2.from;
 }
