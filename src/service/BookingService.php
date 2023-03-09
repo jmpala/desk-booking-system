@@ -8,6 +8,7 @@ namespace App\service;
 use App\dto\BookableInformationDTO;
 use App\dto\SeatmapStatusDTO;
 use App\Entity\Bookings;
+use App\Exception\BookingOverlapException;
 use App\Repository\BookableRepository;
 use App\Repository\BookingsRepository;
 use App\Repository\UnavailableDatesRepository;
@@ -87,6 +88,10 @@ class BookingService
     /**
      * Creates a new bookings for the given bookable and date-range
      *
+     * To prevent errors when booking the same bookable with similar dates at
+     * the same time, @function isBookableAlreadyBookedByDateRange is called.
+     * In case duplicates are found, @throws \App\Exception\BookingOverlapException
+     *
      * @param int       $bookableId
      * @param \DateTime $fromDate
      * @param \DateTime $toDate
@@ -99,6 +104,11 @@ class BookingService
         \DateTime $fromDate,
         \DateTime $toDate
     ): Bookings {
+
+        if ($this->isBookableAlreadyBookedByDateRange($bookableId, $fromDate, $toDate)) {
+            throw new BookingOverlapException('The bookable is already booked for the given date range');
+        }
+
         $bookable = $this->bookableRepository->find($bookableId);
         $user = $this->security->getUser();
 
@@ -112,5 +122,20 @@ class BookingService
         $this->bookingRepository->save($newBooking, true);
 
         return $newBooking;
+    }
+
+    /**
+     * Checks if the given bookable is already booked by the given date range
+     *
+     * @param int       $bookableId
+     * @param \DateTime $from
+     * @param \DateTime $to
+     *
+     * @return bool
+     */
+    public function isBookableAlreadyBookedByDateRange(int $bookableId, \DateTime $from, \DateTime $to): bool
+    {
+        $bookings = $this->bookingRepository->getAllBookingsByBookableIdAndDateRange($bookableId, $from, $to);
+        return !empty($bookings);
     }
 }

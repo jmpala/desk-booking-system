@@ -27,9 +27,11 @@
 
     <form class="form border border-primary bg-light rounded p-3" id="newBookingForm" action="{{ path('app_booking_new_confirm') }}" method="post">
 
-        <div class="error-display alert alert-danger" id="errorArea">
+        <div class="{{ errors is empty ? 'error-display' : 'error-display__show' }} alert alert-danger" id="errorArea">
             <ul class="m-0 p-0 px-2" id="errorList">
-
+                {% for error in errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
             </ul>
         </div>
 

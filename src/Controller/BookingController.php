@@ -24,7 +24,9 @@ class BookingController extends AbstractController
     public function showNewBookingPage(Request $request): Response
     {
         $bookableId = (int) $request->query->get('id');
-        $todaysDate = new \DateTime($request->query->get('date')) ?? new \DateTime();
+        $todaysDate = $request->query->get('date') ?
+            new \DateTime($request->query->get('date')) :
+            new \DateTime();
 
         /* @var array<\App\Entity\Bookable> $allBookables */
         $allBookables = $this->bookableService->getAllBookableAndRelatedCategories();
@@ -38,10 +40,13 @@ class BookingController extends AbstractController
             $selectedBookable = $allBookables[array_key_first($allBookables)];
         }
 
+        $errors = $request->getSession()->getFlashBag()->get('error');
+
         return $this->render('booking/new/createBooking.html.twig',[
             'todaysDate' => $todaysDate,
             'selectedBookable' => $selectedBookable,
-            'allBookables' => $allBookables
+            'allBookables' => $allBookables,
+            'errors' => $errors
         ]);
     }
 
