@@ -46,6 +46,7 @@ export const config = {
     urls: {
         editBooking: "/booking/edit",
         newBooking: "/booking/new",
+        officeOverview: "/api/booking/overview/",
     },
     debug: {
         boundaries: {

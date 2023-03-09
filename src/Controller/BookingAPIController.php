@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\service\BookableService;
+use App\service\BookingService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,9 +13,20 @@ class BookingAPIController extends AbstractController
 {
     public function __construct(
         private BookableService $bookableService,
+        private BookingService $bookingService,
     )
     {
     }
+
+    #[Route('/api/booking/overview/{date}', name: 'app_booking_retrieve_seatstatus_by_date', methods: ['GET'])]
+    public function retrieveSeatStatusByDate(\DateTime $date): Response {
+        return $this->json(
+            $this->bookingService->retrieveSeatStatusByDate($date),
+            200,
+            [],
+            ['groups' => 'seatmapStatusDTO:read']);
+    }
+
 
     #[Route('/api/booking', name: 'app_booking_retrieve_all', methods: ['GET'])]
     public function retrieveAllBookings(): Response

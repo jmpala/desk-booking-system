@@ -30,7 +30,7 @@ class BookingService
      * @return array
      * @throws \Exception
      */
-    public function retrieveSeatsStatusPerDate(\DateTime $date): SeatmapStatusDTO
+    public function retrieveSeatStatusByDate(\DateTime $date): SeatmapStatusDTO
     {
         /** @var Array<\App\Entity\Bookable> $bookables */
         $bookables = $this->bookableRepository->getAllBookableAndRelatedCategories();

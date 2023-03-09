@@ -7,6 +7,7 @@ import {getColorByState} from "../../utils/utils";
 import {bookingStates} from "../enums";
 import {Group} from "konva/lib/Group";
 import {createBookableInformationLabels} from "../../components/ui/bookableInformatioLabelsFactory";
+import {config} from "../../config";
 
 
 /**
@@ -16,7 +17,7 @@ import {createBookableInformationLabels} from "../../components/ui/bookableInfor
  * @returns {Promise<getSeatmapStausByDateResponse>}
  */
 export async function getSeatmapStausByDate(date: Date): getSeatmapStausByDateResponse {
-  const res = await fetch(`/sketch/${date}`);
+  const res = await fetch(config.urls.officeOverview + date);
   const json = await res.json();
   return _jsonToArrayOfBookables(json);
 }
