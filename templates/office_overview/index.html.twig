@@ -13,7 +13,11 @@
 {% block body %}
     <h1 class="mt-3 mb-2 text-center">Office Overview</h1>
     <div class="container">
-        <input id="datePicker" type="date">
+        <div class="d-flex">
+            <button class="btn btn-outline-primary" id="moveBack"><i class="bi bi-chevron-double-left"></i></button>
+            <input id="datePicker" type="date" value="{{ today | date('d-m-y') }}">
+            <button class="btn btn-outline-primary" id="moveForward"><i class="bi bi-chevron-double-right"></i></button>
+        </div>
         <div id="konva-container" style="border: 1px solid black"></div>
         <div class="row mt-2 mb-3 justify-content-center">
             <a type="button" id="konva-submit" class="col-4 btn btn-lg btn-primary text-black" value=""></a>
