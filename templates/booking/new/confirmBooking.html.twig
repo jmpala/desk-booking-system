@@ -3,7 +3,7 @@
 {% block title %}Confirm Booking{% endblock %}
 
 {% block body %}
-    <h1 class="mt-4 mb-3 text-center">Confirm Booking</h1>
+    <h1 class="mt-4 mb-3 text-center">New Booking</h1>
 
     <div class="row">
         <nav class="my-4 col-12 d-flex justify-content-around" aria-label="breadcrumb">
@@ -17,19 +17,22 @@
         </nav>
     </div>
 
-    <form class="form border border-primary bg-light rounded p-3" action="" method="post">
+    <form class="form border border-primary bg-light rounded p-3" action="{{ path('app_booking_process_and_show_confirmation') }}" method="post">
         <div class="form-floating m-3">
-            <select class="form-select" name="bookable" id="allBookables" disabled>
+            <select class="form-select" id="allBookables" disabled>
                 <option value="{{ bookable.id }}"> {{ bookable.code }}</option>
             </select>
+            <input type="hidden" value="{{ bookable.id }}" name="bookable" />
             <label for="allBookables">Available Bookables</label>
         </div>
         <div class="form-floating m-3">
-            <input class="form-control" type="date" name="fromDate" id="fromDate" value="{{ fromDate | date('Y-m-d') }}" min="{{ fromDate | date('Y-m-d') }}" disabled>
+            <input class="form-control" type="date" id="fromDate" value="{{ fromDate | date('Y-m-d') }}" disabled>
+            <input type="hidden" value="{{ fromDate | date('Y-m-d') }}" name="fromDate" />
             <label for="fromDate">From Date</label>
         </div>
         <div class="form-floating m-3">
-            <input class="form-control" type="date" name="toDate" id="toDate" value="{{ toDate | date('Y-m-d') }}" min="{{ toDate | date('Y-m-d') }}" disabled>
+            <input class="form-control" type="date" name="toDate" id="toDate" value="{{ toDate | date('Y-m-d') }}" disabled>
+            <input type="hidden" value="{{ toDate | date('Y-m-d') }}" name="toDate" />
             <label for="toDate">To Date</label>
         </div>
         <div class="row justify-content-center m-3">

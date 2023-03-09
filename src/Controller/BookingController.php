@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\service\BookableService;
+use App\service\BookingService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,6 +15,7 @@ class BookingController extends AbstractController
 {
     public function __construct(
         private BookableService $bookableService,
+        private BookingService $bookingService
     )
     {
     }
@@ -55,6 +57,20 @@ class BookingController extends AbstractController
             'bookable' => $bookable,
             'fromDate' => $fromDate,
             'toDate' => $toDate
+        ]);
+    }
+
+    #[Route('/booking/new/confirmation', name: 'app_booking_process_and_show_confirmation', methods: ['POST'])]
+    public function processNewBookingAndShowConfirmation(Request $request): Response
+    {
+        $bookableId = (int) $request->request->get('bookable');
+        $fromDate = new \DateTime($request->request->get('fromDate'));
+        $toDate = new \DateTime($request->request->get('toDate'));
+
+        $createdBooking = $this->bookingService->createNewBooking($bookableId, $fromDate, $toDate);
+
+        return $this->render('booking/new/createdBooking.html.twig', [
+            'booking' => $createdBooking
         ]);
     }
 }

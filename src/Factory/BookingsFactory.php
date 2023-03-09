@@ -47,7 +47,6 @@ final class BookingsFactory extends ModelFactory
     protected function getDefaults(): array
     {
         return [
-            'booked_at' => new \DateTime(),
             'confirmation' => self::faker()->text(255),
             'start_date' => new \DateTime(),
             'end_date' => new \DateTime(),

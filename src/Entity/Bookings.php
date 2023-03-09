@@ -40,9 +40,6 @@ class Bookings
     #[Groups(['bookable:read'])]
     private ?\DateTimeInterface $end_date = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $booked_at = null;
-
     public function getId(): ?int
     {
         return $this->id;
@@ -104,18 +101,6 @@ class Bookings
     public function setEndDate(\DateTimeInterface $end_date): self
     {
         $this->end_date = $end_date;
-
-        return $this;
-    }
-
-    public function getBookedAt(): ?\DateTimeInterface
-    {
-        return $this->booked_at;
-    }
-
-    public function setBookedAt(\DateTimeInterface $booked_at): self
-    {
-        $this->booked_at = $booked_at;
 
         return $this;
     }

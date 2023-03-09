@@ -7,6 +7,7 @@ namespace App\service;
 
 use App\dto\BookableInformationDTO;
 use App\dto\SeatmapStatusDTO;
+use App\Entity\Bookings;
 use App\Repository\BookableRepository;
 use App\Repository\BookingsRepository;
 use App\Repository\UnavailableDatesRepository;
@@ -18,7 +19,7 @@ class BookingService
         private Security $security,
         private BookableRepository $bookableRepository,
         private BookingsRepository $bookingRepository,
-        private UnavailableDatesRepository $unavailableDatesRepository,
+        private UnavailableDatesRepository $unavailableDatesRepository
     )
     {
     }
@@ -27,7 +28,7 @@ class BookingService
      * Returns the status of all seats for a given date
      *
      * @param \DateTime $date
-     * @return array
+     * @return SeatmapStatusDTO
      * @throws \Exception
      */
     public function retrieveSeatStatusByDate(\DateTime $date): SeatmapStatusDTO
@@ -83,4 +84,33 @@ class BookingService
         return $seatmapStatusDTO;
     }
 
+    /**
+     * Creates a new bookings for the given bookable and date-range
+     *
+     * @param int       $bookableId
+     * @param \DateTime $fromDate
+     * @param \DateTime $toDate
+     *
+     * @return \App\Entity\Bookings
+     * @throws \Exception
+     */
+    public function createNewBooking(
+        int $bookableId,
+        \DateTime $fromDate,
+        \DateTime $toDate
+    ): Bookings {
+        $bookable = $this->bookableRepository->find($bookableId);
+        $user = $this->security->getUser();
+
+        $newBooking = new Bookings();
+        $newBooking->setBookable($bookable);
+        $newBooking->setStartDate($fromDate);
+        $newBooking->setEndDate($toDate);
+        $newBooking->setUser($user);
+        $newBooking->setConfirmation(bin2hex(random_bytes(4)));
+
+        $this->bookingRepository->save($newBooking, true);
+
+        return $newBooking;
+    }
 }
