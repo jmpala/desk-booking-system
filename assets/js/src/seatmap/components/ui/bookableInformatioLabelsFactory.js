@@ -73,9 +73,19 @@ function _createLabelsForBookedByLoggedUser(bookable: Bookable): Group {
     listening: false,
   });
 
-  const bookedByLabel = new Text({
+  const confirmationLabel = new Text({
     x: bookable.shape.x() + padding,
     y: bookable.shape.y() + padding + fontSize,
+    width: bookable.shape.width(),
+    text: 'Confirmation: ' + bookable.bookingConfirmationCode,
+    fontSize,
+    fontFamily,
+    listening: false,
+  });
+
+  const bookedByLabel = new Text({
+    x: bookable.shape.x() + padding,
+    y: bookable.shape.y() + padding + fontSize * 2,
     width: bookable.shape.width(),
     text: 'Booked by: ' + bookable.userName,
     fontSize,
@@ -85,7 +95,7 @@ function _createLabelsForBookedByLoggedUser(bookable: Bookable): Group {
 
   const bookStartLabel = new Text({
     x: bookable.shape.x() + padding,
-    y: bookable.shape.y() + padding + fontSize * 2,
+    y: bookable.shape.y() + padding + fontSize * 3,
     width: bookable.shape.width(),
     text: 'From: ' + extractDateFromDateIsoString(bookable.bookingStartDate),
     fontSize,
@@ -95,7 +105,7 @@ function _createLabelsForBookedByLoggedUser(bookable: Bookable): Group {
 
   const bookEndLabel = new Text({
     x: bookable.shape.x() + padding,
-    y: bookable.shape.y() + padding + fontSize * 3,
+    y: bookable.shape.y() + padding + fontSize * 4,
     width: bookable.shape.width(),
     text: 'To: ' + extractDateFromDateIsoString(bookable.bookingEndDate),
     fontSize,
@@ -104,6 +114,7 @@ function _createLabelsForBookedByLoggedUser(bookable: Bookable): Group {
   });
 
   container.add(deskNameLabel);
+  container.add(confirmationLabel);
   container.add(bookedByLabel);
   container.add(bookStartLabel);
   container.add(bookEndLabel);
@@ -124,9 +135,19 @@ function _createLabelsForBookedBookable(bookable: Bookable): Group {
     listening: false,
   });
 
-  const bookedByLabel = new Text({
+  const confirmationLabel = new Text({
     x: bookable.shape.x() + padding,
     y: bookable.shape.y() + padding + fontSize,
+    width: bookable.shape.width(),
+    text: 'Confirmation: ' + bookable.bookingConfirmationCode,
+    fontSize,
+    fontFamily,
+    listening: false,
+  });
+
+  const bookedByLabel = new Text({
+    x: bookable.shape.x() + padding,
+    y: bookable.shape.y() + padding + fontSize * 2,
     width: bookable.shape.width(),
     text: 'Booked by: ' + bookable.userName,
     fontSize,
@@ -136,7 +157,7 @@ function _createLabelsForBookedBookable(bookable: Bookable): Group {
 
   const bookStartLabel = new Text({
     x: bookable.shape.x() + padding,
-    y: bookable.shape.y() + padding + fontSize * 2,
+    y: bookable.shape.y() + padding + fontSize * 3,
     width: bookable.shape.width(),
     text: 'From: ' + extractDateFromDateIsoString(bookable.bookingStartDate),
     fontSize,
@@ -146,7 +167,7 @@ function _createLabelsForBookedBookable(bookable: Bookable): Group {
 
   const bookEndLabel = new Text({
     x: bookable.shape.x() + padding,
-    y: bookable.shape.y() + padding + fontSize * 3,
+    y: bookable.shape.y() + padding + fontSize * 4,
     width: bookable.shape.width(),
     text: 'To: ' + extractDateFromDateIsoString(bookable.bookingEndDate),
     fontSize,
@@ -155,6 +176,7 @@ function _createLabelsForBookedBookable(bookable: Bookable): Group {
   });
 
   container.add(deskNameLabel);
+  container.add(confirmationLabel);
   container.add(bookedByLabel);
   container.add(bookStartLabel);
   container.add(bookEndLabel);

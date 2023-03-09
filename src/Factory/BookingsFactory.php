@@ -47,7 +47,7 @@ final class BookingsFactory extends ModelFactory
     protected function getDefaults(): array
     {
         return [
-            'confirmation' => self::faker()->text(255),
+            'confirmation' => bin2hex(random_bytes(4)),
             'start_date' => new \DateTime(),
             'end_date' => new \DateTime(),
         ];
