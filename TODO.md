@@ -15,6 +15,8 @@
 11. [ ] map can have a list where users can be selected for the new booking
 12. [x] user availability should be a flag on table (implemented on its own table)
 
+- What if 2 two bookings are made on the same time for the same resource?
+
 ---
 
 ## Map TODOs
@@ -64,3 +66,11 @@ LJ bk
 SELECT * FROM u
 WHERE :date BETWEEN u.start AND u.end
 LJ bk
+
+
+## Ideas
+
+### Overview Page
+
+- Choose which date to start from. When compliting a new booking, should the user be redirected to the date of the booking?
+- correct the seatmap map displacement when entered for the first time to the page
