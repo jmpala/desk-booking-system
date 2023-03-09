@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\service;
 
+use App\Entity\Bookable;
 use App\Repository\BookableRepository;
 use App\Repository\BookingsRepository;
 use App\Repository\UnavailableDatesRepository;
@@ -16,6 +17,18 @@ class BookableService
         private UnavailableDatesRepository $unavailableDatesRepository,
     )
     {
+    }
+
+    /**
+     * Just another normal find by id
+     *
+     * @param int $id
+     *
+     * @return \App\Entity\Bookable|null
+     */
+    public function findById(int $id): ?Bookable
+    {
+        return $this->bookableRepository->find($id);
     }
 
     /**
@@ -87,7 +100,7 @@ class BookableService
      *
      * @return array<\App\Entity\UnavailableDates> | []
      */
-    public function extractUnavailableDates(array $unavailableDates): array
+    private function extractUnavailableDates(array $unavailableDates): array
     {
         $mappedUnavailables = [];
         foreach ($unavailableDates as $unavailableDate) {
@@ -101,4 +114,5 @@ class BookableService
         }
         return $mappedUnavailables;
     }
+
 }

@@ -13,12 +13,12 @@ use Symfony\Component\Routing\Annotation\Route;
 class BookingController extends AbstractController
 {
     public function __construct(
-        private BookableService $bookableService
+        private BookableService $bookableService,
     )
     {
     }
 
-    #[Route('/booking/new', name: 'app_booking_retrieve_one', methods: ['GET'])]
+    #[Route('/booking/new', name: 'app_booking_new', methods: ['GET'])]
     public function showNewBookingPage(Request $request): Response
     {
         $bookableId = (int) $request->query->get('id');
@@ -43,4 +43,18 @@ class BookingController extends AbstractController
         ]);
     }
 
+    #[Route('/booking/confirm', name: 'app_booking_new_confirm', methods: ['POST'])]
+    public function showConfirmBookingPage(Request $request): Response
+    {
+        $bookableId = (int) $request->request->get('bookable');
+        $bookable = $this->bookableService->findById($bookableId);
+        $fromDate = $request->request->get('fromDate');
+        $toDate = $request->request->get('toDate');
+
+        return $this->render('booking/new/confirmBooking.html.twig', [
+            'bookable' => $bookable,
+            'fromDate' => $fromDate,
+            'toDate' => $toDate
+        ]);
+    }
 }
