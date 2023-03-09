@@ -111,6 +111,7 @@ async function checkAvailabilityBeforeSubmit(e: Event): void {
  * Calls the internal API to check if the selected dates are available and returns if any,
  * the unavailable dates and bookings for the selected bookable
  *
+ * @param id
  * @param from
  * @param to
  * @returns {Promise<isAvailableAPIData>}
@@ -236,30 +237,22 @@ function checkIfPeriodsOverlap(period1: period, period2: period): boolean {
 
 
 /**
- * Shows the users which input-date is overlapping with an unavailable period (invalid)
+ * Shows the users when the selected dates are overlaping with existing
+ * bookings or unavalilable_dates
  */
 function showErrorsOnInputsIfAny() {
-  const startDate: period = {
+  clearInputErrors();
+
+  const selectedPeriod: period = {
     from: new Date(fromDateDOMElement.value),
-    to: new Date(fromDateDOMElement.value),
-  };
-  const isStartDateOverlapping: boolean = selectedUnavailablePeriods.reduce((acc, period) => {
-    return acc || checkIfPeriodsOverlap(startDate, period);
-  }, false);
-
-  if (isStartDateOverlapping) {
-    fromDateDOMElement.classList.add('is-invalid');
-  }
-
-  const endDate: period = {
-    from: new Date(toDateDOMElement.value),
     to: new Date(toDateDOMElement.value),
   };
-  const isEndDateOverlapping: boolean = selectedUnavailablePeriods.reduce((acc, period) => {
-    return acc || checkIfPeriodsOverlap(endDate, period);
+  const isSelectedPeriodOverlapping: boolean = selectedUnavailablePeriods.reduce((acc, period) => {
+    return acc || checkIfPeriodsOverlap(selectedPeriod, period);
   }, false);
 
-  if (isEndDateOverlapping) {
+  if (isSelectedPeriodOverlapping) {
+    fromDateDOMElement.classList.add('is-invalid');
     toDateDOMElement.classList.add('is-invalid');
   }
 }
