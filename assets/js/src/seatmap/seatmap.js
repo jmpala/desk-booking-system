@@ -106,6 +106,9 @@ preventMapOutOfBoundsOnDragmoveEvent(appLayers[layers.ROOM], stage);
  * @returns {Promise<void>}
  */
 async function updateSeatmap(date: Date): void {
+    appLayers[layers.ROOM].destroyChildren();
+    // TODO: how can I centralize the creation and deletion of Konva elements
+    appLayers[layers.ROOM].add(createMainRoom());
     const updatedSeatmap: getSeatmapStausByDateResponse = await getSeatmapStausByDate(date);
     await appState.updateStateWithNewSeatmapstate(updatedSeatmap);
     const bookables: Array<Bookable> = appState.getBookings();
