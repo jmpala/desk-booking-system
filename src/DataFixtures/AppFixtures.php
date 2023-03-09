@@ -9,10 +9,8 @@ use App\Factory\BookingsFactory;
 use App\Factory\CategoryFactory;
 use App\Factory\UnavailableDatesFactory;
 use App\Factory\UserFactory;
-use App\Repository\UnavailableDatesRepository;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
-use DoctrineExtensions\Query\Mysql\Date;
 
 class AppFixtures extends Fixture
 {
@@ -208,6 +206,13 @@ class AppFixtures extends Fixture
         BookingsFactory::createOne([
             'bookable' => $desk2,
             'user' => $user2,
+        ]);
+
+        BookingsFactory::createOne([
+            'bookable' => $stand1,
+            'user' => $user2,
+            'start_date' => (new \DateTime())->modify('+5 day'),
+            'end_date' => (new \DateTime())->modify('+6 day'),
         ]);
         // END BOOKING
 
