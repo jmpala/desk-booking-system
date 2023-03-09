@@ -57,4 +57,21 @@ class BookingsRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function getAllBookingsByBookableIdAndDateRange(
+        int $id,
+        DateTime $from,
+        DateTime $to
+    ): array {
+        return $this->createQueryBuilder('b')
+            ->select('b', 'bk')
+            ->leftJoin('b.bookable', 'bk')
+            ->where('bk.id = :id AND
+            DATE(:from) <= DATE(b.end_date) AND DATE(:to) >= DATE(b.start_date)')
+            ->setParameter('from', $from->format('Y-m-d'))
+            ->setParameter('to', $to->format('Y-m-d'))
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getResult();
+    }
+
 }

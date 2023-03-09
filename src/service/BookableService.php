@@ -4,13 +4,16 @@ declare(strict_types=1);
 
 namespace App\service;
 
-use App\Entity\Bookable;
 use App\Repository\BookableRepository;
+use App\Repository\BookingsRepository;
+use App\Repository\UnavailableDatesRepository;
 
 class BookableService
 {
     public function __construct(
         private BookableRepository $bookableRepository,
+        private BookingsRepository $bookingsRepository,
+        private UnavailableDatesRepository $unavailableDatesRepository,
     )
     {
     }
@@ -38,56 +41,57 @@ class BookableService
      */
     public function checkAvailabilityByDate(int $id, \DateTime $from, \DateTime $to): array
     {
-        /** @var array<\App\Entity\Bookable> $res */
-        $res = $this->bookableRepository->checkAvailabilityByDate($id, $from, $to);
+        /** @var array<\App\Entity\Bookings> $bookings */
+        $bookings = $this->bookingsRepository->getAllBookingsByBookableIdAndDateRange($id, $from, $to);
+
+        /** @var array<\App\Entity\UnavailableDates> $unavailable_dates */
+        $unavailable_dates = $this->unavailableDatesRepository->getAllUnavailableDatesByBookableIdAndDateRange($id, $from, $to);
 
         $status = [
-            'isAvailable' => empty($res)
+            'isAvailable' => empty($bookings) && empty($unavailable_dates)
         ];
 
         if (!$status['isAvailable']) {
-            foreach ($res as $bookable) {
-                $status['bookings'] = $this->extractBookings($bookable);
-                $status['unavailableDates'] = $this->extractUnavailableDates($bookable);
-            }
+            $status['bookings'] = $this->extractBookings($bookings);
+            $status['unavailableDates'] = $this->extractUnavailableDates($unavailable_dates);
         }
 
         return $status;
     }
 
     /**
-     * Extracts the bookings from the bookables or empty array when none found
+     * Maps all the bookings to a front-end format or empty array when none found
      *
-     * @param \App\Entity\Bookable $bookables
+     * @param array<\App\Entity\Bookings> $bookings
      *
      * @return array<\App\Entity\Bookings> | []
      */
-    private function extractBookings(Bookable $bookables): array
+    private function extractBookings(array $bookings): array
     {
-        $bookings = [];
-        foreach ($bookables->getBookings() as $booking) {
-            $bookings[] = [
+        $mappedBookings = [];
+        foreach ($bookings as $booking) {
+            $mappedBookings[] = [
                 'id' => $booking->getId(),
                 'from' => $booking->getStartDate()->format('Y-m-d'),
                 'to' => $booking->getEndDate()->format('Y-m-d'),
                 'bookableCode' => $booking->getBookable()->getCode(),
             ];
         }
-        return $bookings;
+        return $mappedBookings;
     }
 
     /**
-     * Extracts the unavailable dates from the bookables or empty array when none found
+     * Maps all the unavailable dates to a front-end format or empty array when none found
      *
-     * @param \App\Entity\Bookable $bookables
+     * @param array<\App\Entity\UnavailableDates> $unavailableDates
      *
      * @return array<\App\Entity\UnavailableDates> | []
      */
-    public function extractUnavailableDates(Bookable $bookables): array
+    public function extractUnavailableDates(array $unavailableDates): array
     {
-        $unavailableDates = [];
-        foreach ($bookables->getUnavailableDates() as $unavailableDate) {
-            $unavailableDates[] = [
+        $mappedUnavailables = [];
+        foreach ($unavailableDates as $unavailableDate) {
+            $mappedUnavailables[] = [
                 'id' => $unavailableDate->getId(),
                 'from' => $unavailableDate->getStartDate()->format('Y-m-d'),
                 'to' => $unavailableDate->getEndDate()->format('Y-m-d'),
@@ -95,6 +99,6 @@ class BookableService
                 'bookableCode' => $unavailableDate->getBookable()->getCode(),
             ];
         }
-        return $unavailableDates;
+        return $mappedUnavailables;
     }
 }

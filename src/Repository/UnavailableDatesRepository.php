@@ -57,4 +57,20 @@ class UnavailableDatesRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function getAllUnavailableDatesByBookableIdAndDateRange(
+        int $id,
+        \DateTime $from,
+        \DateTime $to
+    ): array {
+        return $this->createQueryBuilder('u')
+            ->select('u', 'bk')
+            ->leftJoin('u.bookable', 'bk')
+            ->where('bk.id = :id AND
+            DATE(:from) <= DATE(u.end_date) AND DATE(:to) >= DATE(u.start_date)')
+            ->setParameter('id', $id)
+            ->setParameter('from', $from)
+            ->setParameter('to', $to)
+            ->getQuery()
+            ->getResult();
+    }
 }
