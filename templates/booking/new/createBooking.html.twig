@@ -27,7 +27,7 @@
 
     <form class="form border border-primary bg-light rounded p-3" id="newBookingForm" action="{{ path('app_booking_new_confirm') }}" method="post">
 
-        {% import '_parts/errors/errorBusDisplay.html.twig' %}
+        {% include '_parts/errors/errorBusDisplay.html.twig' %}
 
         <div class="form-floating m-3">
             <select class="form-select" name="bookable" id="allBookables">
@@ -48,7 +48,8 @@
             <label for="toDate">To Date</label>
         </div>
         <div class="row justify-content-center m-3">
-            <button type="submit" class="btn btn-primary btn-lg col-3 bg-primary" id="submitBtn" disabled>Create</button>
+            <a href="{{ path('app_office_overview') }}" class="btn btn-outline-primary btn-lg col-2 m-2">To Overview</a>
+            <button type="submit" class="btn btn-primary btn-lg col-2 bg-primary m-2" id="submitBtn" disabled>Create</button>
         </div>
     </form>
 

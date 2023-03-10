@@ -10,8 +10,8 @@
             <div class="d-flex py-2 px-3 border rounded">
                 <ol class="breadcrumb m-0 justify-content-center">
                     <li class="breadcrumb-item">Create</li>
-                    <li class="breadcrumb-item active">Confirm</li>
-                    <li class="breadcrumb-item">Created</li>
+                    <li class="breadcrumb-item">Confirm</li>
+                    <li class="breadcrumb-item active">Created</li>
                 </ol>
             </div>
         </nav>
@@ -21,13 +21,14 @@
         <div>
             <h2 class="text-center">Booking Details</h2>
             <div class="d-flex flex-column m-4 text-center fs-4">
+                <p>Booked Resource: {{ booking.bookable.code }}</p>
                 <p>Booking Confirmation: {{ booking.confirmation }}</p>
                 <p>Starting Date: {{ booking.startDate | date('d-m-Y') }}</p>
                 <p>End Date: {{ booking.endDate | date('d-m-Y') }}</p>
             </div>
         </div>
         <div class="row justify-content-center m-3">
-            <a href="{{ path('app_office_overview') }}" type="submit" class="btn btn-primary btn-lg col-3 bg-primary" id="submitBtn">To Overview</a>
+            <a href="{{ path('app_office_overview') }}" class="btn btn-primary btn-lg col-3 bg-primary" id="submitBtn">To Overview</a>
         </div>
     </div>
 
