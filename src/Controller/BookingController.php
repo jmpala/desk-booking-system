@@ -78,4 +78,19 @@ class BookingController extends AbstractController
             'booking' => $createdBooking
         ]);
     }
+
+    #[Route('/booking/all', name: 'app_booking_showallbookings', methods: ['GET'])]
+    public function showAllBookings(Request $request): Response
+    {
+        $pageNum = (int) $request->query->get('page') ?: 1;
+        $user = $this->getUser();
+
+        $pagerFanta = $this->bookingService->getAllBookingsByID($user->getId());
+        $pagerFanta->setMaxPerPage(10);
+        $pagerFanta->setCurrentPage($pageNum);
+
+        return $this->render('booking/allBookings.html.twig', [
+            'pager' => $pagerFanta
+        ]);
+    }
 }

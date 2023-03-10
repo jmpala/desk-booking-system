@@ -1,0 +1,35 @@
+{% extends '_templates/base.html.twig' %}
+
+{% block title %}All Bookings{% endblock %}
+
+{% block body %}
+    <h1 class="mt-4 mb-3 text-center">All Bookings</h1>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">First</th>
+            <th scope="col">Last</th>
+            <th scope="col">Handle</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for booking in pager %}
+            <tr>
+                <th>{{ booking.id }}</th>
+                <td>{{ booking.confirmation }}</td>
+                <td>{{ booking.startDate | date('d-m-Y') }}</td>
+                <td>{{ booking.endDate | date('d-m-Y') }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="d-flex mt-3 mb-4 justify-content-center pagerfanta">
+        {{ pagerfanta(pager, 'twitter_bootstrap5') }}
+    </div>
+{% endblock %}
+
+
+

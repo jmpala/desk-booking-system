@@ -6,6 +6,8 @@ use App\Entity\Bookings;
 use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Pagerfanta\Doctrine\ORM\QueryAdapter;
+use Pagerfanta\Pagerfanta;
 
 /**
  * @extends ServiceEntityRepository<Bookings>
@@ -72,6 +74,26 @@ class BookingsRepository extends ServiceEntityRepository
             ->setParameter('id', $id)
             ->getQuery()
             ->getResult();
+    }
+
+    /**
+     *
+     *
+     * @param int $getId
+     * @return Pagerfanta
+     */
+    public function getAllBookingsByID(int $getId): Pagerfanta
+    {
+        $queryBuilder = $this->createQueryBuilder('b')
+            ->select('b', 'bk')
+            ->leftJoin('b.bookable', 'bk')
+            ->where('b.user = :id')
+            ->setParameter('id', $getId)
+            ->getQuery();
+
+        $pagerFanta = new Pagerfanta(new QueryAdapter($queryBuilder));
+
+        return $pagerFanta;
     }
 
 }

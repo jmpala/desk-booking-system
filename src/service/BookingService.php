@@ -12,6 +12,7 @@ use App\Exception\BookingOverlapException;
 use App\Repository\BookableRepository;
 use App\Repository\BookingsRepository;
 use App\Repository\UnavailableDatesRepository;
+use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\SecurityBundle\Security;
 
 class BookingService
@@ -137,5 +138,16 @@ class BookingService
     {
         $bookings = $this->bookingRepository->getAllBookingsByBookableIdAndDateRange($bookableId, $from, $to);
         return !empty($bookings);
+    }
+
+    /**
+     * Returns all bookings for the given user
+     *
+     * @param $getId
+     * @return array
+     */
+    public function getAllBookingsByID(int $getId): Pagerfanta
+    {
+        return $this->bookingRepository->getAllBookingsByID($getId);
     }
 }
