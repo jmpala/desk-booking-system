@@ -82,12 +82,33 @@ class BookingsRepository extends ServiceEntityRepository
      * @param int $getId
      * @return Pagerfanta
      */
-    public function getAllBookingsByID(int $getId): Pagerfanta
+    public function getAllBookingsByUserIDWithOrderedColumn(int $getId, string $columnName, string $oder, string $pastBookings): Pagerfanta
     {
+        $selectedColumn = match ($columnName) {
+            'resource' => 'bk.code',
+            'confirmation' => 'b.confirmation',
+            'startdate' => 'b.start_date',
+            'enddate' => 'b.end_date',
+            default => 'b.start_date',
+        };
+
+        $selectedOrder = match ($oder) {
+            'asc' => 'ASC',
+            'desc' => 'DESC',
+            default => 'ASC',
+        };
+
+        $selectedPast = match ($pastBookings) {
+            'true' => '',
+            'false' => ' AND b.end_date >= CURRENT_DATE()',
+            default => ' AND b.end_date >= CURRENT_DATE()',
+        };
+
         $queryBuilder = $this->createQueryBuilder('b')
             ->select('b', 'bk')
             ->leftJoin('b.bookable', 'bk')
-            ->where('b.user = :id')
+            ->where('b.user = :id' . $selectedPast)
+            ->orderBy($selectedColumn, $selectedOrder)
             ->setParameter('id', $getId)
             ->getQuery();
 

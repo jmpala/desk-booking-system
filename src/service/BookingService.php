@@ -146,8 +146,8 @@ class BookingService
      * @param $getId
      * @return array
      */
-    public function getAllBookingsByID(int $getId): Pagerfanta
+    public function getAllBookingsByID(int $getId, string $columnName, string $oder, string $pastBookings): Pagerfanta
     {
-        return $this->bookingRepository->getAllBookingsByID($getId);
+        return $this->bookingRepository->getAllBookingsByUserIDWithOrderedColumn($getId, $columnName, $oder, $pastBookings);
     }
 }

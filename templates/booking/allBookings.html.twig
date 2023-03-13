@@ -8,16 +8,37 @@
     <table class="table">
         <thead>
         <tr>
-            <th class="text-center" scope="col">Resource</th>
-            <th class="text-center" scope="col">Confirmation #</th>
-            <th class="text-center" scope="col">Start Date</th>
-            <th class="text-center" scope="col">End Date</th>
-            <th class="text-center" scope="col"></th>
+            <th class="col-table text-center"
+                data-col-name="resource"
+                data-col-selected="{{ (selectedCol == 'resource') ? 'true' : 'false' }}"
+                data-col-order="{{ (selectedCol == 'resource') ? selectedOder : 'asc' }}"
+                scope="col"
+            >Resource<button class="order-btn mx-3 btn btn-outline-dark btn-sm"><i class="bi bi-arrow-down-up"></i></button></th>
+            <th class="col-table text-center"
+                data-col-name="confirmation"
+                data-col-selected="{{ (selectedCol == 'confirmation') ? 'true' : 'false' }}"
+                data-col-order="{{ (selectedCol == 'confirmation') ? selectedOder : 'asc' }}"
+                scope="col"
+            >Confirmation #<button class="order-btn mx-3 btn btn-outline-dark btn-sm"><i class="bi bi-arrow-down-up"></i></button></th>
+            <th class="col-table text-center"
+                data-col-name="startdate"
+                data-col-selected="{{ (selectedCol == 'startdate') ? 'true' : 'false' }}"
+                data-col-order="{{ (selectedCol == 'startdate') ? selectedOder : 'asc' }}"
+                scope="col"
+            >Start Date<button class="order-btn mx-3 btn btn-outline-dark btn-sm"><i class="bi bi-arrow-down-up"></i></button></th>
+            <th class="col-table text-center"
+                data-col-name="enddate"
+                data-col-selected="{{ (selectedCol == 'enddate') ? 'true' : 'false' }}"
+                data-col-order="{{ (selectedCol == 'enddate') ? selectedOder : 'asc' }}"
+                scope="col"
+            >End Date<button class="order-btn mx-3 btn btn-outline-dark btn-sm"><i class="bi bi-arrow-down-up"></i></button></th>
+            <th class="col-table text-center" scope="col">Past Bookings
+                <input id="pastBookings" class="form-check-input" type="checkbox" {{ (pastBookings == 'true') ? 'checked' : '' }}></th>
         </tr>
         </thead>
         <tbody>
         {% for booking in pager %}
-            <tr>
+            <tr class="{{ (booking.endDate <  todaysDate ) ? 'bg-dark bg-opacity-10' : '' }}">
                 <td class="text-center">{{ booking.bookable.code }}</td>
                 <td class="text-center">{{ booking.confirmation }}</td>
                 <td class="text-center">{{ booking.startDate | date('d/m/Y') }}</td>
@@ -36,5 +57,6 @@
     </div>
 {% endblock %}
 
-
-
+{% block javascripts %}
+    {{ encore_entry_script_tags('allBookings') }}
+{% endblock %}

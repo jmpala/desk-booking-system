@@ -83,14 +83,21 @@ class BookingController extends AbstractController
     public function showAllBookings(Request $request): Response
     {
         $pageNum = (int) $request->query->get('page') ?: 1;
+        $col = $request->query->get('col') ?: 'resource';
+        $order = $request->query->get('ord') ?: 'asc';
+        $past = $request->query->get('past') ?: 'false';
         $user = $this->getUser();
 
-        $pagerFanta = $this->bookingService->getAllBookingsByID($user->getId());
+        $pagerFanta = $this->bookingService->getAllBookingsByID($user->getId(), $col, $order, $past);
         $pagerFanta->setMaxPerPage(10);
         $pagerFanta->setCurrentPage($pageNum);
 
         return $this->render('booking/allBookings.html.twig', [
-            'pager' => $pagerFanta
+            'pager' => $pagerFanta,
+            'selectedCol' => $col,
+            'selectedOder' => $order,
+            'todaysDate' => new \DateTime((new \DateTime())->format('Y-m-d')),
+            'pastBookings' => $past
         ]);
     }
 }
