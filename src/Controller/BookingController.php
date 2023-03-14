@@ -88,7 +88,17 @@ class BookingController extends AbstractController
         $past = $request->query->get('past') ?: 'false';
         $user = $this->getUser();
 
+        $hasBookings = $this->bookingService->countAllBookingsByUserID($user->getId()) > 0;
+        $hasOnlyPastBookings = false;
+
         $pagerFanta = $this->bookingService->getAllBookingsByID($user->getId(), $col, $order, $past);
+        if ($hasBookings
+            && $pagerFanta->getNbResults() === 0) {
+            $past = 'true';
+            $hasOnlyPastBookings = true;
+            $pagerFanta = $this->bookingService->getAllBookingsByID($user->getId(), $col, $order, $past);
+        }
+
         $pagerFanta->setMaxPerPage(10);
         $pagerFanta->setCurrentPage($pageNum);
 
@@ -97,7 +107,9 @@ class BookingController extends AbstractController
             'selectedCol' => $col,
             'selectedOder' => $order,
             'todaysDate' => new \DateTime((new \DateTime())->format('Y-m-d')),
-            'pastBookings' => $past
+            'pastBookings' => $past,
+            'hasBookings' => $hasBookings,
+            'hasOnlyPastBookings' => $hasOnlyPastBookings
         ]);
     }
 

@@ -117,4 +117,22 @@ class BookingsRepository extends ServiceEntityRepository
         return $pagerFanta;
     }
 
+    /**
+     * Returns the number of bookings for a given user
+     *
+     * @param int $userID
+     *
+     * @return float|int|mixed|string
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function countAllBookingsByUserID(int $userID)
+    {
+        return $this->createQueryBuilder('b')
+            ->select('COUNT(b)')
+            ->where('b.user = :id')
+            ->setParameter('id', $userID)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 }

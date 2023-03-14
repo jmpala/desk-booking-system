@@ -4,6 +4,7 @@ const table: HTMLElement = document.querySelector('.table');
 const selectedColumn: HTMLElement = document.querySelector('[data-col-selected="true"]');
 const iconSelected: HTMLElement = selectedColumn.querySelector('i');
 const pastCheck: HTMLInputElement = document.getElementById('pastBookings');
+const checkForPastBookings: HTMLInputElement = document.getElementById('checkForPastBookings');
 
 const deleteConmfirmationModal = document.getElementById('deleteConfirmation')
 
@@ -18,6 +19,7 @@ if (selectedColumn.dataset.colOrder === 'asc') {
 
 table.addEventListener('click', orderTable);
 pastCheck.addEventListener('change', onCheckedPastBookings);
+checkForPastBookings.addEventListener('change', onCheckedPastBookings);
 deleteConmfirmationModal.addEventListener('show.bs.modal', onShowDeleteConfirmationModal);
 
 
@@ -49,7 +51,8 @@ function orderTable(event: Event): void {
 function onCheckedPastBookings(event: Event): void {
   const target: HTMLInputElement = event.target;
 
-  if (target.id !== 'pastBookings') return;
+  if (target.id !== 'pastBookings'
+  && target.id !== 'checkForPastBookings') return;
 
   const urlParams = new URLSearchParams(window.location.search);
   const page = urlParams.get('page') || '1';
@@ -58,7 +61,7 @@ function onCheckedPastBookings(event: Event): void {
 
   let newUri = `${window.location.origin}${window.location.pathname}?page=${page}&col=${col}&ord=${order}`;
 
-  if (pastCheck.checked) {
+  if (target.checked) {
     newUri += '&past=true';
   }
 

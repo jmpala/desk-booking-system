@@ -176,4 +176,16 @@ class BookingService
 
         $this->bookingRepository->remove($booking, true);
     }
+
+    /**
+     * Get the number of bookings for the given user
+     *
+     * @param int $userID
+     *
+     * @return int
+     */
+    public function countAllBookingsByUserID(int $userID): int
+    {
+        return $this->bookingRepository->countAllBookingsByUserID($userID);
+    }
 }
