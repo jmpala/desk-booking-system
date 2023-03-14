@@ -41,6 +41,8 @@
     ,
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "^3.4",
+        "phpstan/extension-installer": "^1.2",
+        "phpstan/phpstan-symfony": "^1.2",
         "roave/security-advisories": "dev-latest",
         "symfony/debug-bundle": "6.2.*",
         "symfony/maker-bundle": "^1.48",
@@ -51,7 +53,8 @@
     "config": {
         "allow-plugins": {
             "symfony/flex": true,
-            "symfony/runtime": true
+            "symfony/runtime": true,
+            "phpstan/extension-installer": true
         },
         "sort-packages": true
     },
