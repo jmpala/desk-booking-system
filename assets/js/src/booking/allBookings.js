@@ -4,7 +4,6 @@ const table: HTMLElement = document.querySelector('.table');
 const selectedColumn: HTMLElement = document.querySelector('[data-col-selected="true"]');
 const iconSelected: HTMLElement = selectedColumn.querySelector('i');
 const pastCheck: HTMLInputElement = document.getElementById('pastBookings');
-const checkForPastBookings: HTMLInputElement = document.getElementById('checkForPastBookings');
 
 const deleteConmfirmationModal = document.getElementById('deleteConfirmation')
 
@@ -19,7 +18,6 @@ if (selectedColumn.dataset.colOrder === 'asc') {
 
 table.addEventListener('click', orderTable);
 pastCheck.addEventListener('change', onCheckedPastBookings);
-checkForPastBookings.addEventListener('change', onCheckedPastBookings);
 deleteConmfirmationModal.addEventListener('show.bs.modal', onShowDeleteConfirmationModal);
 
 
