@@ -9,9 +9,11 @@ use App\dto\BookableInformationDTO;
 use App\dto\SeatmapStatusDTO;
 use App\Entity\Bookings;
 use App\Exception\BookingOverlapException;
+use App\Exception\NotAuthorizedException;
 use App\Repository\BookableRepository;
 use App\Repository\BookingsRepository;
 use App\Repository\UnavailableDatesRepository;
+use Doctrine\ORM\EntityNotFoundException;
 use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\SecurityBundle\Security;
 
@@ -149,5 +151,29 @@ class BookingService
     public function getAllBookingsByID(int $getId, string $columnName, string $oder, string $pastBookings): Pagerfanta
     {
         return $this->bookingRepository->getAllBookingsByUserIDWithOrderedColumn($getId, $columnName, $oder, $pastBookings);
+    }
+
+    /**t
+     * Deletes the given booking
+     *
+     * @param int $bookingId
+     *
+     * @return void
+     * @throws \App\Exception\NotAuthorizedException
+     */
+    public function deleteBooking(int $bookingId): void
+    {
+        $todayDate = new \DateTime((new \DateTime())->format('Y-m-d'));
+        $booking = $this->bookingRepository->find($bookingId);
+
+        if (!$booking) {
+            throw new \RuntimeException('Booking not found');
+        }
+
+        if ($booking->getEndDate() < $todayDate) {
+            throw new NotAuthorizedException('You are not allowed to delete past bookings');
+        }
+
+        $this->bookingRepository->remove($booking, true);
     }
 }

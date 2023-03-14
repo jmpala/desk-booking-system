@@ -44,8 +44,16 @@
                 <td class="text-center">{{ booking.startDate | date('d/m/Y') }}</td>
                 <td class="text-center">{{ booking.endDate | date('d/m/Y') }}</td>
                 <td class="text-center">
-                    <a href="#" class="btn btn-outline-warning btn-sm">Modify</a>
-                    <a href="#" class="btn btn-outline-danger btn-sm">Delete</a>
+                    <button class="btn btn-outline-warning btn-sm"
+                            {{ (booking.endDate <  todaysDate ) ? 'disabled' : '' }}
+                    >Modify</button>
+                    <button type="button" class="btn btn-outline-danger btn-sm"
+                            data-bs-toggle="modal"
+                            data-bs-target="#deleteConfirmation"
+                            data-bs-confirmation="{{ booking.confirmation }}"
+                            data-bs-booking-id="{{ booking.id }}"
+                            {{ (booking.endDate <  todaysDate ) ? 'disabled' : '' }}
+                    >Delete</button>
                 </td>
             </tr>
         {% endfor %}
@@ -55,6 +63,33 @@
     <div class="d-flex mt-3 mb-4 justify-content-center pagerfanta">
         {{ pagerfanta(pager, 'twitter_bootstrap5') }}
     </div>
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="deleteConfirmation" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Deletion Confirmation</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to delete booking confimation <span id="data-bs-confirmation"></span>?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
+                    <form action="{{ path('app_booking_delete') }}" method="post">
+                        <input type="hidden" name="bookingId" id="bookingId" value="">
+                        <input type="hidden" name="_csrf_token"
+                               value="{{ csrf_token('deleteBooking') }}"
+                        >
+                        <button id="deleteConfirmationBtn" type="submit" class="btn btn-danger" data-booking-id="">DELETE</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
 {% endblock %}
 
 {% block javascripts %}

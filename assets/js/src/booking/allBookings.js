@@ -5,6 +5,9 @@ const selectedColumn: HTMLElement = document.querySelector('[data-col-selected="
 const iconSelected: HTMLElement = selectedColumn.querySelector('i');
 const pastCheck: HTMLInputElement = document.getElementById('pastBookings');
 
+const deleteConmfirmationModal = document.getElementById('deleteConfirmation')
+
+
 iconSelected.classList.remove('bi-arrow-down-up');
 if (selectedColumn.dataset.colOrder === 'asc') {
   iconSelected.classList.add('bi-arrow-down');
@@ -15,9 +18,10 @@ if (selectedColumn.dataset.colOrder === 'asc') {
 
 table.addEventListener('click', orderTable);
 pastCheck.addEventListener('change', onCheckedPastBookings);
+deleteConmfirmationModal.addEventListener('show.bs.modal', onShowDeleteConfirmationModal);
 
 
-function orderTable(event: Event) {
+function orderTable(event: Event): void {
   const target: HTMLElement = event.target;
 
   if (!target.classList.contains('bi')
@@ -42,7 +46,7 @@ function orderTable(event: Event) {
 }
 
 
-function onCheckedPastBookings(event: Event) {
+function onCheckedPastBookings(event: Event): void {
   const target: HTMLInputElement = event.target;
 
   if (target.id !== 'pastBookings') return;
@@ -59,4 +63,18 @@ function onCheckedPastBookings(event: Event) {
   }
 
   window.location.href = newUri;
+}
+
+
+function onShowDeleteConfirmationModal(event): void {
+  const button: HTMLElement = event.relatedTarget;
+  const confirmationNumber = button.getAttribute('data-bs-confirmation');
+  const bookingId = button.getAttribute('data-bs-booking-id');
+  const confirmationLabel = document.getElementById('data-bs-confirmation');
+  const deleteConfirmationBtn = document.getElementById('deleteConfirmationBtn');
+  const hiddenInput = document.getElementById('bookingId');
+
+  deleteConfirmationBtn.setAttribute('data-booking-id', bookingId);
+  confirmationLabel.textContent = confirmationNumber;
+  hiddenInput.value = bookingId;
 }

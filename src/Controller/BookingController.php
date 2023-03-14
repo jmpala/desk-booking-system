@@ -100,4 +100,16 @@ class BookingController extends AbstractController
             'pastBookings' => $past
         ]);
     }
+
+    #[Route('/booking/delete', name: 'app_booking_delete', methods: ['POST'])]
+    public function deleteBooking(Request $request): Response
+    {
+        if ($this->isCsrfTokenValid('deleteBooking', $request->request->get('_csrf_token')) === false) {
+            throw new \Exception('Invalid CSRF token');
+        }
+
+        $bookingId = (int) $request->request->get('bookingId');
+        $this->bookingService->deleteBooking($bookingId);
+        return $this->redirectToRoute('app_booking_showallbookings');
+    }
 }

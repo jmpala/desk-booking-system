@@ -74,3 +74,7 @@ LJ bk
 
 - Choose which date to start from. When compliting a new booking, should the user be redirected to the date of the booking?
 - correct the seatmap map displacement when entered for the first time to the page
+
+### Delete Booking
+
+- what if the booking is not ended and the user attempts to delete it? Should the user be able to delete it?

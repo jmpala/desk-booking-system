@@ -3,6 +3,7 @@
 namespace App\EventSubscriber;
 
 use App\Exception\BookingOverlapException;
+use App\Exception\NotAuthorizedException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
@@ -25,6 +26,11 @@ class ExceptionSubscriber implements EventSubscriberInterface
         if ($exception instanceof BookingOverlapException) {
             $request->getSession()->getFlashBag()->add('error', 'The booking overlaps with another booking, please check the given dates');
             $event->setResponse(new RedirectResponse('/booking/new'));
+        }
+
+        if ($exception instanceof NotAuthorizedException) {
+            $request->getSession()->getFlashBag()->add('error', 'You are not authorized to perform this action');
+            $event->setResponse(new RedirectResponse('/'));
         }
     }
 
