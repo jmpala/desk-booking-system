@@ -78,7 +78,7 @@ function _changeButton(bookable: Bookable, message: string, color: string, disab
   submitbtn.href = "javascript:void(0)";
 
   if (bookable.isBookedByLoggedUser) {
-    submitbtn.href = config.urls.editBooking + "?id=";
+    submitbtn.href = config.urls.editBooking + "/" + bookable.bookingId;
   }
   else if (!bookable.isBooked && !bookable.isDisabled) {
     submitbtn.href = config.urls.newBooking + "?id=" + bookable.bookableId;
