@@ -11,7 +11,7 @@
             <p class="text-center">No actual booking available, make a <a href="{{ path('app_booking_new') }}">new booking</a>
         {% endif %}
 
-        <table class="table">
+        <table id="bookingsTable" class="table">
             <thead>
             <tr>
                 <th class="col-table text-center"
@@ -50,7 +50,8 @@
                     <td class="text-center">{{ booking.startDate | date('d/m/Y') }}</td>
                     <td class="text-center">{{ booking.endDate | date('d/m/Y') }}</td>
                     <td class="text-center">
-                        <button class="btn btn-outline-warning btn-sm"
+                        <button class="btn btn-outline-warning btn-sm edit-btn"
+                                data-bs-booking-id="{{ booking.id }}"
                                 {{ (booking.endDate <  todaysDate ) ? 'disabled' : '' }}
                         >Modify</button>
                         <button type="button" class="btn btn-outline-danger btn-sm"
