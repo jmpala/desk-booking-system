@@ -8,7 +8,7 @@ import {extractDateFromDateIsoString} from "../../utils/utils";
 
 const padding: number = 10;
 const fontSize: number = 12;
-const fontFamily: string = 'Roboto, sans-serif';
+const fontFamily: string = 'system-ui';
 
 
 /**
@@ -97,7 +97,7 @@ function _createLabelsForBookedByLoggedUser(bookable: Bookable): Group {
     x: bookable.shape.x() + padding,
     y: bookable.shape.y() + padding + fontSize * 3,
     width: bookable.shape.width(),
-    text: 'From: ' + extractDateFromDateIsoString(bookable.bookingStartDate),
+    text: 'From: ' + _formatLabelDate(extractDateFromDateIsoString(bookable.bookingStartDate)),
     fontSize,
     fontFamily,
     listening: false,
@@ -107,7 +107,7 @@ function _createLabelsForBookedByLoggedUser(bookable: Bookable): Group {
     x: bookable.shape.x() + padding,
     y: bookable.shape.y() + padding + fontSize * 4,
     width: bookable.shape.width(),
-    text: 'To: ' + extractDateFromDateIsoString(bookable.bookingEndDate),
+    text: 'To: ' + _formatLabelDate(extractDateFromDateIsoString(bookable.bookingEndDate)),
     fontSize,
     fontFamily,
     listening: false,
@@ -159,7 +159,7 @@ function _createLabelsForBookedBookable(bookable: Bookable): Group {
     x: bookable.shape.x() + padding,
     y: bookable.shape.y() + padding + fontSize * 3,
     width: bookable.shape.width(),
-    text: 'From: ' + extractDateFromDateIsoString(bookable.bookingStartDate),
+    text: 'From: ' + _formatLabelDate(extractDateFromDateIsoString(bookable.bookingStartDate)),
     fontSize,
     fontFamily,
     listening: false,
@@ -169,7 +169,7 @@ function _createLabelsForBookedBookable(bookable: Bookable): Group {
     x: bookable.shape.x() + padding,
     y: bookable.shape.y() + padding + fontSize * 4,
     width: bookable.shape.width(),
-    text: 'To: ' + extractDateFromDateIsoString(bookable.bookingEndDate),
+    text: 'To: ' + _formatLabelDate(extractDateFromDateIsoString(bookable.bookingEndDate)),
     fontSize,
     fontFamily,
     listening: false,
@@ -211,7 +211,7 @@ function _createLabelsForDisabledBookable(bookable: Bookable): Group {
     x: bookable.shape.x() + padding,
     y: bookable.shape.y() + padding + fontSize * 2,
     width: bookable.shape.width(),
-    text: 'From: ' + extractDateFromDateIsoString(bookable.disabledFromDate),
+    text: 'From: ' + _formatLabelDate(extractDateFromDateIsoString(bookable.disabledFromDate)),
     fontSize,
     fontFamily,
     listening: false,
@@ -221,7 +221,7 @@ function _createLabelsForDisabledBookable(bookable: Bookable): Group {
     x: bookable.shape.x() + padding,
     y: bookable.shape.y() + padding + fontSize * 3,
     width: bookable.shape.width(),
-    text: 'To: ' + extractDateFromDateIsoString(bookable.disabledToDate),
+    text: 'To: ' + _formatLabelDate(extractDateFromDateIsoString(bookable.disabledToDate)),
     fontSize,
     fontFamily,
     listening: false,
@@ -244,4 +244,10 @@ function _createLabelsForDisabledBookable(bookable: Bookable): Group {
   container.add(disableNotesLabel);
 
   return container;
+}
+
+
+function _formatLabelDate(string: string): string {
+  const date = new Date(string);
+  return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
 }
