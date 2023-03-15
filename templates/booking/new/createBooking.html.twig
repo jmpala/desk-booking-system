@@ -12,46 +12,22 @@
 {% endblock %}
 
 {% block body %}
+
     <h1 class="mt-4 mb-3 text-center">New Booking</h1>
 
-    <div class="row">
-        <nav class="my-4 col-12 d-flex justify-content-around" aria-label="breadcrumb">
-            <div class="d-flex py-2 px-3 border rounded">
-                <ol class="breadcrumb m-0 justify-content-center">
-                    <li class="breadcrumb-item active">Create</li>
-                    <li class="breadcrumb-item">Confirm</li>
-                    <li class="breadcrumb-item">Created</li>
-                </ol>
-            </div>
-        </nav>
-    </div>
+    {% include "booking/new/_parts/_createBookingBreadCrumb.html.twig" with { 'editStage': '0' } %}
 
-    <form class="form border border-primary bg-light rounded p-3" id="newBookingForm" action="{{ path('app_booking_new_confirm') }}" method="post">
-
-        {% include '_parts/errors/errorBusDisplay.html.twig' %}
-
-        <div class="form-floating m-3">
-            <select class="form-select" name="bookable" id="allBookables">
-
-                {% for bookable in allBookables %}
-                    <option value="{{ bookable.id }}"{{ bookable.id == selectedBookable.id ? 'selected' : '' }}> {{ bookable.code }}</option>
-                {% endfor %}
-
-            </select>
-            <label for="allBookables">Available Bookables</label>
-        </div>
-        <div class="form-floating m-3">
-            <input class="form-control" type="date" name="fromDate" id="fromDate" value="{{ todaysDate | date('Y-m-d') }}" min="{{ todaysDate | date('Y-m-d') }}">
-            <label for="fromDate">From Date</label>
-        </div>
-        <div class="form-floating m-3">
-            <input class="form-control" type="date" name="toDate" id="toDate" min="{{ todaysDate | date('Y-m-d') }}">
-            <label for="toDate">To Date</label>
-        </div>
-        <div class="row justify-content-center m-3">
-            <button type="button" class="btn btn-outline-primary btn-lg col-2 m-2" onclick="window.history.back();">Return</button>
-            <button type="submit" class="btn btn-primary btn-lg col-2 bg-primary m-2" id="submitBtn" disabled>Create</button>
-        </div>
-    </form>
+    {% include "_parts/forms/_inputCreateBookingForm.html.twig" with {
+        'action': path('app_booking_new_confirm'),
+        'hasErrors': true,
+        'hasCsrf': true,
+        'csrfName': '_csrf_token',
+        'csrfValue': csrf_token('newBooking'),
+        'allBookables': allBookables,
+        'todaysDate': todaysDate,
+        'returnTo': 'window.history.back();',
+        'returnLbl': 'Return',
+        'submitLbl': 'Create',
+    } %}
 
 {% endblock %}
