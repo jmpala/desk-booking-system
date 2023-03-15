@@ -68,9 +68,12 @@
             </tbody>
         </table>
 
+        {% if pager.nbPages > 1 %}
         <div class="d-flex mt-3 mb-4 justify-content-center pagerfanta">
             {{ pagerfanta(pager, 'twitter_bootstrap5') }}
         </div>
+        {% endif %}
+
     </div>
 
     <div class="{{ (pager.nbResults > 0) ? 'visually-hidden': '' }}">
