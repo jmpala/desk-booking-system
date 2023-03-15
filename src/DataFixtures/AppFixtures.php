@@ -29,7 +29,7 @@ class AppFixtures extends Fixture
 
         UserFactory::createOne([
             'email' => 'tl@user.com',
-            'roles' => ['ROLE_TEAM_LEADER'],
+            'roles' => ['ROLE_TEAMLEAD'],
         ]);
 
         UserFactory::createOne([
