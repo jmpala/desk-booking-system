@@ -21,13 +21,6 @@ import {period} from "../utils/bookingUtils";
  */
 export async function checkBookableAvailabilityBySelectedDatesRESTCall(bookableId: number, from: Date, to: Date, options?: isAvailableAPIDataOptions): isAvailableAPIData {
 
-  if (options == null) {
-    options = {
-      ignoreSelectedBooking: false,
-      ignoreSelectedBookingId: 0
-    }
-  }
-
   const res: Response = await fetch(`/api/booking/${bookableId}/availability`, {
     method: "POST",
     headers: {
@@ -36,8 +29,8 @@ export async function checkBookableAvailabilityBySelectedDatesRESTCall(bookableI
     body: JSON.stringify({
       from: from,
       to: to,
-      ignoreBooking: options.ignoreSelectedBooking,
-      ignoreBookingId: options.ignoreSelectedBookingId,
+      ignoreBooking: options?.ignoreSelectedBooking ?? false,
+      ignoreBookingId: options?.ignoreSelectedBookingId ?? null,
     })
   });
 
@@ -92,5 +85,5 @@ export type isAvailableAPIData = {
 
 export type isAvailableAPIDataOptions = {
   ignoreSelectedBooking: boolean,
-  ignoreSelectedBookingId: number
+  ignoreSelectedBookingId?: number
 }

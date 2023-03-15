@@ -51,9 +51,9 @@ class BookingAPIController extends AbstractController
         $to = new \DateTime($data['to']);
 
         $isIgnoreActive = (bool) ($data['ignoreBooking'] ?? false);
-        $ignore = (int) ($data['ignoreBookingId'] ?? null);
+        $ignore = $data['ignoreBookingId'] ?? null;
         if ($isIgnoreActive) {
-            $ignore = $this->bookingService->findById($ignore);
+            $ignore = $this->bookingService->findById((int) $ignore);
         }
 
         // TODO: implement a DTO

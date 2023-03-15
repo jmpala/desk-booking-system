@@ -2,30 +2,9 @@
 
 
 import '../../../../sass/pages/main/main_newBooking.scss';
-
-
-type isAvailableAPIData = {
-  isAvailable: boolean,
-  unavailableDates: {
-    id: number,
-    from: Date,
-    to: Date,
-    notes: string,
-    bookableCode: string,
-  }[],
-  bookings: {
-    id: number,
-    from: Date,
-    to: Date,
-    bookableCode: string,
-  }[]
-}
-
-
-type period = {
-  from: Date,
-  to: Date,
-}
+import '../../../../sass/pages/main/main_editBooking.scss';
+import { period, sanitizeDisplayDate, checkIfDatesAreValid, checkIfPeriodsOverlap } from '../../utils/bookingUtils';
+import { isAvailableAPIData, checkBookableAvailabilityBySelectedDatesRESTCall, setUnavailablePeriods } from '../../api/checkBookableAvailabilityBySelectedDatesRESTCall';
 
 
 const dateDisplayFormat = 'en-GB';
@@ -72,7 +51,12 @@ function checkFormSate(e: Event): void {
 
   e.stopPropagation();
 
-  if (checkIfSelectedDatesAreValid()
+  const isSelectionValid: boolean = checkIfDatesAreValid(
+    fromDateDOMElement.value,
+    toDateDOMElement.value,
+    selectedUnavailablePeriods);
+
+  if (isSelectionValid
     || e.target === availableBookables) {
     clearErrorMessages();
     clearInputErrors();
@@ -94,41 +78,16 @@ async function checkAvailabilityBeforeSubmit(e: Event): void {
   const from: Date = new Date(fromDateDOMElement.value);
   const to: Date = new Date(toDateDOMElement.value);
 
-  const isAvailable: isAvailableAPIData = await isBookableAvailabilityBySelectedDatesRESTCall(id, from, to);
+  const isAvailable: isAvailableAPIData = await checkBookableAvailabilityBySelectedDatesRESTCall(id, from, to);
 
   if (isAvailable['isAvailable']) {
     return bookingFrom.submit();
   }
 
   showBookingsOrUnavailableDates(isAvailable);
-  setUnavailablePeriods(isAvailable);
+  selectedUnavailablePeriods = setUnavailablePeriods(isAvailable);
 
   showErrorsOnInputsIfAny();
-}
-
-
-/**
- * Calls the internal API to check if the selected dates are available and returns if any,
- * the unavailable dates and bookings for the selected bookable
- *
- * @param id
- * @param from
- * @param to
- * @returns {Promise<isAvailableAPIData>}
- */
-async function isBookableAvailabilityBySelectedDatesRESTCall(id: number, from: Date, to: Date): isAvailableAPIData {
-  const res: Response = await fetch(`/api/booking/${id}/availability`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      from: from,
-      to: to
-    })
-  });
-
-  return await res.json();
 }
 
 
@@ -152,87 +111,12 @@ function showBookingsOrUnavailableDates(isAvailable: isAvailableAPIData): void {
 
 
 /**
- * Resets and keeps track of the selected bookable unavailable periods
- *
- * @param isAvailable
- */
-function setUnavailablePeriods(isAvailable: isAvailableAPIData): void {
-  selectedUnavailablePeriods = [];
-
-  isAvailable.unavailableDates.forEach(unavailableDate => {
-    selectedUnavailablePeriods.push({
-      from: new Date(unavailableDate.from),
-      to: new Date(unavailableDate.to),
-    });
-  });
-
-  isAvailable.bookings.forEach(booking => {
-    selectedUnavailablePeriods.push({
-      from: new Date(booking.from),
-      to: new Date(booking.to),
-    });
-  });
-}
-
-
-/**
  * Clears the error messages setted by showBookingsOrUnavailableDates()
  */
 function clearErrorMessages(): void {
   errorArea.classList.add('error-display');
   errorArea.classList.remove('error-display__show');
   errorList.innerHTML = '';
-}
-
-
-/**
- * Creates a date string in the format defined in dateDisplayFormat
- *
- * @param date
- * @returns {string}
- */
-function sanitizeDisplayDate(date: string): string {
-  return new Date(date).toLocaleDateString(dateDisplayFormat);
-}
-
-
-/**
- * Checks if the selected dates are not empty and if they are not overlapping
- * with any unavailable periods returned by the API
- *
- * @returns {boolean}
- */
-function checkIfSelectedDatesAreValid(): boolean {
-  const isEmpty: boolean = fromDateDOMElement.value === '' || toDateDOMElement.value === '';
-  if (isEmpty) {
-    return false;
-  }
-
-  const selectedPeriod: period = {
-    from: new Date(fromDateDOMElement.value),
-    to: new Date(toDateDOMElement.value),
-  };
-
-  const isUnavailable: boolean = selectedUnavailablePeriods.reduce((acc, period) => {
-    return acc || checkIfPeriodsOverlap(selectedPeriod, period);
-  }, false);
-  if (isUnavailable) {
-    return false;
-  }
-
-  return true;
-}
-
-
-/**
- * Checks if two periods are overlapping
- *
- * @param period1
- * @param period2
- * @returns {boolean}
- */
-function checkIfPeriodsOverlap(period1: period, period2: period): boolean {
-  return period1.from <= period2.to && period1.to >= period2.from;
 }
 
 
