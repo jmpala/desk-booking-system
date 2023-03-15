@@ -11,6 +11,8 @@
 
     {% include "_parts/forms/_confirmCreateBookingForm.html.twig" with {
         'action': path('app_booking_process_and_show_confirmation'),
+        'csrfName': '_csrf_token',
+        'csrfValue': csrf_token('newBookingConfirmation'),
         'bookable': bookable,
         'fromDate': fromDate,
         'toDate': toDate,

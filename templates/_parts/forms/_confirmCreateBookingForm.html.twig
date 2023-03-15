@@ -1,5 +1,9 @@
 <form class="form border border-primary bg-light rounded p-3" action="{{ action }}" method="post">
 
+    {% if hasCsrf %}
+        <input type="hidden" name="{{ csrfName }}" value="{{ csrfValue }}">
+    {% endif %}
+
     <div class="form-floating m-3">
         <select class="form-select" id="allBookables" disabled>
             <option value="{{ bookable.id }}"> {{ bookable.code }}</option>

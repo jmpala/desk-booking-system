@@ -54,6 +54,10 @@ class BookingController extends AbstractController
     #[Route('/booking/confirm', name: 'app_booking_new_confirm', methods: ['POST'])]
     public function showConfirmBookingPage(Request $request): Response
     {
+        if ($this->isCsrfTokenValid('newBooking', $request->request->get('_csrf_token')) === false) {
+            throw new \Exception('Invalid CSRF token');
+        }
+
         $bookableId = (int) $request->request->get('bookable');
         $bookable = $this->bookableService->findById($bookableId);
         $fromDate = $request->request->get('fromDate');
@@ -69,6 +73,10 @@ class BookingController extends AbstractController
     #[Route('/booking/new/confirmation', name: 'app_booking_process_and_show_confirmation', methods: ['POST'])]
     public function processNewBookingAndShowConfirmation(Request $request): Response
     {
+        if ($this->isCsrfTokenValid('newBookingConfirmation', $request->request->get('_csrf_token')) === false) {
+            throw new \Exception('Invalid CSRF token');
+        }
+
         $bookableId = (int) $request->request->get('bookable');
         $fromDate = new \DateTime($request->request->get('fromDate'));
         $toDate = new \DateTime($request->request->get('toDate'));
