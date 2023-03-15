@@ -3,6 +3,8 @@
 import {Stage} from "konva/lib/Stage";
 import {AppState} from "../app/AppState";
 import {config} from "../config";
+import {getColorByState} from "../utils/utils";
+import {bookingStates} from "../app/enums";
 
 
 /**
@@ -14,6 +16,7 @@ import {config} from "../config";
  */
 export function deselectBookableOnClickEvent(stage: Stage, appState: AppState): void {
   stage.addEventListener("click", (event) => {
+    _disableButton(appState.isReadonly);
     appState.setSelectedBooking(null);
   });
 }
@@ -29,4 +32,17 @@ export function resizeStageOnWindowResizeEvent(stage: Stage): void {
     stage.width(container.width);
     stage.draw();
   });
+}
+
+
+// TODO: Refactor, almost same logic on bookableEvents.js::_changeButton()
+function _disableButton(isReadOnly: boolean): void {
+  const submitbtn = document.querySelector('#konva-submit');
+
+  if (isReadOnly) return;
+
+  submitbtn.href = "javascript:void(0)";
+  submitbtn.innerHTML = "Please, select booking";
+  submitbtn.style.backgroundColor = getColorByState(bookingStates.UNAVAILABLE);
+  submitbtn.style.color = "black";
 }
