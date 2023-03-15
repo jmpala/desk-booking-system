@@ -43,11 +43,16 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
         - { path: ^/login, roles: PUBLIC_ACCESS }
-        - { path: ^/seatmap, roles: PUBLIC_ACCESS }
-        - { path: ^/api, roles: PUBLIC_ACCESS }
-        - { path: ^/sketch, roles: PUBLIC_ACCESS }
-        - { path: ^/sketch/*, roles: PUBLIC_ACCESS }
+        # - { path: ^/seatmap, roles: PUBLIC_ACCESS }
+        # - { path: ^/api, roles: PUBLIC_ACCESS }
+        # - { path: ^/sketch, roles: PUBLIC_ACCESS }
+        # - { path: ^/sketch/*, roles: PUBLIC_ACCESS }
         - { path: ^/, roles: IS_AUTHENTICATED_REMEMBERED }
+
+    role_hierarchy:
+        ROLE_USER: [ROLE_USER]
+        ROLE_TEAMLEAD: [ROLE_ACCESSTOPLANNING]
+        ROLE_ADMIN: [ROLE_TEAMLEAD, ROLE_ACCESSTOADMINPANNEL]
 
 when@test:
     security:
