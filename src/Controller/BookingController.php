@@ -101,6 +101,12 @@ class BookingController extends AbstractController
         }
 
         $pagerFanta->setMaxPerPage(10);
+
+        if ($pageNum > $pagerFanta->getNbPages()) {
+            $pageNum = min($pageNum, $pagerFanta->getNbPages());
+            return $this->redirect($request->getBaseUrl() . $request->getPathInfo() . '?page=' . $pageNum . '&col=' . $col . '&ord=' . $order);
+        }
+
         $pagerFanta->setCurrentPage($pageNum);
 
         return $this->render('booking/allBookings.html.twig', [
