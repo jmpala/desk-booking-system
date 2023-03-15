@@ -28,16 +28,16 @@
                     <a class="navbar-brand" href="{{ path('app_office_overview') }}">LBX Desk Sharing</a>
                     <ul class="navbar-nav">
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="true" href="{{ path('app_office_overview') }}">Overview</a>
+                            <a class="nav-link {{ module == 'overview' ? 'active' : '' }}" aria-current="true" href="{{ path('app_office_overview') }}">Overview</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ path('app_booking_showallbookings') }}">Bookings</a>
+                            <a class="nav-link {{ module == 'bookings' ? 'active' : '' }}" href="{{ path('app_booking_showallbookings') }}">Bookings</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/planning">Planning</a>
+                            <a class="nav-link {{ module == 'planning' ? 'active' : '' }}" href="/planning">Planning</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/admin">Admin</a>
+                            <a class="nav-link {{ module == 'admin' ? 'active' : '' }}" href="/admin">Admin</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="/logout">Logout</a>
