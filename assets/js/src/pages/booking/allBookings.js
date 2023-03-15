@@ -1,6 +1,6 @@
 "use strict";
 
-const table: HTMLElement = document.querySelector('.table');
+const table: HTMLElement = document.getElementById('bookingsTable');
 const selectedColumn: HTMLElement = document.querySelector('[data-col-selected="true"]');
 const iconSelected: HTMLElement = selectedColumn.querySelector('i');
 const pastCheck: HTMLInputElement = document.getElementById('pastBookings');
@@ -17,6 +17,7 @@ if (selectedColumn.dataset.colOrder === 'asc') {
 
 
 table.addEventListener('click', orderTable);
+table.addEventListener('click', onClickEditBooking);
 pastCheck.addEventListener('change', onCheckedPastBookings);
 deleteConmfirmationModal.addEventListener('show.bs.modal', onShowDeleteConfirmationModal);
 
@@ -78,4 +79,16 @@ function onShowDeleteConfirmationModal(event): void {
   deleteConfirmationBtn.setAttribute('data-booking-id', bookingId);
   confirmationLabel.textContent = confirmationNumber;
   hiddenInput.value = bookingId;
+}
+
+
+function onClickEditBooking(event: Event): void {
+  const target: HTMLElement = event.target;
+  if (!target.classList.contains('edit-btn')) return;
+
+  event.stopPropagation();
+
+  const bookingId = target.getAttribute('data-bs-booking-id');
+
+  window.location.href = window.location.origin + '/booking/edit/' + bookingId;
 }

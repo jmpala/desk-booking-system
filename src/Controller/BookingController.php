@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Entity\Bookings;
 use App\service\BookableService;
 use App\service\BookingService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -123,5 +124,78 @@ class BookingController extends AbstractController
         $bookingId = (int) $request->request->get('bookingId');
         $this->bookingService->deleteBooking($bookingId);
         return $this->redirectToRoute('app_booking_showallbookings');
+    }
+
+
+    #[Route('/booking/edit/{id}', name: 'app_booking_edit', methods: ['GET'])]
+    public function showEditBookingPage(Request $request, Bookings $booking): Response
+    {
+        $bookableId = $booking->getBookable()->getId();
+        $todaysDate = $request->query->get('date') ?
+            new \DateTime($request->query->get('date')) :
+            new \DateTime();
+
+        /* @var array<\App\Entity\Bookable> $allBookables */
+        $allBookables = $this->bookableService->getAllBookableAndRelatedCategories();
+
+        /* @var array<\App\Entity\Bookable> $selectedBookable */
+        $selectedBookable = array_filter($allBookables, fn ($b) => $b->getId() === $bookableId);
+
+        if (!empty($selectedBookable)) {
+            $selectedBookable = $selectedBookable[array_key_first($selectedBookable)];
+        } else {
+            $selectedBookable = $allBookables[array_key_first($allBookables)];
+        }
+
+        $errors = $request->getSession()->getFlashBag()->get('error');
+
+        return $this->render('booking/edit/editBooking.html.twig',[
+            'booking' => $booking,
+            'todaysDate' => $todaysDate,
+            'selectedBookable' => $selectedBookable,
+            'allBookables' => $allBookables,
+            'errors' => $errors
+        ]);
+    }
+
+    #[Route('/booking/edit/confirm', name: 'app_booking_showconfirmeditbookingpage', methods: ['POST'])]
+    public function showConfirmEditBookingPage(Request $request): Response
+    {
+        if ($this->isCsrfTokenValid('editBooking', $request->request->get('_csrf_token')) === false) {
+            throw new \Exception('Invalid CSRF token');
+        }
+
+        $bookingId = (int) $request->request->get('bookingId');
+        $booking = $this->bookingService->findById($bookingId);
+        $bookableId = (int) $request->request->get('bookable');
+        $bookable = $this->bookableService->findById($bookableId);
+        $fromDate = $request->request->get('fromDate');
+        $toDate = $request->request->get('toDate');
+
+        return $this->render('booking/edit/confirmEditBooking.html.twig', [
+            'booking' => $booking,
+            'bookable' => $bookable,
+            'fromDate' => $fromDate,
+            'toDate' => $toDate
+        ]);
+    }
+
+    #[Route('/booking/edit/confirmation', name: 'app_booking_processeditbookingandshowconfirmation', methods: ['POST'])]
+    public function processEditBookingAndShowConfirmation(Request $request): Response
+    {
+        if ($this->isCsrfTokenValid('confirmEditBooking', $request->request->get('_csrf_token')) === false) {
+            throw new \Exception('Invalid CSRF token');
+        }
+
+        $bookingId = (int) $request->request->get('bookingId');
+        $bookableId = (int) $request->request->get('bookable');
+        $fromDate = new \DateTime($request->request->get('fromDate'));
+        $toDate = new \DateTime($request->request->get('toDate'));
+
+        $editerBooking = $this->bookingService->editBooking($bookingId, $bookableId, $fromDate, $toDate);
+
+        return $this->render('booking/edit/editedBooking.html.twig', [
+            'booking' => $editerBooking
+        ]);
     }
 }

@@ -1,7 +1,7 @@
 "use strict";
 
 
-import '../../../sass/pages/main/main_newBooking.scss';
+import '../../../../sass/pages/main/main_newBooking.scss';
 
 
 type isAvailableAPIData = {

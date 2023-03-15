@@ -30,11 +30,12 @@ Encore
      * Each entry will result in one JavaScript file (e.g. app.js)
      * and one CSS file (e.g. app.css) if your JavaScript imports CSS.
      */
-    .addEntry('base', './assets/js/src/base/base.js')
-    .addEntry('login', './assets/js/src/login/login.js')
-    .addEntry('overview', './assets/js/src/overview/overview.js')
-    .addEntry('newBooking', './assets/js/src/booking/newBooking.js')
-  .addEntry('allBookings', './assets/js/src/booking/allBookings.js')
+    .addEntry('base', './assets/js/src/pages/base/base.js')
+    .addEntry('login', './assets/js/src/pages/login/login.js')
+    .addEntry('overview', './assets/js/src/pages/overview/overview.js')
+    .addEntry('newBooking', './assets/js/src/pages/booking/newBooking.js')
+    .addEntry('allBookings', './assets/js/src/pages/booking/allBookings.js')
+    .addEntry('editBooking', './assets/js/src/pages/booking/editBooking.js')
 
     .addEntry('sketch', './assets/js/src/sketch/script.js')
 

@@ -1,0 +1,52 @@
+{% extends '_templates/base.html.twig' %}
+
+{% block title %}Edit Booking{% endblock %}
+
+{% block stylesheets %}
+    {{ encore_entry_link_tags('editBooking') }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('editBooking') }}
+{% endblock %}
+
+{% block body %}
+    <h1 class="mt-4 mb-3 text-center">Edit Booking</h1>
+
+    {% include "booking/edit/_parts/_editBreadCrumb.html.twig" with { 'editStage': '0' } %}
+
+    <form class="form border border-primary bg-light rounded p-3" id="editBookingForm" action="{{ path('app_booking_showconfirmeditbookingpage') }}" method="post">
+
+        <input id="bookingId" type="hidden" name="bookingId" value="{{ booking.id }}">
+        <input type="hidden" name="_csrf_token"
+               value="{{ csrf_token('editBooking') }}"
+        >
+
+        {% include '_parts/errors/errorBusDisplay.html.twig' %}
+
+        <div class="form-floating m-3">
+            <select class="form-select" name="bookable" id="allBookables">
+
+                {% for bookable in allBookables %}
+                    <option value="{{ bookable.id }}"{{ bookable.id == booking.bookable.id ? 'selected' : '' }}> {{ bookable.code }}</option>
+                {% endfor %}
+
+            </select>
+            <label for="allBookables">Available Bookables</label>
+        </div>
+        <div class="form-floating m-3">
+            <input class="form-control" type="date" name="fromDate" id="fromDate" value="{{ booking.startDate | date('Y-m-d') }}" min="{{ todaysDate | date('Y-m-d') }}" {{ booking.startDate | date('Y-m-d') < todaysDate | date('Y-m-d') ? 'disabled' : '' }}>
+            <label for="fromDate">From Date</label>
+        </div>
+        <div class="form-floating m-3">
+            <input class="form-control" type="date" name="toDate" id="toDate" value="{{ booking.endDate | date('Y-m-d') }}" min="{{ booking.startDate | date('Y-m-d') }}">
+            <label for="toDate">To Date</label>
+        </div>
+
+        <div class="row justify-content-center m-3">
+            <a href="{{ path('app_booking_showallbookings') }}" class="btn btn-outline-primary btn-lg col-2 m-2">To Bookings</a>
+            <button type="submit" class="btn btn-primary btn-lg col-2 bg-primary m-2" id="submitBtn" disabled>Edit</button>
+        </div>
+    </form>
+
+{% endblock %}

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\service;
 
 use App\Entity\Bookable;
+use App\Entity\Bookings;
 use App\Repository\BookableRepository;
 use App\Repository\BookingsRepository;
 use App\Repository\UnavailableDatesRepository;
@@ -46,16 +47,22 @@ class BookableService
      * unavailable dates data when the bookable is not available, otherwise this data will be empty. For convienience
      * the isAvailable key will be set to true or false, depending the case.
      *
+     * The $ignore parameter is used to ignore a booking when checking availability. This is used when updating a booking
+     *
      * @param int       $id
      * @param \DateTime $from
      * @param \DateTime $to
      *
      * @return bool[]
      */
-    public function checkAvailabilityByDate(int $id, \DateTime $from, \DateTime $to): array
+    public function checkAvailabilityByDate(int $id, \DateTime $from, \DateTime $to, ?Bookings $ignore = null): array
     {
         /** @var array<\App\Entity\Bookings> $bookings */
         $bookings = $this->bookingsRepository->getAllBookingsByBookableIdAndDateRange($id, $from, $to);
+
+        if ($ignore) {
+            $bookings = array_filter($bookings, static fn (Bookings $booking) => $booking->getId() !== $ignore->getId());
+        }
 
         /** @var array<\App\Entity\UnavailableDates> $unavailable_dates */
         $unavailable_dates = $this->unavailableDatesRepository->getAllUnavailableDatesByBookableIdAndDateRange($id, $from, $to);

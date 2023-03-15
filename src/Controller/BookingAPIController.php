@@ -50,8 +50,13 @@ class BookingAPIController extends AbstractController
         $from = new \DateTime($data['from']);
         $to = new \DateTime($data['to']);
 
+        $ignore = $data['ignoreBookingId'] ?? null;
+        if ($ignore) {
+            $ignore = $this->bookingService->findById($ignore);
+        }
+
         // TODO: implement a DTO
-        $isAvailable = $this->bookableService->checkAvailabilityByDate($id,$from, $to);
+        $isAvailable = $this->bookableService->checkAvailabilityByDate($id,$from, $to, $ignore);
 
         return $this->json($isAvailable, 200, [], [
             'groups' => ['bookable:read']

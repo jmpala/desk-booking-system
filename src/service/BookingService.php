@@ -128,17 +128,23 @@ class BookingService
     }
 
     /**
-     * Checks if the given bookable is already booked by the given date range
+     * Checks if the given bookable is already booked by the given date range, optionally excluding the given booking
      *
-     * @param int       $bookableId
-     * @param \DateTime $from
-     * @param \DateTime $to
+     * @param int                       $bookableId
+     * @param \DateTime                 $from
+     * @param \DateTime                 $to
+     * @param \App\Entity\Bookings|null $booking
      *
      * @return bool
      */
-    public function isBookableAlreadyBookedByDateRange(int $bookableId, \DateTime $from, \DateTime $to): bool
+    public function isBookableAlreadyBookedByDateRange(int $bookableId, \DateTime $from, \DateTime $to, ?Bookings $ignore = null): bool
     {
         $bookings = $this->bookingRepository->getAllBookingsByBookableIdAndDateRange($bookableId, $from, $to);
+
+        if ($ignore) {
+            $bookings = array_filter($bookings, static fn (Bookings $booking) => $booking->getId() !== $ignore->getId());
+        }
+
         return !empty($bookings);
     }
 
@@ -188,4 +194,51 @@ class BookingService
     {
         return $this->bookingRepository->countAllBookingsByUserID($userID);
     }
+
+    /**
+     * Finds a booking by its ID
+     *
+     * @param int $bookingId
+     *
+     * @return \App\Entity\Bookings|null
+     */
+    public function findById(int $bookingId): ?Bookings
+    {
+        return $this->bookingRepository->find($bookingId);
+    }
+
+    /**
+     * Edit an existing booking
+     *
+     * @param int       $bookingId
+     * @param int       $bookableId
+     * @param \DateTime $fromDate
+     * @param \DateTime $toDate
+     *
+     * @return \App\Entity\Bookings
+     * @throws \App\Exception\BookingOverlapException
+     */
+    public function editBooking(
+        int $bookingId,
+        int $bookableId,
+        \DateTime $fromDate,
+        \DateTime $toDate
+    ): Bookings {
+
+        $booking = $this->bookingRepository->find($bookingId);
+        $bookable = $this->bookableRepository->find($bookableId);
+
+        if ($this->isBookableAlreadyBookedByDateRange($bookableId, $fromDate, $toDate, $booking)) {
+            throw new BookingOverlapException('The bookable is already booked for the given date range');
+        }
+
+        $booking->setBookable($bookable);
+        $booking->setStartDate($fromDate);
+        $booking->setEndDate($toDate);
+
+        $this->bookingRepository->save($booking, true);
+
+        return $booking;
+    }
+
 }

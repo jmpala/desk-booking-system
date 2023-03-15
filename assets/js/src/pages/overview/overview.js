@@ -1,9 +1,9 @@
 "use strict";
 
-import {appState} from "../seatmap/seatmap.js";
+import {appState} from "../../components/seatmap/seatmap.js";
 
-import '../../../sass/pages/main/main_overview.scss';
-import {extractDateFromDateIsoString} from "../seatmap/utils/utils";
+import '../../../../sass/pages/main/main_overview.scss';
+import {extractDateFromDateIsoString} from "../../components/seatmap/utils/utils";
 
 
 const moveBack: HTMLElement = document.getElementById("moveBack");
