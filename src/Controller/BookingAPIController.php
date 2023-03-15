@@ -50,8 +50,9 @@ class BookingAPIController extends AbstractController
         $from = new \DateTime($data['from']);
         $to = new \DateTime($data['to']);
 
-        $ignore = $data['ignoreBookingId'] ?? null;
-        if ($ignore) {
+        $isIgnoreActive = (bool) ($data['ignoreBooking'] ?? false);
+        $ignore = (int) ($data['ignoreBookingId'] ?? null);
+        if ($isIgnoreActive) {
             $ignore = $this->bookingService->findById($ignore);
         }
 

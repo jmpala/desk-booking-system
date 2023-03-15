@@ -79,7 +79,7 @@ async function checkAvailabilityBeforeSubmit(e: Event): void {
 
   const options: isAvailableAPIDataOptions = {
     ignoreSelectedBooking: true,
-    ignoreSelectedBookingId: bookingId.id
+    ignoreSelectedBookingId: bookingId.value,
   }
 
   const isAvailable: isAvailableAPIData = await checkBookableAvailabilityBySelectedDatesRESTCall(id, from, to, options);
