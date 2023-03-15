@@ -14,6 +14,7 @@ import {deselectBookableOnClickEvent, resizeStageOnWindowResizeEvent} from "./do
 import {getColorByState} from "./utils/utils";
 import {getSeatmapStausByDate} from "./app/rest/getSeatmapStausByDate";
 import type {getSeatmapStausByDateResponse} from "./app/rest/getSeatmapStausByDate";
+import {Group} from "konva/lib/Group";
 
 
 export const appState = new AppState();
@@ -83,8 +84,12 @@ preventMapOutOfBoundsOnDragmoveEvent(appLayers[layers.ROOM], stage);
 
 // register elements to each layer
 (async (stage: Stage, appLayers: Layer) => {
-    appLayers[layers.ROOM].add(createMainRoom());
-    console.log(appLayers[layers.ROOM])
+    const mainRoom: Group = createMainRoom();
+    appLayers[layers.ROOM].add(mainRoom);
+    appLayers[layers.ROOM].y((stage.height() - mainRoom.height()) / 2);
+    appLayers[layers.ROOM].x((stage.width() - mainRoom.width()) / 2);
+
+    console.log(appLayers[layers.ROOM]);
 
     await updateSeatmap(new Date().toISOString());
 
