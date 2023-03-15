@@ -44,7 +44,10 @@ export class Bookable {
         });
     }
 
-    selectBookable(): void {
+    selectBookable(readOnly: boolean): void {
+
+        if (readOnly) return;
+
         this.shape.stroke('black');
         this.shape.strokeWidth(5);
         this.container.moveToTop();

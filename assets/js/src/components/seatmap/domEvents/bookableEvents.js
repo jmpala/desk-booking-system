@@ -36,7 +36,10 @@ export function handleBookableSelectionOnClickEvent(bookable: Bookable, app: App
     callback: (event) => {
       event.cancelBubble = true;
 
-      if (bookable.isDisabled || bookable.isBooked || bookable.isBookedByLoggedUser) {
+      if (bookable.isBookedByLoggedUser) {
+        app.setSelectedBooking(bookable);
+        return _showAlert(bookable, app.isReadonly);
+      } else if (bookable.isDisabled || bookable.isBooked) {
         app.setSelectedBooking(null);
         return _showAlert(bookable, app.isReadonly);
       }

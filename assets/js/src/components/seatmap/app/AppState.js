@@ -52,7 +52,7 @@ export class AppState {
     }
     this._selectedBooking = booking;
     if (this._selectedBooking) {
-      this._selectedBooking.selectBookable();
+      this._selectedBooking.selectBookable(this.isReadonly);
     }
   }
 }
