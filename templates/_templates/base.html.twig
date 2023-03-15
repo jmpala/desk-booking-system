@@ -33,12 +33,16 @@
                         <li class="nav-item">
                             <a class="nav-link {{ module == 'bookings' ? 'active' : '' }}" href="{{ path('app_booking_showallbookings') }}">Bookings</a>
                         </li>
+                        {% if is_granted('ROLE_ACCESSTOPLANNING') %}
                         <li class="nav-item">
                             <a class="nav-link {{ module == 'planning' ? 'active' : '' }}" href="/planning">Planning</a>
                         </li>
+                        {% endif %}
+                        {% if is_granted('ROLE_ACCESSTOADMINPANNEL') %}
                         <li class="nav-item">
                             <a class="nav-link {{ module == 'admin' ? 'active' : '' }}" href="/admin">Admin</a>
                         </li>
+                        {% endif %}
                         <li class="nav-item">
                             <a class="nav-link" href="/logout">Logout</a>
                         </li>
