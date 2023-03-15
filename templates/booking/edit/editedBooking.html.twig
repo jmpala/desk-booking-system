@@ -5,17 +5,7 @@
 {% block body %}
     <h1 class="mt-4 mb-3 text-center">Edit Booking</h1>
 
-    <div class="row">
-        <nav class="my-4 col-12 d-flex justify-content-around" aria-label="breadcrumb">
-            <div class="d-flex py-2 px-3 border rounded">
-                <ol class="breadcrumb m-0 justify-content-center">
-                    <li class="breadcrumb-item">Edit</li>
-                    <li class="breadcrumb-item">Confirm</li>
-                    <li class="breadcrumb-item active">Edited</li>
-                </ol>
-            </div>
-        </nav>
-    </div>
+    {% include "booking/edit/_parts/_editBreadCrumb.html.twig" with { 'editStage': '2' } %}
 
     <div class="border border-primary bg-light rounded p-3">
         <div>
