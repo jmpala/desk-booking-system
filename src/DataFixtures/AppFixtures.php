@@ -214,6 +214,76 @@ class AppFixtures extends Fixture
             'start_date' => (new \DateTime())->modify('+5 day'),
             'end_date' => (new \DateTime())->modify('+6 day'),
         ]);
+
+        BookingsFactory::createOne([
+            'bookable' => $stand1,
+            'user' => $user1,
+            'start_date' => (new \DateTime())->modify('-14 day'),
+            'end_date' => (new \DateTime())->modify('-14 day'),
+        ]);
+
+        BookingsFactory::createOne([
+            'bookable' => $stand1,
+            'user' => $user1,
+            'start_date' => (new \DateTime())->modify('-13 day'),
+            'end_date' => (new \DateTime())->modify('-13 day'),
+        ]);
+
+        BookingsFactory::createOne([
+            'bookable' => $stand1,
+            'user' => $user1,
+            'start_date' => (new \DateTime())->modify('-12 day'),
+            'end_date' => (new \DateTime())->modify('-12 day'),
+        ]);
+
+        BookingsFactory::createOne([
+            'bookable' => $stand1,
+            'user' => $user1,
+            'start_date' => (new \DateTime())->modify('-11 day'),
+            'end_date' => (new \DateTime())->modify('-11 day'),
+        ]);
+
+        BookingsFactory::createOne([
+            'bookable' => $stand1,
+            'user' => $user1,
+            'start_date' => (new \DateTime())->modify('-10 day'),
+            'end_date' => (new \DateTime())->modify('-10 day'),
+        ]);
+
+        BookingsFactory::createOne([
+            'bookable' => $stand1,
+            'user' => $user1,
+            'start_date' => (new \DateTime())->modify('-9 day'),
+            'end_date' => (new \DateTime())->modify('-9 day'),
+        ]);
+
+        BookingsFactory::createOne([
+            'bookable' => $stand1,
+            'user' => $user1,
+            'start_date' => (new \DateTime())->modify('-8 day'),
+            'end_date' => (new \DateTime())->modify('-8 day'),
+        ]);
+
+        BookingsFactory::createOne([
+            'bookable' => $stand1,
+            'user' => $user1,
+            'start_date' => (new \DateTime())->modify('-7 day'),
+            'end_date' => (new \DateTime())->modify('-7 day'),
+        ]);
+
+        BookingsFactory::createOne([
+            'bookable' => $stand1,
+            'user' => $user1,
+            'start_date' => (new \DateTime())->modify('-6 day'),
+            'end_date' => (new \DateTime())->modify('-6 day'),
+        ]);
+
+        BookingsFactory::createOne([
+            'bookable' => $stand1,
+            'user' => $user1,
+            'start_date' => (new \DateTime())->modify('-5 day'),
+            'end_date' => (new \DateTime())->modify('-5 day'),
+        ]);
         // END BOOKING
 
         $manager->flush();
