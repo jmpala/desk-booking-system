@@ -4,16 +4,18 @@
 {% block title %}Edit Booking{% endblock %}
 
 {% block body %}
-    <h1 class="mt-4 mb-3 text-center">Edit Booking</h1>
+
+    <h1 class="mt-4 mb-3 text-center">Editing Booking {{ booking.confirmation }} for {{ selectedUser.userIdentifier }}</h1>
 
     {% include "_parts/breadcrumbs/_editBookingBreadCrumb.html.twig" with { 'editStage': '1' } %}
 
     {% include "_parts/forms/_confirmEditBooking.html.twig" with {
-        "action": path('app_booking_processeditbookingandshowconfirmation'),
+        "action": path('app_planning_processeditbookingandshowconfirmation'),
         "hasCsrf": true,
         "csrfName": '_csrf_token',
         "csrfValue": csrf_token('confirmEditBooking'),
-        "hasSelectedUser": false,
+        "hasSelectedUser": true,
+        "selectedUser": selectedUser,
         "booking": booking,
         "bookable": bookable,
         "fromDate": fromDate,

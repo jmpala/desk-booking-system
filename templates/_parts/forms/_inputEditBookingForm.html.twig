@@ -8,6 +8,10 @@
         <input type="hidden" name="{{ csrfName }}" value="{{ csrfValue }}">
     {% endif %}
 
+    {% if hasSelectedUser %}
+        <input type="hidden" name="userid" value="{{ selectedUser.id }}">
+    {% endif %}
+
     <input id="bookingId" type="hidden" name="bookingId" value="{{ booking.id }}">
 
     <div class="form-floating m-3">

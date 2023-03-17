@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Entity\Bookings;
 use App\Repository\UserRepository;
 use App\service\BookableService;
 use App\service\BookingService;
@@ -157,5 +158,86 @@ class PlanningController extends AbstractController
         $bookingId = (int) $request->request->get('bookingId');
         $this->bookingService->deleteBooking($bookingId);
         return $this->redirectToRoute('app_planning', ['userid' => $userid]);
+    }
+
+    #[Route('/planning/booking/edit/{id}', name: 'app_planning_showeditbookingpage', methods: ['GET'])]
+    public function showEditBookingPage(Request $request, Bookings $booking): Response
+    {
+        $userid = (int) $request->query->get('userid');
+        $selectedUser = $this->userRepository->find($userid);
+        $bookableId = $booking->getBookable()->getId();
+        $todaysDate = $request->query->get('date') ?
+            new \DateTime($request->query->get('date')) :
+            new \DateTime();
+
+        /* @var array<\App\Entity\Bookable> $allBookables */
+        $allBookables = $this->bookableService->getAllBookableAndRelatedCategories();
+
+        /* @var array<\App\Entity\Bookable> $selectedBookable */
+        $selectedBookable = array_filter($allBookables, fn ($b) => $b->getId() === $bookableId);
+
+        if (!empty($selectedBookable)) {
+            $selectedBookable = $selectedBookable[array_key_first($selectedBookable)];
+        } else {
+            $selectedBookable = $allBookables[array_key_first($allBookables)];
+        }
+
+        $errors = $request->getSession()->getFlashBag()->get('error');
+
+        return $this->render('planning/edit/editBooking.html.twig',[
+            'selectedUser' => $selectedUser,
+            'booking' => $booking,
+            'todaysDate' => $todaysDate,
+            'selectedBookable' => $selectedBookable,
+            'allBookables' => $allBookables,
+            'errors' => $errors
+        ]);
+    }
+
+    #[Route('/planning/booking/edit/confirm', name: 'app_planning_showconfirmeditbookingpage', methods: ['POST'])]
+    public function showConfirmEditBookingPage(Request $request): Response
+    {
+        if ($this->isCsrfTokenValid('editBooking', $request->request->get('_csrf_token')) === false) {
+            throw new \Exception('Invalid CSRF token');
+        }
+
+        $userid = (int) $request->request->get('userid');
+        $selectedUser = $this->userRepository->find($userid);
+        $bookingId = (int) $request->request->get('bookingId');
+        $booking = $this->bookingService->findById($bookingId);
+        $bookableId = (int) $request->request->get('bookable');
+        $bookable = $this->bookableService->findById($bookableId);
+        $fromDate = $request->request->get('fromDate');
+        $toDate = $request->request->get('toDate');
+
+        return $this->render('planning/edit/confirmEditBooking.html.twig', [
+            'selectedUser' => $selectedUser,
+            'booking' => $booking,
+            'bookable' => $bookable,
+            'fromDate' => $fromDate,
+            'toDate' => $toDate
+        ]);
+    }
+
+    #[Route('/planning/booking/edit/confirmation', name: 'app_planning_processeditbookingandshowconfirmation', methods: ['POST'])]
+    public function processEditBookingAndShowConfirmation(Request $request): Response
+    {
+        if ($this->isCsrfTokenValid('confirmEditBooking', $request->request->get('_csrf_token')) === false) {
+            throw new \Exception('Invalid CSRF token');
+        }
+
+        $userid = (int) $request->request->get('userid');
+        $selectedUser = $this->userRepository->find($userid);
+        $bookingId = (int) $request->request->get('bookingId');
+        $bookableId = (int) $request->request->get('bookable');
+        $fromDate = new \DateTime($request->request->get('fromDate'));
+        $toDate = new \DateTime($request->request->get('toDate'));
+
+        $editerBooking = $this->bookingService->editBooking($bookingId, $bookableId, $fromDate, $toDate);
+
+        return $this->render('planning/edit/editedBooking.html.twig', [
+            'selectedUser' => $selectedUser,
+            'booking' => $editerBooking
+        ]);
     }
 }

@@ -1,5 +1,5 @@
 {% extends '_templates/base.html.twig' %}
-{% set module = 'bookings' %}
+{% set module = 'planning' %}
 
 {% block title %}Edit Booking{% endblock %}
 
@@ -13,17 +13,18 @@
 
 {% block body %}
 
-    <h1 class="mt-4 mb-3 text-center">Edit Booking</h1>
+    <h1 class="mt-4 mb-3 text-center">Editing Booking {{ booking.confirmation }} for {{ selectedUser.userIdentifier }}</h1>
 
     {% include "_parts/breadcrumbs/_editBookingBreadCrumb.html.twig" with { 'editStage': '0' } %}
 
     {% include "_parts/forms/_inputEditBookingForm.html.twig" with {
-        "action": path('app_booking_showconfirmeditbookingpage'),
+        "action": path('app_planning_showconfirmeditbookingpage'),
         "hasErrors": true,
         "hasCsrf": true,
-        "hasSelectedUser": false,
         "csrfName": "_csrf_token",
         "csrfValue": csrf_token('editBooking'),
+        "hasSelectedUser": true,
+        "selectedUser": selectedUser,
         "booking": booking,
         "allBookables": allBookables,
         "todaysDate": todaysDate,

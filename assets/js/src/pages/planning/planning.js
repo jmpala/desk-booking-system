@@ -94,9 +94,11 @@ function onClickEditBooking(event: Event): void {
 
   event.stopPropagation();
 
+  const urlParams = new URLSearchParams(window.location.search);
+  const userId = urlParams.get('userid');
   const bookingId = target.getAttribute('data-bs-booking-id');
 
-  window.location.href = window.location.origin + '/booking/edit/' + bookingId;
+  window.location.href = window.location.origin + '/planning/booking/edit/' + bookingId + '?userid=' + userId;
 }
 
 

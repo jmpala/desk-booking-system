@@ -1,0 +1,22 @@
+{% extends '_templates/base.html.twig' %}
+{% set module = 'planning' %}
+
+{% block title %}Confirmation{% endblock %}
+
+{% block body %}
+
+    <h1 class="mt-4 mb-3 text-center">Editing Booking {{ booking.confirmation }} for {{ selectedUser.userIdentifier }}</h1>
+
+    {% include "_parts/breadcrumbs/_editBookingBreadCrumb.html.twig" with { 'editStage': '2' } %}
+
+    {% include "_parts/booking/_bookingDetails.html.twig" with {
+        'isBookedInPlanning': true,
+        'booking': booking,
+        'goToPath': path('app_planning') ~ '?userid=' ~ selectedUser.id,
+        'goToLbl': 'To Bookings'
+    } %}
+
+{% endblock %}
+
+
+
