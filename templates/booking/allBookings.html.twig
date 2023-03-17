@@ -34,6 +34,7 @@
 
     {% include "_parts/modals/_confirmDeletionModal.html.twig" with {
         "action": path('app_booking_delete'),
+        "hasSelecteduser": false,
         "hasCsrf": true,
         "csrfName": "_csrf_token",
         "csrfValue": csrf_token('deleteBooking'),

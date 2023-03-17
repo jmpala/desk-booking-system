@@ -145,4 +145,17 @@ class PlanningController extends AbstractController
             'selectedUser' => $selectedUser,
         ]);
     }
+
+    #[Route('/planning/booking/delete', name: 'app_planning_deletebooking', methods: ['POST'])]
+    public function deleteBooking(Request $request): Response
+    {
+        if ($this->isCsrfTokenValid('deleteBooking', $request->request->get('_csrf_token')) === false) {
+            throw new \Exception('Invalid CSRF token');
+        }
+        $userid = (int) $request->request->get('userid');
+
+        $bookingId = (int) $request->request->get('bookingId');
+        $this->bookingService->deleteBooking($bookingId);
+        return $this->redirectToRoute('app_planning', ['userid' => $userid]);
+    }
 }

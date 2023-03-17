@@ -13,9 +13,15 @@
                 <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
                 <form action="{{ action }}" method="post">
                     <input type="hidden" name="bookingId" id="bookingId" value="">
+
+                    {% if hasSelecteduser %}
+                        <input type="hidden" name="userid" id="userid" value="{{ selectedUser.id }}">
+                    {% endif %}
+
                     {% if hasCsrf %}
                         <input type="hidden" name="{{ csrfName }}" value="{{ csrfValue }}">
                     {% endif %}
+
                     <button id="deleteConfirmationBtn" type="submit" class="btn btn-danger" data-booking-id="">DELETE</button>
                 </form>
             </div>

@@ -53,11 +53,12 @@
     </div>
 
     {% include "_parts/modals/_confirmDeletionModal.html.twig" with {
-        "action": path('app_booking_delete'),
+        "action": path('app_planning_deletebooking'),
+        "hasSelecteduser": true,
+        "selectedUser": selectedUser,
         "hasCsrf": true,
         "csrfName": "_csrf_token",
         "csrfValue": csrf_token('deleteBooking'),
-
     } %}
 
     {% else %}
