@@ -9,6 +9,7 @@
     {% include "_parts/breadcrumbs/_editBookingBreadCrumb.html.twig" with { 'editStage': '2' } %}
 
     {% include "_parts/booking/_bookingDetails.html.twig" with {
+        'isBookedInPlanning': false,
         'booking': booking,
         'goToPath': path('app_booking_showallbookings'),
         'goToLbl': 'To Bookings'
