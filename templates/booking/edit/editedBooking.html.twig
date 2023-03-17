@@ -6,7 +6,7 @@
 {% block body %}
     <h1 class="mt-4 mb-3 text-center">Edit Booking</h1>
 
-    {% include "booking/edit/_parts/_editBookingBreadCrumb.html.twig" with { 'editStage': '2' } %}
+    {% include "_parts/breadcrumbs/_editBookingBreadCrumb.html.twig" with { 'editStage': '2' } %}
 
     {% include "_parts/booking/_bookingDetails.html.twig" with {
         'booking': booking,

@@ -15,7 +15,7 @@
 
     <h1 class="mt-4 mb-3 text-center">Edit Booking</h1>
 
-    {% include "booking/edit/_parts/_editBookingBreadCrumb.html.twig" with { 'editStage': '0' } %}
+    {% include "_parts/breadcrumbs/_editBookingBreadCrumb.html.twig" with { 'editStage': '0' } %}
 
     {% include "_parts/forms/_inputEditBookingForm.html.twig" with {
         "action": path('app_booking_showconfirmeditbookingpage'),
