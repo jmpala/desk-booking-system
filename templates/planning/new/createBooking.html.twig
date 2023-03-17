@@ -15,7 +15,7 @@
 
     <h1 class="mt-4 mb-3 text-center">New Booking for {{ selectedUser.userIdentifier }}</h1>
 
-    {% include "booking/new/_parts/_createBookingBreadCrumb.html.twig" with { 'editStage': '0' } %}
+    {% include "_parts/breadcrumbs/_createBookingBreadCrumb.html.twig" with { 'editStage': '0' } %}
 
     {% include "_parts/forms/_inputCreateBookingForm.html.twig" with {
         'action': path('app_planning_showconfirmbookingpage'),

@@ -7,7 +7,7 @@
 
     <h1 class="mt-4 mb-3 text-center">New Booking for {{ selectedUser.userIdentifier }}</h1>
 
-    {% include "booking/new/_parts/_createBookingBreadCrumb.html.twig" with { 'editStage': '2' } %}
+    {% include "_parts/breadcrumbs/_createBookingBreadCrumb.html.twig" with { 'editStage': '2' } %}
 
     {% include "_parts/booking/_bookingDetails.html.twig" with {
         'isBookedInPlanning': true,
