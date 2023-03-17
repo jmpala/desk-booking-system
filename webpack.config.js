@@ -37,6 +37,7 @@ Encore
     .addEntry('allBookings', './assets/js/src/pages/booking/allBookings.js')
     .addEntry('editBooking', './assets/js/src/pages/booking/editBooking.js')
     .addEntry('planning', './assets/js/src/pages/planning/planning.js')
+    .addEntry('manageBookables', './assets/js/src/pages/admin/manageBookables.js')
 
     .addEntry('sketch', './assets/js/src/sketch/script.js')
 
@@ -92,3 +93,4 @@ Encore
 ;
 
 module.exports = Encore.getWebpackConfig();
+

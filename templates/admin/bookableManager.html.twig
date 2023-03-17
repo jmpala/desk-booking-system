@@ -1,0 +1,69 @@
+{% extends '_templates/base.html.twig' %}
+{% set module = 'admin' %}
+
+{% block title %}Admin Panel{% endblock %}
+
+{% block body %}
+
+    <h1 class="mt-4 mb-3 text-center">Manage Bookables Availability</h1>
+
+    <table id="unavailableDatesTable" class="table">
+        <thead>
+        <tr>
+            <th class="col-table text-center"
+                data-col-name="bookable"
+                data-col-selected="{{ (selectedCol == 'bookable') ? 'true' : 'false' }}"
+                data-col-order="{{ (selectedCol == 'bookable') ? selectedOder : 'desc' }}"
+                scope="col"
+            >Bookable Code<button class="order-btn mx-3 btn btn-outline-dark btn-sm"><i class="bi bi-arrow-down-up"></i></button></th>
+            <th class="col-table text-center"
+                data-col-name="startdate"
+                data-col-selected="{{ (selectedCol == 'startdate') ? 'true' : 'false' }}"
+                data-col-order="{{ (selectedCol == 'startdate') ? selectedOder : 'desc' }}"
+                scope="col"
+            >Start Date<button class="order-btn mx-3 btn btn-outline-dark btn-sm"><i class="bi bi-arrow-down-up"></i></button></th>
+            <th class="col-table text-center"
+                data-col-name="enddate"
+                data-col-selected="{{ (selectedCol == 'enddate') ? 'true' : 'false' }}"
+                data-col-order="{{ (selectedCol == 'enddate') ? selectedOder : 'desc' }}"
+                scope="col"
+            >End Date<button class="order-btn mx-3 btn btn-outline-dark btn-sm"><i class="bi bi-arrow-down-up"></i></button></th>
+            <th class="col-table text-center"
+                data-col-name="notes"
+                scope="col"
+            >Notes</th>
+            <th class="col-table text-center" scope="col">Past Unavailable Dates
+                <input id="pastUnavailabledates" class="form-check-input" type="checkbox" {{ (pastUnavailabledates == 'true') ? 'checked' : '' }}></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for unavailableDates in pager %}
+            <tr class="{{ (unavailableDates.endDate <  todaysDate ) ? 'bg-dark bg-opacity-10' : '' }}">
+                <td class="text-center">{{ unavailableDates.bookable.code }}</td>
+                <td class="text-center">{{ unavailableDates.startDate | date('d/m/Y') }}</td>
+                <td class="text-center">{{ unavailableDates.endDate | date('d/m/Y') }}</td>
+                <td class="text-center">{{ unavailableDates.notes }}</td>
+                <td class="text-center">
+                    <button class="btn btn-outline-warning btn-sm edit-btn"
+                            data-bs-booking-id="{{ unavailableDates.id }}"
+                    >Modify</button>
+                    <button type="button" class="btn btn-outline-danger btn-sm"
+                            data-bs-toggle="modal"
+                            data-bs-target="#deleteConfirmation"
+                            data-bs-booking-id="{{ unavailableDates.id }}"
+                     >Delete</button>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {% if pager.nbPages > 1 %}
+        {% include "_parts/pagers/_listBookingsPager.html.twig" with { "pager": pager } %}
+    {% endif %}
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('manageBookables') }}
+{% endblock %}

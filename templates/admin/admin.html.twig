@@ -1,0 +1,15 @@
+{% extends '_templates/base.html.twig' %}
+{% set module = 'bookings' %}
+
+{% block title %}Admin Panel{% endblock %}
+
+{% block body %}
+
+    <h1 class="mt-4 mb-3 text-center">Admin Panel</h1>
+
+    <ul class="list-group text-center">
+        <li class="list-group-item"><a href="{{ path('app_admin_showbookablemanagerpage') }}">Manage Bookables</a></li>
+        <li class="list-group-item"><a href="">Register New User</a></li>
+    </ul>
+
+{% endblock %}
