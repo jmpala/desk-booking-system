@@ -154,6 +154,90 @@ class AppFixtures extends Fixture
         // START DISABLED BOOKABLES
         UnavailableDatesFactory::createOne([
             'bookable' => $desk3,
+            'start_date' => (new \DateTime())->modify('-17 day'),
+            'end_date' => (new \DateTime())->modify('-17 day'),
+            'notes' => 'Broken table leg',
+        ]);
+
+        UnavailableDatesFactory::createOne([
+            'bookable' => $desk3,
+            'start_date' => (new \DateTime())->modify('-16 day'),
+            'end_date' => (new \DateTime())->modify('-16 day'),
+            'notes' => 'Broken table leg',
+        ]);
+
+        UnavailableDatesFactory::createOne([
+            'bookable' => $desk3,
+            'start_date' => (new \DateTime())->modify('-15 day'),
+            'end_date' => (new \DateTime())->modify('-15 day'),
+            'notes' => 'Broken table leg',
+        ]);
+
+        UnavailableDatesFactory::createOne([
+            'bookable' => $desk3,
+            'start_date' => (new \DateTime())->modify('-14 day'),
+            'end_date' => (new \DateTime())->modify('-14 day'),
+            'notes' => 'Broken table leg',
+        ]);
+
+        UnavailableDatesFactory::createOne([
+            'bookable' => $desk3,
+            'start_date' => (new \DateTime())->modify('-13 day'),
+            'end_date' => (new \DateTime())->modify('-13 day'),
+            'notes' => 'Broken table leg',
+        ]);
+
+        UnavailableDatesFactory::createOne([
+            'bookable' => $desk3,
+            'start_date' => (new \DateTime())->modify('-12 day'),
+            'end_date' => (new \DateTime())->modify('-12 day'),
+            'notes' => 'Broken table leg',
+        ]);
+
+        UnavailableDatesFactory::createOne([
+            'bookable' => $desk3,
+            'start_date' => (new \DateTime())->modify('-11 day'),
+            'end_date' => (new \DateTime())->modify('-11 day'),
+            'notes' => 'Broken table leg',
+        ]);
+
+        UnavailableDatesFactory::createOne([
+            'bookable' => $desk3,
+            'start_date' => (new \DateTime())->modify('-10 day'),
+            'end_date' => (new \DateTime())->modify('-10 day'),
+            'notes' => 'Broken table leg',
+        ]);
+
+        UnavailableDatesFactory::createOne([
+            'bookable' => $desk3,
+            'start_date' => (new \DateTime())->modify('-9 day'),
+            'end_date' => (new \DateTime())->modify('-9 day'),
+            'notes' => 'Broken table leg',
+        ]);
+
+        UnavailableDatesFactory::createOne([
+            'bookable' => $desk3,
+            'start_date' => (new \DateTime())->modify('-8 day'),
+            'end_date' => (new \DateTime())->modify('-8 day'),
+            'notes' => 'Broken table leg',
+        ]);
+
+        UnavailableDatesFactory::createOne([
+            'bookable' => $desk3,
+            'start_date' => (new \DateTime())->modify('-7 day'),
+            'end_date' => (new \DateTime())->modify('-7 day'),
+            'notes' => 'Broken table leg',
+        ]);
+
+        UnavailableDatesFactory::createOne([
+            'bookable' => $desk3,
+            'start_date' => (new \DateTime())->modify('-6 day'),
+            'end_date' => (new \DateTime())->modify('-6 day'),
+            'notes' => 'Broken table leg',
+        ]);
+
+        UnavailableDatesFactory::createOne([
+            'bookable' => $desk3,
             'start_date' => (new \DateTime())->modify('-5 day'),
             'end_date' => (new \DateTime())->modify('-1 day'),
             'notes' => 'Broken table leg',
