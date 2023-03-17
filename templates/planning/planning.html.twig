@@ -1,0 +1,88 @@
+{% extends '_templates/base.html.twig' %}
+{% set module = 'planning' %}
+
+{% block title %}Planning{% endblock %}
+
+{% block body %}
+
+    {% if isUserSelected %}
+
+    <div class="{{ (pager.nbResults > 0) ? '': 'visually-hidden' }}">
+
+        <h1 class="mt-4 mb-3 text-center">All Bookings from:
+            <select class="h5" id="userSelect">
+                {% for  user in allUsers %}
+                    <option value="{{ user.id }}" {{ (user.id == selectedUser.id) ? 'selected' : '' }}>{{ user.userIdentifier }}</option>
+                {% endfor %}
+            </select>
+        </h1>
+
+        <input type="hidden" name="userid" value="{{ userid }}">
+
+        {% if hasOnlyPastBookings %}
+            <p class="text-center">No actual booking available, make a <a href="{{ path('app_booking_new') }}">new booking</a>
+        {% endif %}
+
+        {% include "_parts/tables/_listAllBookingsTable.html.twig" with {
+            "selectedCol": selectedCol,
+            "selectedOder": selectedOder,
+            "pastBookings": pastBookings,
+            "pager": pager,
+            "todaysDate": todaysDate
+        } %}
+
+        {% if pager.nbPages > 1 %}
+            {% include "_parts/pagers/_listBookingsPager.html.twig" with { "pager": pager } %}
+        {% endif %}
+
+    </div>
+
+    <div class="{{ (pager.nbResults > 0) ? 'visually-hidden': '' }}">
+        <h1 class="mt-4 mb-3 text-center">No upcomming bookings for
+            <select class="h5" id="userSelect">
+                {% for  user in allUsers %}
+                    <option value="{{ user.id }}" {{ (user.id == selectedUser.id) ? 'selected' : '' }}>{{ user.userIdentifier }}</option>
+                {% endfor %}
+            </select>
+        </h1>
+        <p class="text-center">Make a <a href="{{ path('app_booking_new') }}">new booking</a>
+    </div>
+
+    {% include "_parts/modals/_confirmDeletionModal.html.twig" with {
+        "action": path('app_booking_delete'),
+        "hasCsrf": true,
+        "csrfName": "_csrf_token",
+        "csrfValue": csrf_token('deleteBooking'),
+
+    } %}
+
+    {% else %}
+
+        <h1 class="mt-4 mb-3 text-center">Please select a user</h1>
+
+        <form class="form border border-primary bg-light rounded p-3" id="newBookingForm" action="{{ path('app_planning') }}" method="get">
+
+            <div class="form-floating m-3">
+                <select class="form-select" name="userid" id="userid">
+
+                    {% for user in allUsers %}
+                        <option value="{{ user.id }}"> {{ user.userIdentifier }}</option>
+                    {% endfor %}
+
+                </select>
+                <label for="allBookables">All users</label>
+            </div>
+
+            <div class="row justify-content-center m-3">
+                <button type="submit" class="btn btn-primary btn-lg col-2 bg-primary m-2" id="submitBtn">Select</button>
+            </div>
+
+        </form>
+
+    {% endif %}
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('planning') }}
+{% endblock %}

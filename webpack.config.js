@@ -36,6 +36,7 @@ Encore
     .addEntry('newBooking', './assets/js/src/pages/booking/newBooking.js')
     .addEntry('allBookings', './assets/js/src/pages/booking/allBookings.js')
     .addEntry('editBooking', './assets/js/src/pages/booking/editBooking.js')
+    .addEntry('planning', './assets/js/src/pages/planning/planning.js')
 
     .addEntry('sketch', './assets/js/src/sketch/script.js')
 
