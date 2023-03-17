@@ -2,6 +2,9 @@
     <div>
         <h2 class="text-center">Booking Details</h2>
         <div class="d-flex flex-column m-4 text-center fs-4">
+            {% if isBookedInPlanning %}
+                <p>Booked for: {{ selectedUser.userIdentifier }}</p>
+            {% endif %}
             <p>Booked Resource: {{ booking.bookable.code }}</p>
             <p>Booking Confirmation: {{ booking.confirmation }}</p>
             <p>Starting Date: {{ booking.startDate | date('d/m/Y') }}</p>

@@ -4,6 +4,10 @@
         <input type="hidden" name="{{ csrfName }}" value="{{ csrfValue }}">
     {% endif %}
 
+    {% if hasUserId %}
+        <input type="hidden" name="userid" value="{{ userid }}">
+    {% endif %}
+
     <div class="form-floating m-3">
         <select class="form-select" id="allBookables" disabled>
             <option value="{{ bookable.id }}"> {{ bookable.code }}</option>

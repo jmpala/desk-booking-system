@@ -13,7 +13,7 @@ use App\Exception\NotAuthorizedException;
 use App\Repository\BookableRepository;
 use App\Repository\BookingsRepository;
 use App\Repository\UnavailableDatesRepository;
-use Doctrine\ORM\EntityNotFoundException;
+use App\Repository\UserRepository;
 use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\SecurityBundle\Security;
 
@@ -23,7 +23,8 @@ class BookingService
         private Security $security,
         private BookableRepository $bookableRepository,
         private BookingsRepository $bookingRepository,
-        private UnavailableDatesRepository $unavailableDatesRepository
+        private UnavailableDatesRepository $unavailableDatesRepository,
+        private UserRepository $userRepository
     )
     {
     }
@@ -114,6 +115,47 @@ class BookingService
 
         $bookable = $this->bookableRepository->find($bookableId);
         $user = $this->security->getUser();
+
+        $newBooking = new Bookings();
+        $newBooking->setBookable($bookable);
+        $newBooking->setStartDate($fromDate);
+        $newBooking->setEndDate($toDate);
+        $newBooking->setUser($user);
+        $newBooking->setConfirmation(bin2hex(random_bytes(4)));
+
+        $this->bookingRepository->save($newBooking, true);
+
+        return $newBooking;
+    }
+
+    /**
+     * Creates a new bookings for the given bookable, date-range and userid
+     *
+     * To prevent errors when booking the same bookable with similar dates at
+     * the same time, @function isBookableAlreadyBookedByDateRange is called.
+     * In case duplicates are found, @throws \App\Exception\BookingOverlapException
+     *
+     * @param int       $bookableId
+     * @param \DateTime $fromDate
+     * @param \DateTime $toDate
+     * @param int       $userId
+     *
+     * @return \App\Entity\Bookings
+     * @throws \Exception
+     */
+    public function createNewBookingByUserId(
+        int $bookableId,
+        \DateTime $fromDate,
+        \DateTime $toDate,
+        int $userId
+    ): Bookings
+    {
+        if ($this->isBookableAlreadyBookedByDateRange($bookableId, $fromDate, $toDate)) {
+            throw new BookingOverlapException('The bookable is already booked for the given date range');
+        }
+
+        $bookable = $this->bookableRepository->find($bookableId);
+        $user = $this->userRepository->find($userId);
 
         $newBooking = new Bookings();
         $newBooking->setBookable($bookable);

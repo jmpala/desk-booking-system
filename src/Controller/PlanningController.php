@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Repository\UserRepository;
+use App\service\BookableService;
 use App\service\BookingService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,6 +18,7 @@ class PlanningController extends AbstractController
 {
     public function __construct(
         private BookingService $bookingService,
+        private BookableService $bookableService,
         private UserRepository $userRepository,
     ){}
 
@@ -75,5 +77,72 @@ class PlanningController extends AbstractController
         ]);
     }
 
+    #[Route('/planning/booking/new/create', name: 'app_planning_createbookingbyuseidpage', methods: ['GET'])]
+    public function createBookingByUseIdPage(Request $request): Response
+    {
+        $userid = (int) $request->query->get('userid') ?: null;
 
+        $selectedUser = $this->userRepository->find($userid);
+
+        /* @var array<\App\Entity\Bookable> $allBookables */
+        $allBookables = $this->bookableService->getAllBookableAndRelatedCategories();
+
+        /* @var array<\App\Entity\Bookable> $selectedBookable */
+        $selectedBookable = $allBookables[array_key_first($allBookables)];
+
+        $errors = $request->getSession()->getFlashBag()->get('error');
+
+        return $this->render('planning/new/createBooking.html.twig', [
+            'userid' => $userid,
+            'selectedUser' => $selectedUser,
+            'todaysDate' => new \DateTime((new \DateTime())->format('Y-m-d')),
+            'selectedBookable' => $selectedBookable,
+            'allBookables' => $allBookables,
+            'errors' => $errors
+        ]);
+    }
+
+    #[Route('/planning/booking/new/confirm', name: 'app_planning_showconfirmbookingpage', methods: ['POST'])]
+    public function showConfirmBookingPage(Request $request): Response
+    {
+        if ($this->isCsrfTokenValid('newPlanningBooking', $request->request->get('_csrf_token')) === false) {
+            throw new \Exception('Invalid CSRF token');
+        }
+
+        $userid = (int) $request->request->get('userid');
+        $selectedUser = $this->userRepository->find($userid);
+        $bookableId = (int) $request->request->get('bookable');
+        $bookable = $this->bookableService->findById($bookableId);
+        $fromDate = $request->request->get('fromDate');
+        $toDate = $request->request->get('toDate');
+
+        return $this->render('planning/new/confirmBooking.html.twig', [
+            'selectedUser' => $selectedUser,
+            'userid' => $userid,
+            'bookable' => $bookable,
+            'fromDate' => $fromDate,
+            'toDate' => $toDate
+        ]);
+    }
+
+    #[Route('/planning/booking/new/confirmation', name: 'app_planning_processnewbookingandshowconfirmation', methods: ['POST'])]
+    public function processNewBookingAndShowConfirmation(Request $request): Response
+    {
+        if ($this->isCsrfTokenValid('newPlanningBooking', $request->request->get('_csrf_token')) === false) {
+            throw new \Exception('Invalid CSRF token');
+        }
+
+        $userid = (int) $request->request->get('userid');
+        $selectedUser = $this->userRepository->find($userid);
+        $bookableId = (int) $request->request->get('bookable');
+        $fromDate = new \DateTime($request->request->get('fromDate'));
+        $toDate = new \DateTime($request->request->get('toDate'));
+
+        $createdBooking = $this->bookingService->createNewBookingByUserId($bookableId, $fromDate, $toDate, $userid);
+
+        return $this->render('planning/new/createdBooking.html.twig', [
+            'booking' => $createdBooking,
+            'selectedUser' => $selectedUser,
+        ]);
+    }
 }

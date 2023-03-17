@@ -1,19 +1,19 @@
 {% extends '_templates/base.html.twig' %}
-{% set module = 'bookings' %}
+{% set module = 'planning' %}
 
 {% block title %}New Booking{% endblock %}
 
 {% block body %}
 
-    <h1 class="mt-4 mb-3 text-center">New Booking</h1>
+    <h1 class="mt-4 mb-3 text-center">New Booking for {{ selectedUser.userIdentifier }}</h1>
 
     {% include "booking/new/_parts/_createBookingBreadCrumb.html.twig" with { 'editStage': '2' } %}
 
     {% include "_parts/booking/_bookingDetails.html.twig" with {
-        'isBookedInPlanning': false,
+        'isBookedInPlanning': true,
         'booking': booking,
-        'goToPath': path('app_booking_showallbookings'),
-        'goToLbl': 'To Bookings'
+        'goToPath': path('app_planning') ~ '?userid=' ~ selectedUser.id,
+        'goToLbl': 'To Planning'
     } %}
 
 {% endblock %}

@@ -20,7 +20,11 @@
         <input type="hidden" name="userid" value="{{ userid }}">
 
         {% if hasOnlyPastBookings %}
-            <p class="text-center">No actual booking available, make a <a href="{{ path('app_booking_new') }}">new booking</a>
+            <p class="text-center">No actual booking available, make a <a href="{{ "#{path('app_planning_createbookingbyuseidpage')}?userid=#{selectedUser.id}" }}">new booking</a>
+        {% endif %}
+
+        {% if not hasOnlyPastBookings %}
+            <p class="text-center">Make a <a href="{{ "#{path('app_planning_createbookingbyuseidpage')}?userid=#{selectedUser.id}" }}">new booking</a>
         {% endif %}
 
         {% include "_parts/tables/_listAllBookingsTable.html.twig" with {
@@ -45,7 +49,7 @@
                 {% endfor %}
             </select>
         </h1>
-        <p class="text-center">Make a <a href="{{ path('app_booking_new') }}">new booking</a>
+        <p class="text-center">Make a <a href="{{ "#{path('app_planning_createbookingbyuseidpage')}?=#{selectedUser.id}" }}">new booking</a>
     </div>
 
     {% include "_parts/modals/_confirmDeletionModal.html.twig" with {

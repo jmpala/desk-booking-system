@@ -1,20 +1,20 @@
 {% extends '_templates/base.html.twig' %}
-{% set module = 'bookings' %}
+{% set module = 'planning' %}
 
 {% block title %}New Booking{% endblock %}
 
 {% block body %}
 
-    <h1 class="mt-4 mb-3 text-center">New Booking</h1>
+    <h1 class="mt-4 mb-3 text-center">New Booking for {{ selectedUser.userIdentifier }}</h1>
 
     {% include "booking/new/_parts/_createBookingBreadCrumb.html.twig" with { 'editStage': '1' } %}
 
     {% include "_parts/forms/_confirmCreateBookingForm.html.twig" with {
-        'action': path('app_booking_process_and_show_confirmation'),
-        'hasUserId': false,
+        'action': path('app_planning_processnewbookingandshowconfirmation'),
+        'hasUserId': true,
         "hasCsrf": true,
         'csrfName': '_csrf_token',
-        'csrfValue': csrf_token('newBookingConfirmation'),
+        'csrfValue': csrf_token('newPlanningBooking'),
         'bookable': bookable,
         'fromDate': fromDate,
         'toDate': toDate,
@@ -24,6 +24,3 @@
     } %}
 
 {% endblock %}
-
-
-
