@@ -7,6 +7,8 @@
 
     <h1 class="mt-4 mb-3 text-center">Manage Bookables Availability</h1>
 
+     <p class="text-center">Insert a new <a href="#">Unavailable Date</a></p>
+
     <table id="unavailableDatesTable" class="table">
         <thead>
         <tr>
@@ -37,24 +39,30 @@
         </tr>
         </thead>
         <tbody>
-        {% for unavailableDates in pager %}
-            <tr class="{{ (unavailableDates.endDate <  todaysDate ) ? 'bg-dark bg-opacity-10' : '' }}">
-                <td class="text-center">{{ unavailableDates.bookable.code }}</td>
-                <td class="text-center">{{ unavailableDates.startDate | date('d/m/Y') }}</td>
-                <td class="text-center">{{ unavailableDates.endDate | date('d/m/Y') }}</td>
-                <td class="text-center">{{ unavailableDates.notes }}</td>
-                <td class="text-center">
-                    <button class="btn btn-outline-warning btn-sm edit-btn"
-                            data-bs-booking-id="{{ unavailableDates.id }}"
-                    >Modify</button>
-                    <button type="button" class="btn btn-outline-danger btn-sm"
-                            data-bs-toggle="modal"
-                            data-bs-target="#deleteConfirmation"
-                            data-bs-booking-id="{{ unavailableDates.id }}"
-                     >Delete</button>
-                </td>
+        {% if pager.nbResults > 0 %}
+            {% for unavailableDates in pager %}
+                <tr class="{{ (unavailableDates.endDate <  todaysDate ) ? 'bg-dark bg-opacity-10' : '' }}">
+                    <td class="text-center">{{ unavailableDates.bookable.code }}</td>
+                    <td class="text-center">{{ unavailableDates.startDate | date('d/m/Y') }}</td>
+                    <td class="text-center">{{ unavailableDates.endDate | date('d/m/Y') }}</td>
+                    <td class="text-center">{{ unavailableDates.notes }}</td>
+                    <td class="text-center">
+                        <button class="btn btn-outline-warning btn-sm edit-btn"
+                                data-bs-booking-id="{{ unavailableDates.id }}"
+                        >Modify</button>
+                        <button type="button" class="btn btn-outline-danger btn-sm"
+                                data-bs-toggle="modal"
+                                data-bs-target="#deleteConfirmation"
+                                data-bs-booking-id="{{ unavailableDates.id }}"
+                         >Delete</button>
+                    </td>
+                </tr>
+            {% endfor %}
+        {% else %}
+            <tr>
+                <td colspan="5" class="text-center">No current Unavailable Dates, please chech for past ones</td>
             </tr>
-        {% endfor %}
+        {% endif %}
         </tbody>
     </table>
 
