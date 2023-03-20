@@ -7,7 +7,7 @@ const iconSelected: HTMLElement = selectedColumn.querySelector('i');
 const pastCheck: HTMLInputElement = document.getElementById('pastUnavailabledates');
 const userSelects: NodeListOf = document.querySelectorAll('#userSelect');
 
-// const deleteConmfirmationModal = document.getElementById('deleteConfirmation')
+const deleteConmfirmationModal = document.getElementById('deleteConfirmation')
 
 
 iconSelected.classList.remove('bi-arrow-down-up');
@@ -21,7 +21,7 @@ if (selectedColumn.dataset.colOrder === 'asc') {
 table.addEventListener('click', orderTable);
 table.addEventListener('click', onClickEditBooking);
 pastCheck.addEventListener('change', onCheckedPastBookings);
-// deleteConmfirmationModal.addEventListener('show.bs.modal', onShowDeleteConfirmationModal);
+deleteConmfirmationModal.addEventListener('show.bs.modal', onShowDeleteConfirmationModal);
 
 userSelects.forEach((userSelect) => {
   userSelect.addEventListener('change', onUserSelectChange);
@@ -77,15 +77,12 @@ function onCheckedPastBookings(event: Event): void {
 
 function onShowDeleteConfirmationModal(event): void {
   const button: HTMLElement = event.relatedTarget;
-  const confirmationNumber = button.getAttribute('data-bs-confirmation');
-  const bookingId = button.getAttribute('data-bs-booking-id');
+  const unavailableId = button.getAttribute('data-bs-booking-id');
   const confirmationLabel = document.getElementById('data-bs-confirmation');
-  const deleteConfirmationBtn = document.getElementById('deleteConfirmationBtn');
-  const hiddenInput = document.getElementById('bookingId');
+  const hiddenInput = document.getElementById('unavailableId');
 
-  deleteConfirmationBtn.setAttribute('data-booking-id', bookingId);
-  confirmationLabel.textContent = confirmationNumber;
-  hiddenInput.value = bookingId;
+  confirmationLabel.textContent = unavailableId;
+  hiddenInput.value = unavailableId;
 }
 
 

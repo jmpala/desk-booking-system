@@ -70,4 +70,17 @@ class UnavailableDatesController extends AbstractController
             'unavailableDates' => $unavailableDates
         ]);
     }
+
+    #[Route('/admin/unavailableDates/delete', name: 'app_unavailabledates_deleteunavailabledateperiod', methods: ['POST'])]
+    public function deleteUnavailableDatePeriod(Request $request): Response
+    {
+        if (!$this->isCsrfTokenValid('deleteUnavailableDate', $request->request->get('_csrf_token'))) {
+            throw new \Exception('Invalid CSRF token');
+        }
+
+        $unavailableDateId = (int) $request->request->get('unavailableId');
+        $this->bookableService->deleteUnavailableDate($unavailableDateId);
+
+        return $this->redirectToRoute('app_admin_showbookablemanagerpage');
+    }
 }

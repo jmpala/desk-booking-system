@@ -1,4 +1,4 @@
-{% extends '_templates/base.html.twig' %}
+    {% extends '_templates/base.html.twig' %}
 {% set module = 'admin' %}
 
 {% block title %}Admin Panel{% endblock %}
@@ -49,11 +49,13 @@
                     <td class="text-center">
                         <button class="btn btn-outline-warning btn-sm edit-btn"
                                 data-bs-booking-id="{{ unavailableDates.id }}"
+                                {{ (unavailableDates.endDate <  todaysDate ) ? 'disabled' : '' }}
                         >Modify</button>
                         <button type="button" class="btn btn-outline-danger btn-sm"
                                 data-bs-toggle="modal"
                                 data-bs-target="#deleteConfirmation"
                                 data-bs-booking-id="{{ unavailableDates.id }}"
+                                {{ (unavailableDates.endDate <  todaysDate ) ? 'disabled' : '' }}
                          >Delete</button>
                     </td>
                 </tr>
@@ -69,6 +71,29 @@
     {% if pager.nbPages > 1 %}
         {% include "_parts/pagers/_listBookingsPager.html.twig" with { "pager": pager } %}
     {% endif %}
+
+    <!-- Modal -->
+    <div class="modal fade" id="deleteConfirmation" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Deletion Confirmation</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to delete the Unavailable-Dates id #<span id="data-bs-confirmation"></span>?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
+                    <form action="{{ path('app_unavailabledates_deleteunavailabledateperiod') }}" method="post">
+                        <input type="hidden" name="unavailableId" id="unavailableId" value="">
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token('deleteUnavailableDate') }}">
+                        <button id="deleteConfirmationBtn" type="submit" class="btn btn-danger" data-booking-id="">DELETE</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
 {% endblock %}
 

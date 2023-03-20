@@ -150,4 +150,21 @@ class BookableService
 
         return $unavailableDates;
     }
+
+    /**
+     *
+     *
+     * @param int $unavailableDateId
+     *
+     * @return void
+     */
+    public function deleteUnavailableDate(int $unavailableDateId): void
+    {
+        try {
+            $unavailableDate = $this->unavailableDatesRepository->find($unavailableDateId);
+            $this->unavailableDatesRepository->remove($unavailableDate, true);
+        } catch (\Exception $e) {
+            throw new \Exception('Unable to delete unavailable date id: ' . $unavailableDateId);
+        }
+    }
 }
