@@ -1,6 +1,6 @@
 "use strict";
 
-import {period} from "../utils/bookingUtils";
+import {period} from "../utils/dateUtils";
 
 /**
  * Calls the internal API to check if the selected dates are available and returns if any,

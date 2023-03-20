@@ -2,7 +2,7 @@
 
 
 import '../../../../sass/pages/main/main_editBooking.scss';
-import { period, sanitizeDisplayDate, checkIfDatesAreValid, checkIfPeriodsOverlap } from '../../utils/bookingUtils';
+import { period, sanitizeDisplayDate, checkIfDatesAreValid, checkIfPeriodsOverlap } from '../../utils/dateUtils';
 import { isAvailableAPIData, isAvailableAPIDataOptions, checkBookableAvailabilityBySelectedDatesRESTCall, setUnavailablePeriods } from '../../api/checkBookableAvailabilityBySelectedDatesRESTCall';
 
 
