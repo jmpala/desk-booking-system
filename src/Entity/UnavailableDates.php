@@ -18,7 +18,8 @@ class UnavailableDates
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['bookable:read'])]
+    #[Groups(['bookable:read',
+        'unavailableDates:read'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'unavailableDates')]
@@ -26,15 +27,18 @@ class UnavailableDates
     private ?Bookable $bookable = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    #[Groups(['bookable:read'])]
+    #[Groups(['bookable:read',
+        'unavailableDates:read'])]
     private ?\DateTimeInterface $start_date = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    #[Groups(['bookable:read'])]
+    #[Groups(['bookable:read',
+        'unavailableDates:read'])]
     private ?\DateTimeInterface $end_date = null;
 
     #[ORM\Column(type: Types::TEXT)]
-    #[Groups(['bookable:read'])]
+    #[Groups(['bookable:read',
+        'unavailableDates:read'])]
     private ?string $notes = null;
 
     public function getId(): ?int

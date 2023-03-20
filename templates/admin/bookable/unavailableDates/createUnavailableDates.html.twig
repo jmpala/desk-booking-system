@@ -1,0 +1,34 @@
+{% extends '_templates/base.html.twig' %}
+{% set module = 'admin' %}
+
+{% block title %}Admin Panel{% endblock %}
+
+{% block body %}
+
+    <h1 class="mt-4 mb-3 text-center">Create Unavailable Dates</h1>
+
+    {% include "_parts/breadcrumbs/_createUnavailableDatesBreadCrumb.html.twig" with { 'editStage': 0 } %}
+
+    {% include "_parts/forms/_inputCreateUnavailableDatesFrom.html.twig" with {
+        'action': '#',
+        'hasErrors': true,
+        'errors': errors,
+        'hasCsrf': true,
+        'csrfName': '_csrf_token',
+        'csrfValue': csrf_token('newUnavailableDates'),
+        'allBookables': allBookables,
+        'todaysDate': todaysDate,
+        'returnTo': 'window.history.back();',
+        'returnLbl': 'Return',
+        'submitLbl': 'Create'
+    } %}
+
+{% endblock %}
+
+{% block stylesheets %}
+    {{ encore_entry_link_tags('newUnavailableDates') }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('newUnavailableDates') }}
+{% endblock %}

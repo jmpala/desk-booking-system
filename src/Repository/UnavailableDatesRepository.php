@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Bookable;
 use App\Entity\UnavailableDates;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -118,5 +119,30 @@ class UnavailableDatesRepository extends ServiceEntityRepository
         $pagerFanta = new Pagerfanta(new QueryAdapter($queryBuilder));
 
         return $pagerFanta;
+    }
+
+    /**
+     * Return all the unavailable dates that overlap the given date range
+     *
+     * @param \DateTime $from
+     * @param \DateTime $to
+     *
+     * @return array
+     */
+    public function getUnavailableDatesByDateRange(
+        Bookable $bookable,
+        \DateTime $from,
+        \DateTime $to
+    ): array {
+        return $this->createQueryBuilder('ud')
+            ->select('ud', 'bk')
+            ->leftJoin('ud.bookable', 'bk')
+            ->where('DATE(:from) <= DATE(ud.end_date) AND DATE(:to) >= DATE(ud.start_date)')
+            ->andWhere(':id = bk.id')
+            ->setParameter('id', $bookable->getId())
+            ->setParameter('from', $from)
+            ->setParameter('to', $to)
+            ->getQuery()
+            ->getResult();
     }
 }
