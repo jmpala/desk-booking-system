@@ -1,0 +1,26 @@
+{% extends '_templates/base.html.twig' %}
+{% set module = 'admin' %}
+
+{% block title %}Admin Panel{% endblock %}
+
+{% block body %}
+
+    <h1 class="mt-4 mb-3 text-center">Confirm Unavailable Dates</h1>
+
+    {% include "_parts/breadcrumbs/_createUnavailableDatesBreadCrumb.html.twig" with { 'createStage': 1 } %}
+
+    {% include "_parts/forms/_confirmCreateUnavailableDatesForm.html.twig" with {
+        'action': path('app_unavailabledates_showconfirmationunavailabledatespage'),
+        'hasCsrf': true,
+        'csrfName': '_csrf_token',
+        'csrfValue': csrf_token('newUnavailableDates'),
+        'bookable': bookable,
+        'fromDate': fromDate,
+        'toDate': toDate,
+        'notes': notes,
+        'returnTo': 'window.history.back();',
+        'returnLbl': 'Edit',
+        'submitLbl': 'Confirm'
+    } %}
+
+{% endblock %}

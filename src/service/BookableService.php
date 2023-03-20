@@ -6,6 +6,7 @@ namespace App\service;
 
 use App\Entity\Bookable;
 use App\Entity\Bookings;
+use App\Entity\UnavailableDates;
 use App\Repository\BookableRepository;
 use App\Repository\BookingsRepository;
 use App\Repository\UnavailableDatesRepository;
@@ -122,4 +123,31 @@ class BookableService
         return $mappedUnavailables;
     }
 
+    /**
+     * Creates new Unavailable Dates
+     *
+     * @param int                        $bookableId
+     * @param float|bool|int|string|null $fromDate
+     * @param float|bool|int|string|null $toDate
+     * @param float|bool|int|string|null $notes
+     *
+     * @return void
+     */
+    public function createUnavailableDates(
+        int $bookableId,
+        string $fromDate,
+        string $toDate,
+        string $notes
+    ): UnavailableDates {
+        $bookable = $this->bookableRepository->find($bookableId);
+        $unavailableDates = new UnavailableDates();
+        $unavailableDates->setBookable($bookable);
+        $unavailableDates->setStartDate(new \DateTime($fromDate));
+        $unavailableDates->setEndDate(new \DateTime($toDate));
+        $unavailableDates->setNotes($notes);
+
+        $this->unavailableDatesRepository->save($unavailableDates, true);
+
+        return $unavailableDates;
+    }
 }
