@@ -54,7 +54,7 @@ class BookingController extends AbstractController
     #[Route('/booking/confirm', name: 'app_booking_new_confirm', methods: ['POST'])]
     public function showConfirmBookingPage(Request $request): Response
     {
-        if ($this->isCsrfTokenValid('newBooking', $request->request->get('_csrf_token')) === false) {
+        if (!$this->isCsrfTokenValid('newBooking', $request->request->get('_csrf_token'))) {
             throw new \Exception('Invalid CSRF token');
         }
 
@@ -73,7 +73,7 @@ class BookingController extends AbstractController
     #[Route('/booking/new/confirmation', name: 'app_booking_process_and_show_confirmation', methods: ['POST'])]
     public function processNewBookingAndShowConfirmation(Request $request): Response
     {
-        if ($this->isCsrfTokenValid('newBookingConfirmation', $request->request->get('_csrf_token')) === false) {
+        if (!$this->isCsrfTokenValid('newBookingConfirmation', $request->request->get('_csrf_token'))) {
             throw new \Exception('Invalid CSRF token');
         }
 
@@ -131,7 +131,7 @@ class BookingController extends AbstractController
     #[Route('/booking/delete', name: 'app_booking_delete', methods: ['POST'])]
     public function deleteBooking(Request $request): Response
     {
-        if ($this->isCsrfTokenValid('deleteBooking', $request->request->get('_csrf_token')) === false) {
+        if (!$this->isCsrfTokenValid('deleteBooking', $request->request->get('_csrf_token'))) {
             throw new \Exception('Invalid CSRF token');
         }
 
@@ -175,7 +175,7 @@ class BookingController extends AbstractController
     #[Route('/booking/edit/confirm', name: 'app_booking_showconfirmeditbookingpage', methods: ['POST'])]
     public function showConfirmEditBookingPage(Request $request): Response
     {
-        if ($this->isCsrfTokenValid('editBooking', $request->request->get('_csrf_token')) === false) {
+        if (!$this->isCsrfTokenValid('editBooking', $request->request->get('_csrf_token'))) {
             throw new \Exception('Invalid CSRF token');
         }
 
@@ -197,7 +197,7 @@ class BookingController extends AbstractController
     #[Route('/booking/edit/confirmation', name: 'app_booking_processeditbookingandshowconfirmation', methods: ['POST'])]
     public function processEditBookingAndShowConfirmation(Request $request): Response
     {
-        if ($this->isCsrfTokenValid('confirmEditBooking', $request->request->get('_csrf_token')) === false) {
+        if (!$this->isCsrfTokenValid('confirmEditBooking', $request->request->get('_csrf_token'))) {
             throw new \Exception('Invalid CSRF token');
         }
 
