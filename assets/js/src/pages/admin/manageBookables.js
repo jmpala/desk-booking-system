@@ -22,7 +22,12 @@ table.addEventListener('click', onClickEditUnavailableDate);
 pastCheck.addEventListener('change', onCheckedPastUnavailableDates);
 deleteConmfirmationModal.addEventListener('show.bs.modal', onShowDeleteConfirmationModal);
 
-
+/**
+ * Orders the table by the selected column, requesting the server to get the new
+ * rendered page with the new ordered table
+ *
+ * @param event
+ */
 function orderTable(event: Event): void {
   const target: HTMLElement = event.target;
 
@@ -40,7 +45,6 @@ function orderTable(event: Event): void {
 
   let newUri = `${window.location.origin}${window.location.pathname}?userid=${userId}&page=${page}&col=${col}&ord=${order}`;
 
-  const past = document.querySelector('[data-past-bookings]');
   if (pastCheck.checked) {
     newUri += '&past=true';
   }
@@ -48,7 +52,12 @@ function orderTable(event: Event): void {
   window.location.href = newUri;
 }
 
-
+/**
+ * Request the server to get a new rendered page with or without the past bookings,
+ * according to the checkbox state, also maintaining the current column order
+ *
+ * @param event
+ */
 function onCheckedPastUnavailableDates(event: Event): void {
   const target: HTMLInputElement = event.target;
 
@@ -69,18 +78,28 @@ function onCheckedPastUnavailableDates(event: Event): void {
   window.location.href = newUri;
 }
 
-
+/**
+ * Gets the unavailable date id from the button that triggered the show modal
+ * event and sets it to the hidden input of the modals form and also the info label
+ *
+ * @param event
+ */
 function onShowDeleteConfirmationModal(event): void {
   const button: HTMLElement = event.relatedTarget;
   const unavailableId = button.getAttribute('data-bs-booking-id');
-  const confirmationLabel = document.getElementById('data-bs-confirmation');
+  const confirmationIdLabel = document.getElementById('data-bs-confirmation');
   const hiddenInput = document.getElementById('unavailableId');
 
-  confirmationLabel.textContent = unavailableId;
+  confirmationIdLabel.textContent = unavailableId;
   hiddenInput.value = unavailableId;
 }
 
-
+/**
+ * Handles the click event on the edit button of the table, getting the unavailable
+ * date id from the button and redirecting to the edit page
+ *
+ * @param event
+ */
 function onClickEditUnavailableDate(event: Event): void {
   const target: HTMLElement = event.target;
   if (!target.classList.contains('edit-btn')) return;

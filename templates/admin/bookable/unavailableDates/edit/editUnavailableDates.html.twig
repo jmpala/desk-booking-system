@@ -18,8 +18,8 @@
         'csrfValue': csrf_token('editUnavailableDates'),
         'unavailableDate': unavailableDate,
         'todaysDate': todaysDate,
-        'fromDate': fromDate,
-        'toDate': toDate,
+        'fromDate': unavailableDate.startDate,
+        'toDate': unavailableDate.endDate,
         'returnTo': 'window.history.back();',
         'returnLbl': 'Return',
         'submitLbl': 'Edit'

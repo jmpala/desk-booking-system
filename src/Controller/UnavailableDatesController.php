@@ -12,15 +12,18 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+#[IsGranted('ROLE_ADMIN')]
 class UnavailableDatesController extends AbstractController
 {
+
     public function __construct(
         private BookableService $bookableService,
         private UnavailableDatesService $unavailableDatesService,
     ){}
 
-    #[Route('/admin/unavailableDates/create', name: 'app_unavailabledates_showcreateunavailabledatespage', methods: ['GET'])]
+    #[Route('/admin/unavailableDates/new/create', name: 'app_unavailabledates_showcreateunavailabledatespage', methods: ['GET'])]
     public function showCreateUnavailableDatesPage(Request $request): Response
     {
         $allBookables = $this->bookableService->getAllBookableAndRelatedCategories();
@@ -34,7 +37,7 @@ class UnavailableDatesController extends AbstractController
         ]);
     }
 
-    #[Route('/admin/unavailableDates/confirm', name: 'app_unavailabledates_showconfirmcreateunavailabledatespage', methods: ['POST'])]
+    #[Route('/admin/unavailableDates/new/confirm', name: 'app_unavailabledates_showconfirmcreateunavailabledatespage', methods: ['POST'])]
     public function showConfirmCreateUnavailableDatesPage(Request $request): Response
     {
         if (!$this->isCsrfTokenValid('newUnavailableDates', $request->request->get('_csrf_token'))) {
@@ -55,7 +58,7 @@ class UnavailableDatesController extends AbstractController
         ]);
     }
 
-    #[Route('/admin/unavailableDates/confirmation', name: 'app_unavailabledates_showconfirmationunavailabledatespage', methods: ['POST'])]
+    #[Route('/admin/unavailableDates/new/confirmation', name: 'app_unavailabledates_showconfirmationunavailabledatespage', methods: ['POST'])]
     public function showConfirmationUnavailableDatesPage(Request $request): Response
     {
         if (!$this->isCsrfTokenValid('newUnavailableDates', $request->request->get('_csrf_token'))) {
@@ -90,15 +93,11 @@ class UnavailableDatesController extends AbstractController
     #[Route('/admin/unavailableDates/{id}/edit', name: 'app_unavailabledates_showeditunavailabledatespage', methods: ['GET'])]
     public function showEditUnavailableDatesPage(UnavailableDates $unavailableDates, Request $request): Response
     {
-        $allBookables = $this->bookableService->getAllBookableAndRelatedCategories();
-
         $errors = $request->getSession()->getFlashBag()->get('error');
 
         return $this->render('admin/bookable/unavailableDates/edit/editUnavailableDates.html.twig', [
             'unavailableDate' => $unavailableDates,
             'todaysDate' => DateUtils::getTodaysDate(),
-            'fromDate' => DateUtils::getDateFromString($unavailableDates->getStartDate()->format('Y-m-d')),
-            'toDate' => DateUtils::getDateFromString($unavailableDates->getEndDate()->format('Y-m-d')),
             'errors' => $errors,
         ]);
     }
