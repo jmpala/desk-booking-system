@@ -1,0 +1,27 @@
+{% extends '_templates/base.html.twig' %}
+{% set module = 'admin' %}
+
+{% block title %}Admin Panel{% endblock %}
+
+{% block body %}
+
+    <h1 class="mt-4 mb-3 text-center">Confirm Unavailable Dates</h1>
+
+    {% include "_parts/breadcrumbs/_editUnavailableDatesBreadCrumb.html.twig" with { 'createStage': 2 } %}
+
+    <div class="border border-primary bg-light rounded p-3">
+        <div>
+            <h2 class="text-center">Unavailable Dates Details</h2>
+            <div class="d-flex flex-column m-4 text-center fs-4">
+                <p>Booked Resource: {{ unavailableDates.bookable.code }}</p>
+                <p>Starting Date: {{ unavailableDates.startDate | date('d/m/Y') }}</p>
+                <p>End Date: {{ unavailableDates.endDate | date('d/m/Y') }}</p>
+                <p>Notes: {{ unavailableDates.notes }}</p>
+            </div>
+        </div>
+        <div class="row justify-content-center m-3">
+            <a href="{{ path('app_admin_showbookablemanagerpage') }}" class="btn btn-primary btn-lg col-3 bg-primary">To Unavailable Dates</a>
+        </div>
+    </div>
+
+{% endblock %}

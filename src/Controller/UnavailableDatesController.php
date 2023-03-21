@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Entity\UnavailableDates;
 use App\service\BookableService;
+use App\service\UnavailableDatesService;
 use App\utils\DateUtils;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,6 +17,7 @@ class UnavailableDatesController extends AbstractController
 {
     public function __construct(
         private BookableService $bookableService,
+        private UnavailableDatesService $unavailableDatesService,
     ){}
 
     #[Route('/admin/unavailableDates/create', name: 'app_unavailabledates_showcreateunavailabledatespage', methods: ['GET'])]
@@ -82,5 +85,66 @@ class UnavailableDatesController extends AbstractController
         $this->bookableService->deleteUnavailableDate($unavailableDateId);
 
         return $this->redirectToRoute('app_admin_showbookablemanagerpage');
+    }
+
+    #[Route('/admin/unavailableDates/{id}/edit', name: 'app_unavailabledates_showeditunavailabledatespage', methods: ['GET'])]
+    public function showEditUnavailableDatesPage(UnavailableDates $unavailableDates, Request $request): Response
+    {
+        $allBookables = $this->bookableService->getAllBookableAndRelatedCategories();
+
+        $errors = $request->getSession()->getFlashBag()->get('error');
+
+        return $this->render('admin/bookable/unavailableDates/edit/editUnavailableDates.html.twig', [
+            'unavailableDate' => $unavailableDates,
+            'todaysDate' => DateUtils::getTodaysDate(),
+            'fromDate' => DateUtils::getDateFromString($unavailableDates->getStartDate()->format('Y-m-d')),
+            'toDate' => DateUtils::getDateFromString($unavailableDates->getEndDate()->format('Y-m-d')),
+            'errors' => $errors,
+        ]);
+    }
+
+    #[Route('/admin/unavailableDates/{id}/edit/confirm', name: 'app_unavailabledates_showconfirmeditunavailabledatespage', methods: ['POST'])]
+    public function showConfirmEditUnavailableDatesPage(Request $request): Response
+    {
+        if (!$this->isCsrfTokenValid('editUnavailableDates', $request->request->get('_csrf_token'))) {
+            throw new \Exception('Invalid CSRF token');
+        }
+
+        $bookableId = (int) $request->request->get('bookable');
+        $bookable = $this->bookableService->findById($bookableId);
+        $unavailableDateId = (int) $request->request->get('unavailableDateId');
+        $unavailableDate = $this->unavailableDatesService->findById($unavailableDateId);
+        $fromDate = $request->request->get('fromDate');
+        $toDate = $request->request->get('toDate');
+        $notes = $request->request->get('notes');
+
+        return $this->render('admin/bookable/unavailableDates/edit/confirmEditUnavailableDates.html.twig', [
+            'bookable' => $bookable,
+            'unavailableDate' => $unavailableDate,
+            'todaysDate' => DateUtils::getTodaysDate(),
+            'fromDate' => $fromDate,
+            'toDate' => $toDate,
+            'notes' => $notes
+        ]);
+    }
+
+    #[Route('/admin/unavailableDates/{id}/edit/confirmation', name: 'app_unavailabledates_showconfirmationeditunavailabledatespage', methods: ['POST'])]
+    public function showConfirmationEditUnavailableDatesPage(Request $request): Response
+    {
+        if (!$this->isCsrfTokenValid('editUnavailableDates', $request->request->get('_csrf_token'))) {
+            throw new \Exception('Invalid CSRF token');
+        }
+
+        $bookableId = (int) $request->request->get('bookable');
+        $unavailableDateId = (int) $request->request->get('unavailableDateId');
+        $fromDate = $request->request->get('fromDate');
+        $toDate = $request->request->get('toDate');
+        $notes = $request->request->get('notes');
+
+        $unavailableDates = $this->bookableService->editUnavailableDates($unavailableDateId, new \DateTime($fromDate), new \DateTime($toDate), $notes);
+
+        return $this->render('admin/bookable/unavailableDates/edit/confirmationUnavailableDates.html.twig', [
+            'unavailableDates' => $unavailableDates
+        ]);
     }
 }

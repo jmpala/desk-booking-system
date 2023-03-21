@@ -39,6 +39,7 @@ Encore
     .addEntry('planning', './assets/js/src/pages/planning/planning.js')
     .addEntry('manageBookables', './assets/js/src/pages/admin/manageBookables.js')
     .addEntry('newUnavailableDates', './assets/js/src/pages/admin/unavailableDates/newUnavailableDate.js')
+    .addEntry('editUnavailableDates', './assets/js/src/pages/admin/unavailableDates/editUnavailableDate.js')
 
     .addEntry('sketch', './assets/js/src/sketch/script.js')
 

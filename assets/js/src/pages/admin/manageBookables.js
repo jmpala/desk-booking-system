@@ -5,7 +5,6 @@ const table: HTMLElement = document.getElementById('unavailableDatesTable');
 const selectedColumn: HTMLElement = document.querySelector('[data-col-selected="true"]');
 const iconSelected: HTMLElement = selectedColumn.querySelector('i');
 const pastCheck: HTMLInputElement = document.getElementById('pastUnavailabledates');
-const userSelects: NodeListOf = document.querySelectorAll('#userSelect');
 
 const deleteConmfirmationModal = document.getElementById('deleteConfirmation')
 
@@ -19,13 +18,10 @@ if (selectedColumn.dataset.colOrder === 'asc') {
 
 
 table.addEventListener('click', orderTable);
-table.addEventListener('click', onClickEditBooking);
-pastCheck.addEventListener('change', onCheckedPastBookings);
+table.addEventListener('click', onClickEditUnavailableDate);
+pastCheck.addEventListener('change', onCheckedPastUnavailableDates);
 deleteConmfirmationModal.addEventListener('show.bs.modal', onShowDeleteConfirmationModal);
 
-userSelects.forEach((userSelect) => {
-  userSelect.addEventListener('change', onUserSelectChange);
-});
 
 function orderTable(event: Event): void {
   const target: HTMLElement = event.target;
@@ -53,11 +49,10 @@ function orderTable(event: Event): void {
 }
 
 
-function onCheckedPastBookings(event: Event): void {
+function onCheckedPastUnavailableDates(event: Event): void {
   const target: HTMLInputElement = event.target;
 
-  if (target.id !== 'pastUnavailabledates'
-  && target.id !== 'checkForPastBookings') return;
+  if (target.id !== 'pastUnavailabledates') return;
 
   const urlParams = new URLSearchParams(window.location.search);
   const userId = urlParams.get('userid');
@@ -86,29 +81,13 @@ function onShowDeleteConfirmationModal(event): void {
 }
 
 
-function onClickEditBooking(event: Event): void {
+function onClickEditUnavailableDate(event: Event): void {
   const target: HTMLElement = event.target;
   if (!target.classList.contains('edit-btn')) return;
 
   event.stopPropagation();
 
-  const urlParams = new URLSearchParams(window.location.search);
-  const userId = urlParams.get('userid');
-  const bookingId = target.getAttribute('data-bs-booking-id');
+  const unavailableDateId = target.getAttribute('data-bs-booking-id');
 
-  window.location.href = window.location.origin + '/planning/booking/edit/' + bookingId + '?userid=' + userId;
-}
-
-
-function onUserSelectChange(event: Event): void {
-  const target: HTMLElement = event.target;
-
-  if (target.id !== 'userSelect') return;
-
-  const urlParams = new URLSearchParams(window.location.search);
-  const userId = target.value;
-
-  let newUri = `${window.location.origin}${window.location.pathname}?userid=${userId}`;
-
-  window.location.href = newUri;
+  window.location.href = window.location.origin + `/admin/unavailableDates/${unavailableDateId}/edit`;
 }

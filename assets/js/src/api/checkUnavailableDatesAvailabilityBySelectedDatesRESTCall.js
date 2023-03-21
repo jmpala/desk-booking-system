@@ -2,9 +2,9 @@
 
 import {period} from "../utils/dateUtils";
 
-export async function checkUnavailableDatesAvailabilityBySelectedDatesRESTCall(bookableId: number, from: Date, to: Date, options?: checkUnavailableDatesAvailabilityAPIDataOptions): checkUnavailableDatesAvailabilityAPIData {
+export async function checkUnavailableDatesAvailabilityBySelectedDatesRESTCall(unavailableDateId: number, from: Date, to: Date, options?: checkUnavailableDatesAvailabilityAPIDataOptions): checkUnavailableDatesAvailabilityAPIData {
 // TODO: implement CSRF token
-  const res: Response = await fetch(`/api/admin/unavailableDates/${bookableId}`, {
+  const res: Response = await fetch(`/api/admin/unavailableDates/${unavailableDateId}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"

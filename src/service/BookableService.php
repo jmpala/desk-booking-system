@@ -167,4 +167,21 @@ class BookableService
             throw new \Exception('Unable to delete unavailable date id: ' . $unavailableDateId);
         }
     }
+
+    public function editUnavailableDates(
+        int $unavailableDateId,
+        \DateTime $fromDate,
+        \DateTime $toDate,
+        string $notes
+    ): UnavailableDates {
+        $unavailableDate = $this->unavailableDatesRepository->find($unavailableDateId);
+
+        $unavailableDate->setStartDate($fromDate);
+        $unavailableDate->setEndDate($toDate);
+        $unavailableDate->setNotes($notes);
+
+        $this->unavailableDatesRepository->save($unavailableDate, true);
+
+        return $unavailableDate;
+    }
 }
