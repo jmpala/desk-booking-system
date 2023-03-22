@@ -7,6 +7,8 @@ namespace App\Repository;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Pagerfanta\Doctrine\ORM\QueryAdapter;
+use Pagerfanta\Pagerfanta;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
@@ -58,28 +60,33 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->save($user, true);
     }
 
-//    /**
-//     * @return User[] Returns an array of User objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('u')
-//            ->andWhere('u.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('u.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    /**
+     * Return a @Pagerfanta with all the Users ordered by column and order
+     *
+     * @param string $col
+     * @param string $order
+     *
+     * @return \Pagerfanta\Pagerfanta
+     */
+    public function findAllUsersByPageAndOrder(
+        string $col,
+        string $order
+    ): Pagerfanta {
 
-//    public function findOneBySomeField($value): ?User
-//    {
-//        return $this->createQueryBuilder('u')
-//            ->andWhere('u.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+        $col = match ($col) {
+            'id' => 'id',
+            'email' => 'email',
+            'roles' => 'roles'
+        };
+
+        $order = match ($order) {
+            'asc' => 'asc',
+            'desc' => 'desc'
+        };
+
+        $queryBuilder = $this->createQueryBuilder('u')
+            ->orderBy('u.' . $col, $order);
+
+        return new Pagerfanta(new QueryAdapter($queryBuilder));
+    }
 }

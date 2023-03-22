@@ -1,0 +1,53 @@
+{% extends "_templates/base.html.twig" %}
+{% set module = 'admin' %}
+{% form_theme form 'bootstrap_5_layout.html.twig' %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('createUser') }}
+{% endblock %}
+
+{% block title %}Admin Panel{% endblock %}
+
+{% block body %}
+
+    <h1 class="mt-4 mb-3 text-center">Edit User</h1>
+
+    {% include "_parts/breadcrumbs/_createUserBreadCrumb.html.twig" with { 'createStage': 0 } %}
+
+    {{ form_start(form, {'attr': {'id': 'createUserForm', 'class': 'form border border-primary bg-light rounded p-3'}}) }}
+    <div class="form-floating m-3">
+        {{ form_row(form.email) }}
+    </div>
+    <div class="form-floating m-3">
+        {{ form_row(form.roles, {'attr': {'class': 'form-check'}}) }}
+    </div>
+    <div class="row justify-content-center m-3">
+        {{ form_widget(form.return, {'attr': {'class': 'btn btn-outline-primary btn-lg col-2 m-2'}}) }}
+        {{ form_widget(form.submit, {'attr': {
+            'class': 'btn btn-primary btn-lg col-2 bg-primary m-2',
+            'data-bs-toggle': 'modal',
+            'data-bs-target': '#createConfirmation'
+        }}) }}
+    </div>
+    {{ form_end(form) }}
+
+    <!-- Modal -->
+    <div class="modal fade" id="createConfirmation" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Create Confirmation</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Do you want to proced creating <span id="newUserEmail"></span>?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
+                    <button id="confirmationBtn" type="button" class="btn btn-danger" data-bs-dismiss="modal" >EDIT</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

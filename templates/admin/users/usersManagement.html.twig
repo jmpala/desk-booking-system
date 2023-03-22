@@ -1,0 +1,91 @@
+{% extends "_templates/base.html.twig" %}
+{% set module = 'admin' %}
+
+{% block stylesheets %}
+    {{ encore_entry_link_tags('usersManagement') }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('usersManagement') }}
+{% endblock %}
+
+{% block title %}Admin Panel{% endblock %}
+
+{% block body %}
+
+    <h1 class="mt-4 mb-3 text-center">Admin Panel</h1>
+
+    <p class="text-center">Create a <a href="{{ path('app_usersmanagement_createuser') }}">New User</a></p>
+
+    <table id="usersTable" class="table">
+        <thead>
+        <tr>
+            <th class="col-table text-center"
+                data-col-name="id"
+                data-col-selected="{{ (selectedCol == 'id') ? 'true' : 'false' }}"
+                data-col-order="{{ (selectedCol == 'id') ? selectedOrder : 'desc' }}"
+                scope="col"
+            >ID<button class="order-btn mx-3 btn btn-outline-dark btn-sm"><i class="bi bi-arrow-down-up"></i></button></th>
+            <th class="col-table text-center"
+                data-col-name="email"
+                data-col-selected="{{ (selectedCol == 'email') ? 'true' : 'false' }}"
+                data-col-order="{{ (selectedCol == 'email') ? selectedOrder : 'desc' }}"
+                scope="col"
+            >E-Mail<button class="order-btn mx-3 btn btn-outline-dark btn-sm"><i class="bi bi-arrow-down-up"></i></button></th>
+            <th class="col-table text-center"
+                data-col-name="roles"
+                scope="col"
+            >Roles</th>
+            <th class="col-table text-center" scope="col"></th>
+        </tr>
+        </thead>
+        <tbody>
+
+        {% for user in pager %}
+            <tr data-delete-action="{{ path('app_usersmanagement_deleteuser', { 'id': user.id } ) }}">
+                <td class="text-center">{{ user.id }}</td>
+                <td class="text-center">{{ user.email }}</td>
+                <td class="text-center">
+                    {% for role in user.roles %}
+                        <span class="badge bg-primary">{{ role }}</span>
+                    {% endfor %}
+                </td>
+                <td class="text-center">
+                    <button class="btn btn-outline-warning btn-sm edit-btn editUserBtn"
+                            data-edit-user-path="{{ path('app_usersmanagement_edituser', { 'id': user.id }) }}"
+                    >Modify</button>
+                    <button type="button" class="btn btn-outline-danger btn-sm"
+                            data-bs-toggle="modal"
+                            data-bs-target="#deleteConfirmation"
+                            data-user-id="{{ user.id }}"
+                            data-user-email="{{ user.email }}"
+                    >Delete</button>
+                </td>
+            </tr>
+        {% endfor %}
+
+        </tbody>
+    </table>
+
+    {% include "_parts/pagers/_genericPager.html.twig" %}
+
+    <!-- Modal -->
+    <div class="modal fade" id="deleteConfirmation" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Deletion Confirmation</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to delete the user <span id="data-confirmation"></span>?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
+                    {{ form(form, {'attr': {'id': 'deleteUserForm'}}) }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
