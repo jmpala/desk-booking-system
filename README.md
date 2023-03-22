@@ -19,16 +19,19 @@ This is a booking system webapplication, that allows the booking of "bookables" 
 ## Steps
 
 1. initialize DDEV on root directory
-2. create ".env.local" inside root dir and set the "DATABASE_URL" variable ("ddev status" for correct value)
-3. run `ddev composer install`
-4. run `ddev composer dump-autoload`
-5. run `yarn install` or `npm install
-6. run `ddev start
-7. run 'yarn run dev-server` or `npm run dev-server` (to serve statics on dev mode -> autoreload)
-8. run `ddev php bin/console doctrine:schema:create`
-9. run `ddev php bin/console doctrine:migrations:migrate`
-10. run `ddev php bin/console doctrine:fixtures:load`
-11. open the browser and go to `http://desk-booking-system.ddev.site`
+2. set php version to 8.2 on .ddev/config.yaml
+3. create ".env.local" inside root dir and set the "DATABASE_URL" variable ("ddev status" for correct value)
+4. correct the server_version on config/packages/doctrine.yaml (to match the database version)
+5. run `ddev start`
+6. run `ddev composer install`
+7. run `ddev composer dump-autoload`
+8. run `ddev yarn install` or `ddev npm install`
+9. run 'yarn run dev-server` or `npm run dev-server` (run on local, no on docker)
+10. run `ddev php bin/console doctrine:database:create`
+11. run `ddev php bin/console doctrine:schema:create`
+12. run `ddev php bin/console doctrine:migrations:migrate`
+13. run `ddev php bin/console doctrine:fixtures:load`
+14. run `ddev status` and copy the url to the browser
 
 ## Features
 
