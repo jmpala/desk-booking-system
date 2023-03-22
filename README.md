@@ -35,18 +35,18 @@ This is a booking system webapplication, that allows the booking of "bookables" 
 
 ## Features
 
-- Map that shouws the bookables status per date
-- Map loads bookables dinamically from DB
-- CRUD bookings by user
-- crud bookings for other users by teamleader
-- CRUD bookables status by admin
-- CRUD user acount by admin
+- [x] Map that shouws the bookables status per date
+- [x] Map loads bookables dinamically from DB
+- [x] CRUD bookings by user
+- [x] CRUD bookings for other users by teamleader
+- [x] CRUD bookables status by admin
+- [x] CRUD user acount by admin
 
 ## TODO
 
-- Account Pannel for users
-- Email notifications (registration, forgoten password, booking, etc.)
-- Add more bookable types (rooms, devices, parking)
-- Map creator & editor
-- REST OpenAPI
-- VUE
+- [ ] Account Pannel for users
+- [ ] Email notifications (registration, forgoten password, booking, etc.)
+- [ ] Add more bookable types (rooms, devices, parking)
+- [ ] Map creator & editor
+- [ ] REST OpenAPI
+- [ ] VUE
