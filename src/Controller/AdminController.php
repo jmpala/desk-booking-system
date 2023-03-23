@@ -32,7 +32,7 @@ class AdminController extends AbstractController
         $order = $request->query->getAlpha('ord', 'asc');
         $past = $request->query->getAlpha('past', 'false');
 
-        $pagerFanta = $this->adminService->getAllUnavailableDates($pageNum, $col, $order, $past);
+        $pagerFanta = $this->adminService->getAllUnavailableDatesPaged($pageNum, $col, $order, $past);
 
         if ($pagerFanta->getCurrentPage() < $pageNum) {
             return $this->redirectToRoute('app_admin_showbookablemanagerpage', [

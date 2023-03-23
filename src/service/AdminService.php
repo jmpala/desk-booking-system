@@ -11,12 +11,12 @@ class AdminService
 {
     public function __construct(
         private UnavailableDatesRepository $unavailableDatesRepository,
+        private PagerService $pagerService
     )
     {}
 
     /**
-     * Gets unavailable dates and setup the pager, with the given page number, column name, order and past unavailable dates
-     * (if selected by the user)
+     * Returns a pager that handles all the @UnavailableDates
      *
      * @param int    $pageNum
      * @param string $columnName
@@ -25,14 +25,11 @@ class AdminService
      *
      * @return \Pagerfanta\Pagerfanta
      */
-    public function getAllUnavailableDates(int $pageNum, string $columnName, string $oder, string $pastUnavailableDates): Pagerfanta
+    public function getAllUnavailableDatesPaged(int $pageNum, string $columnName, string $oder, string $pastUnavailableDates): Pagerfanta
     {
-        $pagerFanta = $this->unavailableDatesRepository->getAllUnavailableDatesWithOrderedColumn($columnName, $oder, $pastUnavailableDates);
-        $pagerFanta->setMaxPerPage(10);
-
-        $pageNum  = ($pageNum > $pagerFanta->getNbPages()) ? min($pageNum, $pagerFanta->getNbPages()) : $pageNum;
-        $pagerFanta->setCurrentPage($pageNum);
-
-        return $pagerFanta;
+        return $this->pagerService->createAndConfigurePager(
+            $this->unavailableDatesRepository->getAllUnavailableDatesWithOrderedColumn($columnName, $oder, $pastUnavailableDates),
+            $pageNum
+        );
     }
 }

@@ -7,9 +7,8 @@ namespace App\Repository;
 use App\Entity\Bookable;
 use App\Entity\UnavailableDates;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
-use Pagerfanta\Doctrine\ORM\QueryAdapter;
-use Pagerfanta\Pagerfanta;
 
 /**
  * @extends ServiceEntityRepository<UnavailableDates>
@@ -88,9 +87,9 @@ class UnavailableDatesRepository extends ServiceEntityRepository
      * @param string $oder
      * @param string $pastUnavailableDates
      *
-     * @return \Pagerfanta\Pagerfanta
+     * @return \Doctrine\ORM\QueryBuilder
      */
-    public function getAllUnavailableDatesWithOrderedColumn(string $columnName, string $oder, string $pastUnavailableDates): Pagerfanta
+    public function getAllUnavailableDatesWithOrderedColumn(string $columnName, string $oder, string $pastUnavailableDates): QueryBuilder
     {
         $selectedColumn = match ($columnName) {
             'bookable' => 'bk.code',
@@ -111,16 +110,11 @@ class UnavailableDatesRepository extends ServiceEntityRepository
             default => ' AND ud.end_date >= CURRENT_DATE()',
         };
 
-        $queryBuilder = $this->createQueryBuilder('ud')
+        return $this->createQueryBuilder('ud')
             ->select('ud', 'bk')
             ->leftJoin('ud.bookable', 'bk')
             ->where('1 = 1' . $selectedPast)
-            ->orderBy($selectedColumn, $selectedOrder)
-            ->getQuery();
-
-        $pagerFanta = new Pagerfanta(new QueryAdapter($queryBuilder));
-
-        return $pagerFanta;
+            ->orderBy($selectedColumn, $selectedOrder);
     }
 
     /**
