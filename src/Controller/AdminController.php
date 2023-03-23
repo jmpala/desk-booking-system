@@ -27,21 +27,21 @@ class AdminController extends AbstractController
     #[Route('/admin/bookable', name: 'app_admin_showbookablemanagerpage', methods: ['GET'])]
     public function showBookableManagerPage(Request $request): Response
     {
-        $pageNum = (int) $request->query->get('page') ?: 1;
-        $col = $request->query->get('col') ?: 'bookable';
-        $order = $request->query->get('ord') ?: 'asc';
-        $past = $request->query->get('past') ?: 'false';
+        $pageNum = $request->query->getInt('page', 1);
+        $col = $request->query->getAlpha('col', 'bookable');
+        $order = $request->query->getAlpha('ord', 'asc');
+        $past = $request->query->getAlpha('past', 'false');
 
-        $pagerFanta = $this->adminService->getAllUnavailableDates($col, $order, $past);
+        $pagerFanta = $this->adminService->getAllUnavailableDates($pageNum, $col, $order, $past);
 
-        $pagerFanta->setMaxPerPage(10);
-
-        if ($pageNum > $pagerFanta->getNbPages()) {
-            $pageNum = min($pageNum, $pagerFanta->getNbPages());
-            return $this->redirect($request->getBaseUrl() . $request->getPathInfo() . '?page=' . $pageNum . '&col=' . $col . '&ord=' . $order);
+        if ($pagerFanta->getCurrentPage() < $pageNum) {
+            return $this->redirectToRoute('app_admin_showbookablemanagerpage', [
+                'page' => $pagerFanta->getCurrentPage(),
+                'col' => $col,
+                'ord' => $order,
+                'past' => $past,
+            ]);
         }
-
-        $pagerFanta->setCurrentPage($pageNum);
 
         return $this->render('admin/bookable/bookableManager.html.twig', [
             'pager' => $pagerFanta,
