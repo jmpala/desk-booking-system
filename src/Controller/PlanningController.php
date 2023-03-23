@@ -26,55 +26,39 @@ class PlanningController extends AbstractController
     #[Route('/planning', name: 'app_planning', methods: ['GET'])]
     public function showPlanningPage(Request $request): Response
     {
-        $pageNum = (int) $request->query->get('page') ?: 1;
-        $col = $request->query->get('col') ?: 'resource';
-        $order = $request->query->get('ord') ?: 'asc';
-        $past = $request->query->get('past') ?: 'false';
-        $userid = (int) $request->query->get('userid') ?: null;
-
+        $userId = $request->query->getInt('userid', -1);
+        $isUserSelected = $userId !== -1;
         $allUsers = $this->userRepository->findAll();
 
-        if ($userid === null) {
+        if (!$isUserSelected) {
             return $this->render('planning/planning.html.twig', [
-                "isUserSelected" => false,
+                "isUserSelected" => $isUserSelected,
                 "allUsers" => $allUsers
             ]);
         }
 
-        $selectedUser = $this->userRepository->find($userid);
+        $selectedUser = $this->userRepository->find($userId);
+        $hasOngoingBookings = $this->bookingService->countAllNonPastBookingsByUserID($userId) >= 1;
 
-        $hasBookings = $this->bookingService->countAllBookingsByUserID($userid) > 0;
-        $hasOnlyPastBookings = false;
+        $pageNum = $request->query->getInt('page', 1);
+        $col = $request->query->getAlpha('col', 'resource');
+        $order = $request->query->getAlpha('ord', 'asc');
+        $past = $hasOngoingBookings ? $request->query->get('past', 'false') : 'true';
 
-        $pagerFanta = $this->bookingService->getAllBookingsPagedByUserID($userid, $col, $order, $past);
-        if ($hasBookings
-            && $pagerFanta->getNbResults() === 0) {
-            $past = 'true';
-            $hasOnlyPastBookings = true;
-            $pagerFanta = $this->bookingService->getAllBookingsPagedByUserID($userid, $col, $order, $past);
-        }
-
-        $pagerFanta->setMaxPerPage(10);
-
-        if ($pageNum > $pagerFanta->getNbPages()) {
-            $pageNum = min($pageNum, $pagerFanta->getNbPages());
-            return $this->redirect($request->getBaseUrl() . $request->getPathInfo() . '?userid=' . $userid . '&page=' . $pageNum . '&col=' . $col . '&ord=' . $order);
-        }
-
-        $pagerFanta->setCurrentPage($pageNum);
+        $pagerFanta = $this->bookingService->getAllBookingsPagedByUserID($pageNum, $col, $order, $past, $userId);
 
         return $this->render('planning/planning.html.twig', [
-            "isUserSelected" => true,
+            "isUserSelected" => $isUserSelected,
             "allUsers" => $allUsers,
-            "userid" => $userid,
+            "userid" => $userId,
             "selectedUser" => $selectedUser,
             'pager' => $pagerFanta,
             'selectedCol' => $col,
             'selectedOder' => $order,
             'todaysDate' => new \DateTime((new \DateTime())->format('Y-m-d')),
             'pastBookings' => $past,
-            'hasBookings' => $hasBookings,
-            'hasOnlyPastBookings' => $hasOnlyPastBookings
+            'hasBookingsMade' => $this->bookingService->countAllBookingsByUserID($userId) > 0,
+            'hasOngoingBookings' => $hasOngoingBookings
         ]);
     }
 
@@ -173,8 +157,7 @@ class PlanningController extends AbstractController
         /* @var array<\App\Entity\Bookable> $allBookables */
         $allBookables = $this->bookableService->getAllBookableAndRelatedCategories();
 
-        /* @var array<\App\Entity\Bookable> $selectedBookable */
-        $selectedBookable = array_filter($allBookables, fn ($b) => $b->getId() === $bookableId);
+        $selectedBookable = array_filter($allBookables, static fn ($b) => $b->getId() === $bookableId);
 
         if (!empty($selectedBookable)) {
             $selectedBookable = $selectedBookable[array_key_first($selectedBookable)];

@@ -6,63 +6,58 @@
 {% block body %}
 
     {% if isUserSelected %}
+        {% if hasBookingsMade %}
+            <h1 class="mt-4 mb-3 text-center">All Bookings from:
+                <select class="h5" id="userSelect">
+                    {% for  user in allUsers %}
+                        <option value="{{ user.id }}" {{ (user.id == selectedUser.id) ? 'selected' : '' }}>{{ user.userIdentifier }}</option>
+                    {% endfor %}
+                </select>
+            </h1>
 
-    <div class="{{ (pager.nbResults > 0) ? '': 'visually-hidden' }}">
+            <input type="hidden" name="userid" value="{{ userid }}">
 
-        <h1 class="mt-4 mb-3 text-center">All Bookings from:
-            <select class="h5" id="userSelect">
-                {% for  user in allUsers %}
-                    <option value="{{ user.id }}" {{ (user.id == selectedUser.id) ? 'selected' : '' }}>{{ user.userIdentifier }}</option>
-                {% endfor %}
-            </select>
-        </h1>
+            {% if hasOngoingBookings %}
+                <p class="text-center">Make a <a href="{{ "#{path('app_planning_createbookingbyuseidpage')}?userid=#{selectedUser.id}" }}">new booking</a>
+            {% else %}
+                <p class="text-center">No ongoing bookings, make a <a href="{{ "#{path('app_planning_createbookingbyuseidpage')}?userid=#{selectedUser.id}" }}">new booking</a>
+            {% endif %}
 
-        <input type="hidden" name="userid" value="{{ userid }}">
+            {% include "_parts/tables/_listAllBookingsTable.html.twig" with {
+                "selectedCol": selectedCol,
+                "selectedOder": selectedOder,
+                "pastBookings": pastBookings,
+                "pager": pager,
+                "todaysDate": todaysDate
+            } %}
 
-        {% if hasOnlyPastBookings %}
-            <p class="text-center">No actual booking available, make a <a href="{{ "#{path('app_planning_createbookingbyuseidpage')}?userid=#{selectedUser.id}" }}">new booking</a>
+            {% if pager.nbPages > 1 %}
+                {% include "_parts/pagers/_listBookingsPager.html.twig" with { "pager": pager } %}
+            {% endif %}
+
+            {% include "_parts/modals/_confirmDeletionModal.html.twig" with {
+                "action": path('app_planning_deletebooking'),
+                "hasSelecteduser": true,
+                "selectedUser": selectedUser,
+                "hasCsrf": true,
+                "csrfName": "_csrf_token",
+                "csrfValue": csrf_token('deleteBooking'),
+            } %}
         {% endif %}
 
-        {% if not hasOnlyPastBookings %}
-            <p class="text-center">Make a <a href="{{ "#{path('app_planning_createbookingbyuseidpage')}?userid=#{selectedUser.id}" }}">new booking</a>
+        {% if not hasBookingsMade %}
+            <div class="{{ (pager.nbResults > 0) ? 'visually-hidden': '' }}">
+                <h1 class="mt-4 mb-3 text-center">All Bookings for
+                    <select class="h5" id="userSelect">
+                        {% for  user in allUsers %}
+                            <option value="{{ user.id }}" {{ (user.id == selectedUser.id) ? 'selected' : '' }}>{{ user.userIdentifier }}</option>
+                        {% endfor %}
+                    </select>
+                </h1>
+                <p class="text-center">No past or ongoing Booking found, make a <a href="{{ "#{path('app_planning_createbookingbyuseidpage')}?userid=#{selectedUser.id}" }}">new booking</a>
+            </div>
         {% endif %}
-
-        {% include "_parts/tables/_listAllBookingsTable.html.twig" with {
-            "selectedCol": selectedCol,
-            "selectedOder": selectedOder,
-            "pastBookings": pastBookings,
-            "pager": pager,
-            "todaysDate": todaysDate
-        } %}
-
-        {% if pager.nbPages > 1 %}
-            {% include "_parts/pagers/_listBookingsPager.html.twig" with { "pager": pager } %}
-        {% endif %}
-
-    </div>
-
-    <div class="{{ (pager.nbResults > 0) ? 'visually-hidden': '' }}">
-        <h1 class="mt-4 mb-3 text-center">No upcomming bookings for
-            <select class="h5" id="userSelect">
-                {% for  user in allUsers %}
-                    <option value="{{ user.id }}" {{ (user.id == selectedUser.id) ? 'selected' : '' }}>{{ user.userIdentifier }}</option>
-                {% endfor %}
-            </select>
-        </h1>
-        <p class="text-center">Make a <a href="{{ "#{path('app_planning_createbookingbyuseidpage')}?userid=#{selectedUser.id}" }}">new booking</a>
-    </div>
-
-    {% include "_parts/modals/_confirmDeletionModal.html.twig" with {
-        "action": path('app_planning_deletebooking'),
-        "hasSelecteduser": true,
-        "selectedUser": selectedUser,
-        "hasCsrf": true,
-        "csrfName": "_csrf_token",
-        "csrfValue": csrf_token('deleteBooking'),
-    } %}
-
     {% else %}
-
         <h1 class="mt-4 mb-3 text-center">Please select a user</h1>
 
         <form class="form border border-primary bg-light rounded p-3" id="newBookingForm" action="{{ path('app_planning') }}" method="get">
@@ -83,7 +78,6 @@
             </div>
 
         </form>
-
     {% endif %}
 
 {% endblock %}

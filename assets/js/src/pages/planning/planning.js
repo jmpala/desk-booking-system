@@ -1,26 +1,27 @@
 "use strict";
 
-const table: HTMLElement = document.getElementById('bookingsTable');
-const selectedColumn: HTMLElement = document.querySelector('[data-col-selected="true"]');
-const iconSelected: HTMLElement = selectedColumn.querySelector('i');
-const pastCheck: HTMLInputElement = document.getElementById('pastBookings');
 const userSelects: NodeListOf = document.querySelectorAll('#userSelect');
 
-const deleteConmfirmationModal = document.getElementById('deleteConfirmation')
+const table: HTMLElement = document.getElementById('bookingsTable');
+if (table) {
+  const pastCheck: HTMLInputElement = document.getElementById('pastBookings');
+  const selectedColumn: HTMLElement = document.querySelector('[data-col-selected="true"]');
+  const iconSelected: HTMLElement = selectedColumn.querySelector('i');
+  const deleteConmfirmationModal = document.getElementById('deleteConfirmation')
 
+  iconSelected.classList.remove('bi-arrow-down-up');
+  if (selectedColumn.dataset.colOrder === 'asc') {
+    iconSelected.classList.add('bi-arrow-down');
+  } else {
+    iconSelected.classList.add('bi-arrow-up');
+  }
 
-iconSelected.classList.remove('bi-arrow-down-up');
-if (selectedColumn.dataset.colOrder === 'asc') {
-  iconSelected.classList.add('bi-arrow-down');
-} else {
-  iconSelected.classList.add('bi-arrow-up');
+  table.addEventListener('click', orderTable);
+  table.addEventListener('click', onClickEditBooking);
+  pastCheck.addEventListener('change', onCheckedPastBookings);
+  deleteConmfirmationModal.addEventListener('show.bs.modal', onShowDeleteConfirmationModal);
 }
 
-
-table.addEventListener('click', orderTable);
-table.addEventListener('click', onClickEditBooking);
-pastCheck.addEventListener('change', onCheckedPastBookings);
-deleteConmfirmationModal.addEventListener('show.bs.modal', onShowDeleteConfirmationModal);
 
 userSelects.forEach((userSelect) => {
   userSelect.addEventListener('change', onUserSelectChange);
