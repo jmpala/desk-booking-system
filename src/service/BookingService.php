@@ -24,7 +24,8 @@ class BookingService
         private BookableRepository $bookableRepository,
         private BookingsRepository $bookingRepository,
         private UnavailableDatesRepository $unavailableDatesRepository,
-        private UserRepository $userRepository
+        private UserRepository $userRepository,
+        private PagerService $pagerService
     )
     {
     }
@@ -175,7 +176,7 @@ class BookingService
      * @param int                       $bookableId
      * @param \DateTime                 $from
      * @param \DateTime                 $to
-     * @param \App\Entity\Bookings|null $booking
+     * @param \App\Entity\Bookings|null $ignore
      *
      * @return bool
      */
@@ -193,12 +194,25 @@ class BookingService
     /**
      * Returns all bookings for the given user
      *
-     * @param $getId
-     * @return array
+     * @param int    $pageNumber
+     * @param string $columnName
+     * @param string $oder
+     * @param string $pastBookings
+     * @param int    $userId
+     *
+     * @return \Pagerfanta\Pagerfanta
      */
-    public function getAllBookingsByID(int $getId, string $columnName, string $oder, string $pastBookings): Pagerfanta
-    {
-        return $this->bookingRepository->getAllBookingsByUserIDWithOrderedColumn($getId, $columnName, $oder, $pastBookings);
+    public function getAllBookingsPagedByUserID(
+        int $pageNumber,
+        string $columnName,
+        string $oder,
+        string $pastBookings,
+        int $userId
+    ): Pagerfanta {
+        return  $this->pagerService->createAndConfigurePager(
+            $this->bookingRepository->getAllBookingsByUserIDOrderedByColumnQueryBuilder($columnName, $oder, $pastBookings, $userId),
+            $pageNumber
+        );
     }
 
     /**t
@@ -235,6 +249,18 @@ class BookingService
     public function countAllBookingsByUserID(int $userID): int
     {
         return $this->bookingRepository->countAllBookingsByUserID($userID);
+    }
+
+    /**
+     * Counts all the actual and future bookings for the given user
+     *
+     * @param int $userID
+     *
+     * @return int
+     */
+    public function countAllNonPastBookingsByUserID(int $userID): int
+    {
+        return $this->bookingRepository->countAllNonPastBookingsByUserID($userID);
     }
 
     /**

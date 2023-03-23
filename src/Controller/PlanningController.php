@@ -46,12 +46,12 @@ class PlanningController extends AbstractController
         $hasBookings = $this->bookingService->countAllBookingsByUserID($userid) > 0;
         $hasOnlyPastBookings = false;
 
-        $pagerFanta = $this->bookingService->getAllBookingsByID($userid, $col, $order, $past);
+        $pagerFanta = $this->bookingService->getAllBookingsPagedByUserID($userid, $col, $order, $past);
         if ($hasBookings
             && $pagerFanta->getNbResults() === 0) {
             $past = 'true';
             $hasOnlyPastBookings = true;
-            $pagerFanta = $this->bookingService->getAllBookingsByID($userid, $col, $order, $past);
+            $pagerFanta = $this->bookingService->getAllBookingsPagedByUserID($userid, $col, $order, $past);
         }
 
         $pagerFanta->setMaxPerPage(10);

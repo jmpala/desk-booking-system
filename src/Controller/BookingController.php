@@ -91,40 +91,33 @@ class BookingController extends AbstractController
     #[Route('/booking/all', name: 'app_booking_showallbookings', methods: ['GET'])]
     public function showAllBookings(Request $request): Response
     {
-        $pageNum = (int) $request->query->get('page') ?: 1;
-        $col = $request->query->get('col') ?: 'resource';
-        $order = $request->query->get('ord') ?: 'asc';
-        $past = $request->query->get('past') ?: 'false';
-        $user = $this->getUser();
+        $userId = $this->getUser()->getId();
+        $hasOngoingBookings = $this->bookingService->countAllNonPastBookingsByUserID($userId) >= 1;
 
-        $hasBookings = $this->bookingService->countAllBookingsByUserID($user->getId()) > 0;
-        $hasOnlyPastBookings = false;
+        $pageNum = $request->query->getInt('page', 1);
+        $col = $request->query->getAlpha('col', 'resource');
+        $order = $request->query->getAlpha('ord', 'asc');
+        $past = $hasOngoingBookings ? $request->query->get('past', 'false') : 'true';
 
-        $pagerFanta = $this->bookingService->getAllBookingsByID($user->getId(), $col, $order, $past);
-        if ($hasBookings
-            && $pagerFanta->getNbResults() === 0) {
-            $past = 'true';
-            $hasOnlyPastBookings = true;
-            $pagerFanta = $this->bookingService->getAllBookingsByID($user->getId(), $col, $order, $past);
+        $pagerfanta = $this->bookingService->getAllBookingsPagedByUserID($pageNum, $col, $order, $past, $userId);
+
+        if ($pagerfanta->getCurrentPage() < $pageNum) {
+            return $this->redirectToRoute('app_booking_showallbookings', [
+                'page' => $pagerfanta->getCurrentPage(),
+                'col' => $col,
+                'ord' => $order,
+                'past' => $past,
+            ]);
         }
-
-        $pagerFanta->setMaxPerPage(10);
-
-        if ($pageNum > $pagerFanta->getNbPages()) {
-            $pageNum = min($pageNum, $pagerFanta->getNbPages());
-            return $this->redirect($request->getBaseUrl() . $request->getPathInfo() . '?page=' . $pageNum . '&col=' . $col . '&ord=' . $order);
-        }
-
-        $pagerFanta->setCurrentPage($pageNum);
 
         return $this->render('booking/allBookings.html.twig', [
-            'pager' => $pagerFanta,
+            'pager' => $pagerfanta,
             'selectedCol' => $col,
             'selectedOder' => $order,
             'todaysDate' => new \DateTime((new \DateTime())->format('Y-m-d')),
             'pastBookings' => $past,
-            'hasBookings' => $hasBookings,
-            'hasOnlyPastBookings' => $hasOnlyPastBookings
+            'hasBookingsMade' => $this->bookingService->countAllBookingsByUserID($userId) > 0,
+            'hasOngoingBookings' => $hasOngoingBookings
         ]);
     }
 
@@ -152,7 +145,6 @@ class BookingController extends AbstractController
         /* @var array<\App\Entity\Bookable> $allBookables */
         $allBookables = $this->bookableService->getAllBookableAndRelatedCategories();
 
-        /* @var array<\App\Entity\Bookable> $selectedBookable */
         $selectedBookable = array_filter($allBookables, fn ($b) => $b->getId() === $bookableId);
 
         if (!empty($selectedBookable)) {

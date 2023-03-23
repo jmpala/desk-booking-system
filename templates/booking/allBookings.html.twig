@@ -5,12 +5,13 @@
 
 {% block body %}
 
-    <div class="{{ (pager.nbResults > 0) ? '': 'visually-hidden' }}">
-
+    {% if hasBookingsMade %}
         <h1 class="mt-4 mb-3 text-center">All Bookings</h1>
 
-        {% if hasOnlyPastBookings %}
-            <p class="text-center">No actual booking available, make a <a href="{{ path('app_booking_new') }}">new booking</a>
+        {% if hasOngoingBookings %}
+            <p class="text-center">Make a <a href="{{ path('app_booking_new') }}">new booking</a>
+        {% else %}
+            <p class="text-center">No ongoing bookings, make a <a href="{{ path('app_booking_new') }}">new booking</a>
         {% endif %}
 
         {% include "_parts/tables/_listAllBookingsTable.html.twig" with {
@@ -25,21 +26,22 @@
             {% include "_parts/pagers/_listBookingsPager.html.twig" with { "pager": pager } %}
         {% endif %}
 
-    </div>
+        {% include "_parts/modals/_confirmDeletionModal.html.twig" with {
+            "action": path('app_booking_delete'),
+            "hasSelecteduser": false,
+            "hasCsrf": true,
+            "csrfName": "_csrf_token",
+            "csrfValue": csrf_token('deleteBooking'),
 
-    <div class="{{ (pager.nbResults > 0) ? 'visually-hidden': '' }}">
-        <h1 class="mt-4 mb-3 text-center">No upcomming bookings</h1>
-        <p class="text-center">Make a <a href="{{ path('app_booking_new') }}">new booking</a>
-    </div>
+        } %}
+    {% endif %}
 
-    {% include "_parts/modals/_confirmDeletionModal.html.twig" with {
-        "action": path('app_booking_delete'),
-        "hasSelecteduser": false,
-        "hasCsrf": true,
-        "csrfName": "_csrf_token",
-        "csrfValue": csrf_token('deleteBooking'),
-
-    } %}
+    {% if not hasBookingsMade %}
+        <div class="{{ (hasBookingsMade <= 0) ? '': 'visually-hidden' }}">
+            <h1 class="mt-4 mb-3 text-center">All Bookings</h1>
+            <p class="text-center">No past or ongoing Booking found, make a <a href="{{ path('app_booking_new') }}">new booking</a>
+        </div>
+    {% endif %}
 
 {% endblock %}
 

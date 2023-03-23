@@ -7,9 +7,8 @@ namespace App\Repository;
 use App\Entity\Bookings;
 use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
-use Pagerfanta\Doctrine\ORM\QueryAdapter;
-use Pagerfanta\Pagerfanta;
 
 /**
  * @extends ServiceEntityRepository<Bookings>
@@ -79,13 +78,24 @@ class BookingsRepository extends ServiceEntityRepository
     }
 
     /**
+     * Generates and returns a QueryBuilder for all bookings by user id,
+     * ordered by column
      *
+     * It can also filter past bookings
      *
-     * @param int $getId
-     * @return Pagerfanta
+     * @param string $columnName
+     * @param string $oder
+     * @param string $pastBookings
+     * @param int    $userId
+     *
+     * @return \Doctrine\ORM\QueryBuilder
      */
-    public function getAllBookingsByUserIDWithOrderedColumn(int $getId, string $columnName, string $oder, string $pastBookings): Pagerfanta
-    {
+    public function getAllBookingsByUserIDOrderedByColumnQueryBuilder(
+        string $columnName,
+        string $oder,
+        string $pastBookings,
+        int $userId
+    ): QueryBuilder {
         $selectedColumn = match ($columnName) {
             'resource' => 'bk.code',
             'confirmation' => 'b.confirmation',
@@ -106,17 +116,14 @@ class BookingsRepository extends ServiceEntityRepository
             default => ' AND b.end_date >= CURRENT_DATE()',
         };
 
-        $queryBuilder = $this->createQueryBuilder('b')
+        return $this->createQueryBuilder('b')
             ->select('b', 'bk')
             ->leftJoin('b.bookable', 'bk')
             ->where('b.user = :id' . $selectedPast)
             ->orderBy($selectedColumn, $selectedOrder)
-            ->setParameter('id', $getId)
-            ->getQuery();
-
-        $pagerFanta = new Pagerfanta(new QueryAdapter($queryBuilder));
-
-        return $pagerFanta;
+            ->setParameter(
+                'id',
+                $userId);
     }
 
     /**
@@ -124,15 +131,35 @@ class BookingsRepository extends ServiceEntityRepository
      *
      * @param int $userID
      *
-     * @return float|int|mixed|string
+     * @return int
      * @throws \Doctrine\ORM\NoResultException
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function countAllBookingsByUserID(int $userID)
+    public function countAllBookingsByUserID(int $userID): int
     {
         return $this->createQueryBuilder('b')
             ->select('COUNT(b)')
             ->where('b.user = :id')
+            ->setParameter('id', $userID)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    /**
+     * Returns the number of ongoing bookings for a given user
+     *
+     * @param int $userID
+     *
+     * @return int
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function countAllNonPastBookingsByUserID(int $userID): int
+    {
+        return $this->createQueryBuilder('b')
+            ->select('COUNT(b)')
+            ->where('b.user = :id')
+            ->andWhere('DATE(b.end_date) >= DATE(CURRENT_DATE())')
             ->setParameter('id', $userID)
             ->getQuery()
             ->getSingleScalarResult();
