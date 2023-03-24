@@ -3,9 +3,9 @@
 
 {% block title %}Admin Panel{% endblock %}
 
-{% block body %}
+{% block main_header %}Admin Panel{% endblock %}
 
-    <h1 class="mt-4 mb-3 text-center">Admin Panel</h1>
+{% block body %}
 
     <ul class="list-group text-center">
         <li class="list-group-item"><a href="{{ path('app_admin_showbookablemanagerpage') }}">Manage Bookables</a></li>

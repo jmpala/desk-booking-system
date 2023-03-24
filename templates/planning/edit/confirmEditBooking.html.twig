@@ -3,9 +3,9 @@
 
 {% block title %}Edit Booking{% endblock %}
 
-{% block body %}
+{% block main_header %}Editing Booking {{ booking.confirmation }} for {{ selectedUser.userIdentifier }}{% endblock %}
 
-    <h1 class="mt-4 mb-3 text-center">Editing Booking {{ booking.confirmation }} for {{ selectedUser.userIdentifier }}</h1>
+{% block body %}
 
     {% include "_parts/breadcrumbs/_editBookingBreadCrumb.html.twig" with { 'editStage': '1' } %}
 

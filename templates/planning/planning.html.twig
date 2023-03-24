@@ -1,6 +1,10 @@
 {% extends '_templates/base.html.twig' %}
 {% set module = 'planning' %}
 
+{% block javascripts %}
+    {{ encore_entry_script_tags('planning') }}
+{% endblock %}
+
 {% block title %}Planning{% endblock %}
 
 {% block body %}
@@ -80,8 +84,4 @@
         </form>
     {% endif %}
 
-{% endblock %}
-
-{% block javascripts %}
-    {{ encore_entry_script_tags('planning') }}
 {% endblock %}

@@ -1,8 +1,6 @@
 {% extends '_templates/base.html.twig' %}
 {% set module = 'planning' %}
 
-{% block title %}New Booking{% endblock %}
-
 {% block stylesheets %}
     {{ encore_entry_link_tags('newBooking') }}
 {% endblock %}
@@ -11,9 +9,11 @@
     {{ encore_entry_script_tags('newBooking') }}
 {% endblock %}
 
-{% block body %}
+{% block title %}New Booking{% endblock %}
 
-    <h1 class="mt-4 mb-3 text-center">New Booking for {{ selectedUser.userIdentifier }}</h1>
+{% block main_header %}New Booking for {{ selectedUser.userIdentifier }}{% endblock %}
+
+{% block body %}
 
     {% include "_parts/breadcrumbs/_createBookingBreadCrumb.html.twig" with { 'editStage': '0' } %}
 

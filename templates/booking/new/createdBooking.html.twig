@@ -3,9 +3,9 @@
 
 {% block title %}New Booking{% endblock %}
 
-{% block body %}
+{% block main_header %}New Bookings{% endblock %}
 
-    <h1 class="mt-4 mb-3 text-center">New Booking</h1>
+{% block body %}
 
     {% include "_parts/breadcrumbs/_createBookingBreadCrumb.html.twig" with { 'editStage': '2' } %}
 
