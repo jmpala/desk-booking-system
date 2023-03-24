@@ -39,8 +39,15 @@
                         </li>
                         {% endif %}
                         {% if is_granted('ROLE_ACCESSTOADMINPANNEL') %}
-                        <li class="nav-item">
-                            <a class="nav-link {{ module == 'admin' ? 'active' : '' }}" href="/admin">Admin</a>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle {{ module == 'admin' ? 'active' : '' }}"
+                               href="#"
+                               role="button"
+                               data-bs-toggle="dropdown">Admin</a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="{{ path('app_admin_showbookablemanagerpage') }}">Manage Bookables</a></li>
+                                <li><a class="dropdown-item" href="{{ path('app_usersmanagement_showuserspage') }}">Manage Users</a></li>
+                            </ul>
                         </li>
                         {% endif %}
                         <li class="nav-item">
