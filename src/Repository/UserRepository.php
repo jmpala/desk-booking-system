@@ -6,9 +6,8 @@ namespace App\Repository;
 
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
-use Pagerfanta\Doctrine\ORM\QueryAdapter;
-use Pagerfanta\Pagerfanta;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
@@ -61,17 +60,17 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     }
 
     /**
-     * Return a @Pagerfanta with all the Users ordered by column and order
+     * Return a @QueryBuilder with all the Users ordered by column and order
      *
      * @param string $col
      * @param string $order
      *
-     * @return \Pagerfanta\Pagerfanta
+     * @return \Doctrine\ORM\QueryBuilder
      */
-    public function findAllUsersByPageAndOrder(
+    public function findAllUsersOrderedQueryBuilder(
         string $col,
         string $order
-    ): Pagerfanta {
+    ): QueryBuilder {
 
         $col = match ($col) {
             'id' => 'id',
@@ -87,6 +86,6 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $queryBuilder = $this->createQueryBuilder('u')
             ->orderBy('u.' . $col, $order);
 
-        return new Pagerfanta(new QueryAdapter($queryBuilder));
+        return $queryBuilder;
     }
 }

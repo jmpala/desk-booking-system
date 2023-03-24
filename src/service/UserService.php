@@ -8,35 +8,32 @@ use App\Entity\User;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityNotFoundException;
 use Pagerfanta\Pagerfanta;
-use Symfony\Component\HttpFoundation\Request;
 
 class UserService
 {
     private int $usersPerPage = 10;
 
     public function __construct(
-        private UserRepository $userRepository
+        private UserRepository $userRepository,
+        private PagerService $pagerService,
     ){}
 
     /**
      * Gets all the users from the database and returns a pagerfanta object,
      * ordered by the given page number, column and order, obtained from the request
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param int    $pageNum
+     * @param string $col
+     * @param string $order
      *
      * @return \Pagerfanta\Pagerfanta
      */
-    public function getAllUsers(Request $request) : Pagerfanta
+    public function getAllUsersPaged(int $pageNum, string $col, string $order) : Pagerfanta
     {
-        $page = (int) $request->query->get('page') ?: 1;
-        $col = $request->query->get('col') ?: 'email';
-        $order = $request->query->get('ord') ?: 'asc';
-
-        $pagerFanta = $this->userRepository->findAllUsersByPageAndOrder($col, $order);
-        $pagerFanta->setMaxPerPage($this->usersPerPage);
-        $pagerFanta->setCurrentPage($page);
-
-        return $pagerFanta;
+        return $this->pagerService->createAndConfigurePager(
+            $this->userRepository->findAllUsersOrderedQueryBuilder($col, $order),
+            $pageNum
+        );
     }
 
     public function deleteUser(int $id): void

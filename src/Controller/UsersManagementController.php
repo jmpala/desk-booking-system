@@ -24,11 +24,17 @@ class UsersManagementController extends AbstractController
     #[Route('/admin/users', name: 'app_usersmanagement_showuserspage')]
     public function showUsersPage(Request $request) : Response
     {
+        $page = $request->query->getInt('page', 1);
+        $col = $request->query->getAlpha('col', 'email');
+        $order = $request->query->getAlpha('ord', 'asc');
+
+        $pagerfanta = $this->usersService->getAllUsersPaged($page, $col, $order);
+
         $user = new User();
         $form = $this->createForm(DeleteUserFormType::class, $user);
 
         return $this->render('admin/users/usersManagement.html.twig', [
-            'pager' => $this->usersService->getAllUsers($request),
+            'pager' => $pagerfanta,
             'selectedCol' => $request->query->get('col') ?: 'email',
             'selectedOrder' => $request->query->get('ord') ?: 'asc',
             'form' => $form->createView(),
