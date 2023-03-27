@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 
-namespace App\service;
+namespace App\Service;
 
 use App\dto\BookableInformationDTO;
 use App\dto\SeatmapStatusDTO;

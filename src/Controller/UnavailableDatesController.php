@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\UnavailableDates;
-use App\service\BookableService;
-use App\service\UnavailableDatesService;
+use App\Service\BookableService;
+use App\Service\UnavailableDatesService;
 use App\utils\DateUtils;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;

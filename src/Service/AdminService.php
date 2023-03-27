@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\service;
+namespace App\Service;
 
 use App\Repository\UnavailableDatesRepository;
 use Pagerfanta\Pagerfanta;
