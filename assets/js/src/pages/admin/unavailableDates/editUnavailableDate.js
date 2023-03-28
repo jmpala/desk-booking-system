@@ -1,6 +1,5 @@
 "use strict";
 
-import '../../../../../sass/pages/main/main_newUnavailableDate.scss';
 import { period, sanitizeDisplayDate, checkIfDatesAreValid, checkIfPeriodsOverlap } from '../../../utils/dateUtils';
 import { checkUnavailableDatesAvailabilityAPIData, setUnavailablePeriods, checkUnavailableDatesAvailabilityAPIDataOptions, checkUnavailableDatesAvailabilityBySelectedDatesRESTCall } from '../../../api/checkUnavailableDatesAvailabilityBySelectedDatesRESTCall';
 

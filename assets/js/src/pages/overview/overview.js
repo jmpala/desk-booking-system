@@ -2,7 +2,6 @@
 
 import {appState} from "../../components/seatmap/seatmap.js";
 
-import '../../../../sass/pages/main/main_overview.scss';
 import {extractDateFromDateIsoString} from "../../components/seatmap/utils/utils";
 
 

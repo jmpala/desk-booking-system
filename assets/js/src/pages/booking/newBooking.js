@@ -1,7 +1,6 @@
 "use strict";
 
 
-import '../../../../sass/pages/main/main_newBooking.scss';
 import { period, sanitizeDisplayDate, checkIfDatesAreValid, checkIfPeriodsOverlap } from '../../utils/dateUtils';
 import { isAvailableAPIData, checkBookableAvailabilityBySelectedDatesRESTCall, setUnavailablePeriods } from '../../api/checkBookableAvailabilityBySelectedDatesRESTCall';
 

@@ -1,6 +1,5 @@
 'use strict';
 
-import '../../../../sass/pages/main/main_login.scss';
 import {validatePassword, validateEmail} from './validation';
 
 
