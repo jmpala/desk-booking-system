@@ -33,7 +33,7 @@ class UsersManagementController extends AbstractController
         $user = new User();
         $form = $this->createForm(DeleteUserFormType::class, $user);
 
-        return $this->render('admin/users/usersManagement.html.twig', [
+        return $this->render('admin/users/users_management.html.twig', [
             'pager' => $pagerfanta,
             'selectedCol' => $request->query->get('col') ?: 'email',
             'selectedOrder' => $request->query->get('ord') ?: 'asc',
@@ -63,7 +63,7 @@ class UsersManagementController extends AbstractController
             return $this->redirectToRoute('app_usersmanagement_showuserspage');
         }
 
-        return $this->render('admin/users/new/createUser.html.twig', [
+        return $this->render('admin/users/new/create_user.html.twig', [
             'form' => $form,
         ]);
     }
@@ -82,7 +82,7 @@ class UsersManagementController extends AbstractController
             return $this->redirectToRoute('app_usersmanagement_showuserspage');
         }
 
-        return $this->render('admin/users/edit/editUser.html.twig', [
+        return $this->render('admin/users/edit/edit_user.html.twig', [
             'form' => $form,
         ]);
     }

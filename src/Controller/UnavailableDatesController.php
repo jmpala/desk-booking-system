@@ -30,7 +30,7 @@ class UnavailableDatesController extends AbstractController
 
         $errors = $request->getSession()->getFlashBag()->get('error');
 
-        return $this->render('admin/bookable/unavailableDates/new/createUnavailableDates.html.twig', [
+        return $this->render('admin/bookable/unavailableDates/new/create_unavailable_dates.html.twig', [
             'allBookables' => $allBookables,
             'todaysDate' => DateUtils::getTodaysDate(),
             'errors' => $errors,
@@ -50,7 +50,7 @@ class UnavailableDatesController extends AbstractController
         $toDate = $request->request->get('toDate');
         $notes = $request->request->get('notes');
 
-        return $this->render('admin/bookable/unavailableDates/new/confirmNewUnavailableDates.html.twig', [
+        return $this->render('admin/bookable/unavailableDates/new/confirm_new_unavailable_dates.html.twig', [
             'bookable' => $bookable,
             'fromDate' => $fromDate,
             'toDate' => $toDate,
@@ -72,7 +72,7 @@ class UnavailableDatesController extends AbstractController
 
         $unavailableDates = $this->bookableService->createUnavailableDates($bookableId, $fromDate, $toDate, $notes);
 
-        return $this->render('admin/bookable/unavailableDates/new/confirmationUnavailableDates.html.twig', [
+        return $this->render('admin/bookable/unavailableDates/new/confirmation_unavailable_dates.html.twig', [
             'unavailableDates' => $unavailableDates
         ]);
     }
@@ -95,7 +95,7 @@ class UnavailableDatesController extends AbstractController
     {
         $errors = $request->getSession()->getFlashBag()->get('error');
 
-        return $this->render('admin/bookable/unavailableDates/edit/editUnavailableDates.html.twig', [
+        return $this->render('admin/bookable/unavailableDates/edit/edit_unavailable_dates.html.twig', [
             'unavailableDate' => $unavailableDates,
             'todaysDate' => DateUtils::getTodaysDate(),
             'errors' => $errors,
@@ -117,7 +117,7 @@ class UnavailableDatesController extends AbstractController
         $toDate = $request->request->get('toDate');
         $notes = $request->request->get('notes');
 
-        return $this->render('admin/bookable/unavailableDates/edit/confirmEditUnavailableDates.html.twig', [
+        return $this->render('admin/bookable/unavailableDates/edit/confirm_edit_unavailable_dates.html.twig', [
             'bookable' => $bookable,
             'unavailableDate' => $unavailableDate,
             'todaysDate' => DateUtils::getTodaysDate(),
@@ -142,7 +142,7 @@ class UnavailableDatesController extends AbstractController
 
         $unavailableDates = $this->bookableService->editUnavailableDates($unavailableDateId, new \DateTime($fromDate), new \DateTime($toDate), $notes);
 
-        return $this->render('admin/bookable/unavailableDates/edit/confirmationUnavailableDates.html.twig', [
+        return $this->render('admin/bookable/unavailableDates/edit/confirmation_unavailable_dates.html.twig', [
             'unavailableDates' => $unavailableDates
         ]);
     }

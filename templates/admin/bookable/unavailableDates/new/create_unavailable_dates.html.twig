@@ -15,9 +15,9 @@
 
 {% block body %}
 
-    {% include "_parts/breadcrumbs/_createUnavailableDatesBreadCrumb.html.twig" with { 'createStage': 0 } %}
+    {% include "_parts/breadcrumbs/_create_unavailable_dates_bread_crumb.html.twig" with { 'createStage': 0 } %}
 
-    {% include "_parts/forms/_inputCreateUnavailableDatesFrom.html.twig" with {
+    {% include "_parts/forms/_input_create_unavailable_dates_from.html.twig" with {
         'action': path('app_unavailabledates_showconfirmcreateunavailabledatespage'),
         'hasErrors': true,
         'errors': errors,

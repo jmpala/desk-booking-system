@@ -27,7 +27,7 @@
                 <p class="text-center">No ongoing bookings, make a <a href="{{ "#{path('app_planning_createbookingbyuseidpage')}?userid=#{selectedUser.id}" }}">new booking</a>
             {% endif %}
 
-            {% include "_parts/tables/_listAllBookingsTable.html.twig" with {
+            {% include "_parts/tables/_list_all_bookings_table.html.twig" with {
                 "selectedCol": selectedCol,
                 "selectedOder": selectedOder,
                 "pastBookings": pastBookings,
@@ -36,10 +36,10 @@
             } %}
 
             {% if pager.nbPages > 1 %}
-                {% include "_parts/pagers/_listBookingsPager.html.twig" with { "pager": pager } %}
+                {% include "_parts/pagers/_list_bookings_pager.html.twig" with { "pager": pager } %}
             {% endif %}
 
-            {% include "_parts/modals/_confirmDeletionModal.html.twig" with {
+            {% include "_parts/modals/_confirm_deletion_modal.html.twig" with {
                 "action": path('app_planning_deletebooking'),
                 "hasSelecteduser": true,
                 "selectedUser": selectedUser,

@@ -77,7 +77,7 @@ class PlanningController extends AbstractController
 
         $errors = $request->getSession()->getFlashBag()->get('error');
 
-        return $this->render('planning/new/createBooking.html.twig', [
+        return $this->render('planning/new/create_booking.html.twig', [
             'userid' => $userid,
             'selectedUser' => $selectedUser,
             'todaysDate' => new \DateTime((new \DateTime())->format('Y-m-d')),
@@ -101,7 +101,7 @@ class PlanningController extends AbstractController
         $fromDate = $request->request->get('fromDate');
         $toDate = $request->request->get('toDate');
 
-        return $this->render('planning/new/confirmBooking.html.twig', [
+        return $this->render('planning/new/confirm_booking.html.twig', [
             'selectedUser' => $selectedUser,
             'userid' => $userid,
             'bookable' => $bookable,
@@ -125,7 +125,7 @@ class PlanningController extends AbstractController
 
         $createdBooking = $this->bookingService->createNewBookingByUserId($bookableId, $fromDate, $toDate, $userid);
 
-        return $this->render('planning/new/createdBooking.html.twig', [
+        return $this->render('planning/new/created_booking.html.twig', [
             'booking' => $createdBooking,
             'selectedUser' => $selectedUser,
         ]);
@@ -167,7 +167,7 @@ class PlanningController extends AbstractController
 
         $errors = $request->getSession()->getFlashBag()->get('error');
 
-        return $this->render('planning/edit/editBooking.html.twig',[
+        return $this->render('planning/edit/edit_booking.html.twig',[
             'selectedUser' => $selectedUser,
             'booking' => $booking,
             'todaysDate' => $todaysDate,
@@ -193,7 +193,7 @@ class PlanningController extends AbstractController
         $fromDate = $request->request->get('fromDate');
         $toDate = $request->request->get('toDate');
 
-        return $this->render('planning/edit/confirmEditBooking.html.twig', [
+        return $this->render('planning/edit/confirm_edit_booking.html.twig', [
             'selectedUser' => $selectedUser,
             'booking' => $booking,
             'bookable' => $bookable,
@@ -218,7 +218,7 @@ class PlanningController extends AbstractController
 
         $editerBooking = $this->bookingService->editBooking($bookingId, $bookableId, $fromDate, $toDate);
 
-        return $this->render('planning/edit/editedBooking.html.twig', [
+        return $this->render('planning/edit/edited_booking.html.twig', [
             'selectedUser' => $selectedUser,
             'booking' => $editerBooking
         ]);

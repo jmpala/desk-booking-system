@@ -43,7 +43,7 @@ class BookingController extends AbstractController
 
         $errors = $request->getSession()->getFlashBag()->get('error');
 
-        return $this->render('booking/new/createBooking.html.twig',[
+        return $this->render('booking/new/create_booking.html.twig',[
             'todaysDate' => $todaysDate,
             'selectedBookable' => $selectedBookable,
             'allBookables' => $allBookables,
@@ -63,7 +63,7 @@ class BookingController extends AbstractController
         $fromDate = $request->request->get('fromDate');
         $toDate = $request->request->get('toDate');
 
-        return $this->render('booking/new/confirmBooking.html.twig', [
+        return $this->render('booking/new/confirm_booking.html.twig', [
             'bookable' => $bookable,
             'fromDate' => $fromDate,
             'toDate' => $toDate
@@ -83,7 +83,7 @@ class BookingController extends AbstractController
 
         $createdBooking = $this->bookingService->createNewBooking($bookableId, $fromDate, $toDate);
 
-        return $this->render('booking/new/createdBooking.html.twig', [
+        return $this->render('booking/new/created_booking.html.twig', [
             'booking' => $createdBooking
         ]);
     }
@@ -110,7 +110,7 @@ class BookingController extends AbstractController
             ]);
         }
 
-        return $this->render('booking/allBookings.html.twig', [
+        return $this->render('booking/all_bookings.html.twig', [
             'pager' => $pagerfanta,
             'selectedCol' => $col,
             'selectedOder' => $order,
@@ -155,7 +155,7 @@ class BookingController extends AbstractController
 
         $errors = $request->getSession()->getFlashBag()->get('error');
 
-        return $this->render('booking/edit/editBooking.html.twig',[
+        return $this->render('booking/edit/edit_booking.html.twig',[
             'booking' => $booking,
             'todaysDate' => $todaysDate,
             'selectedBookable' => $selectedBookable,
@@ -178,7 +178,7 @@ class BookingController extends AbstractController
         $fromDate = $request->request->get('fromDate');
         $toDate = $request->request->get('toDate');
 
-        return $this->render('booking/edit/confirmEditBooking.html.twig', [
+        return $this->render('booking/edit/confirm_edit_booking.html.twig', [
             'booking' => $booking,
             'bookable' => $bookable,
             'fromDate' => $fromDate,
@@ -200,7 +200,7 @@ class BookingController extends AbstractController
 
         $editerBooking = $this->bookingService->editBooking($bookingId, $bookableId, $fromDate, $toDate);
 
-        return $this->render('booking/edit/editedBooking.html.twig', [
+        return $this->render('booking/edit/edited_booking.html.twig', [
             'booking' => $editerBooking
         ]);
     }

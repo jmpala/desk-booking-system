@@ -43,7 +43,7 @@ class AdminController extends AbstractController
             ]);
         }
 
-        return $this->render('admin/bookable/bookableManager.html.twig', [
+        return $this->render('admin/bookable/bookable_manager.html.twig', [
             'pager' => $pagerFanta,
             'selectedCol' => $col,
             'selectedOder' => $order,

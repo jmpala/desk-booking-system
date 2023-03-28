@@ -7,9 +7,9 @@
 
 {% block body %}
 
-    {% include "_parts/breadcrumbs/_editUnavailableDatesBreadCrumb.html.twig" with { 'createStage': 1 } %}
+    {% include "_parts/breadcrumbs/_edit_unavailable_dates_bread_crumb.html.twig" with { 'createStage': 1 } %}
 
-    {% include "_parts/forms/_confirmEditUnavailableDatesFrom.html.twig" with {
+    {% include "_parts/forms/_confirm_edit_unavailable_dates_from.html.twig" with {
         'action': path('app_unavailabledates_showconfirmationeditunavailabledatespage', { 'id': unavailableDate.id }),
         'hasCsrf': true,
         'csrfName': '_csrf_token',

@@ -7,9 +7,9 @@
 
 {% block body %}
 
-    {% include "_parts/breadcrumbs/_createBookingBreadCrumb.html.twig" with { 'editStage': '1' } %}
+    {% include "_parts/breadcrumbs/_create_booking_bread_crumb.html.twig" with { 'editStage': '1' } %}
 
-    {% include "_parts/forms/_confirmCreateBookingForm.html.twig" with {
+    {% include "_parts/forms/_confirm_create_booking_form.html.twig" with {
         'action': path('app_planning_processnewbookingandshowconfirmation'),
         'hasUserId': true,
         "hasCsrf": true,

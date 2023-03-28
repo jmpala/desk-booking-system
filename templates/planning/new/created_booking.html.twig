@@ -7,9 +7,9 @@
 
 {% block body %}
 
-    {% include "_parts/breadcrumbs/_createBookingBreadCrumb.html.twig" with { 'editStage': '2' } %}
+    {% include "_parts/breadcrumbs/_create_booking_bread_crumb.html.twig" with { 'editStage': '2' } %}
 
-    {% include "_parts/booking/_bookingDetails.html.twig" with {
+    {% include "_parts/booking/_booking_details.html.twig" with {
         'isBookedInPlanning': true,
         'booking': booking,
         'goToPath': path('app_planning') ~ '?userid=' ~ selectedUser.id,

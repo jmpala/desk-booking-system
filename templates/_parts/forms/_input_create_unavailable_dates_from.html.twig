@@ -1,22 +1,18 @@
-<form class="form border border-primary bg-light rounded p-3" id="newBookingForm" action="{{ action }}" method="post">
+<form class="form border border-primary bg-light rounded p-3" id="newUnavailableDateForm" action="{{ action }}" method="post">
 
     {% if hasErrors %}
-        {% include '_parts/errors/errorBusDisplay.html.twig' %}
+        {% include '_parts/errors/_error_bus_display.html.twig' %}
     {% endif %}
 
     {% if hasCsrf %}
         <input type="hidden" name="{{ csrfName }}" value="{{ csrfValue }}">
     {% endif %}
 
-    {% if hasUserId %}
-        <input type="hidden" name="userid" value="{{ userid }}">
-    {% endif %}
-
     <div class="form-floating m-3">
         <select class="form-select" name="bookable" id="allBookables">
 
             {% for bookable in allBookables %}
-                <option value="{{ bookable.id }}"{{ bookable.id == selectedBookable.id ? 'selected' : '' }}> {{ bookable.code }}</option>
+                <option value="{{ bookable.id }}" > {{ bookable.code }}</option>
             {% endfor %}
 
         </select>
@@ -31,6 +27,11 @@
     <div class="form-floating m-3">
         <input class="form-control" type="date" name="toDate" id="toDate" min="{{ todaysDate | date('Y-m-d') }}">
         <label for="toDate">To Date</label>
+    </div>
+
+    <div class="form-floating m-3">
+        <textarea class="form-control" placeholder="Enter notes..." name="notes" id="notes"></textarea>
+        <label for="toDate">Notes</label>
     </div>
 
     <div class="row justify-content-center m-3">

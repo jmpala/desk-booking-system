@@ -1,5 +1,5 @@
 {% extends '_templates/base.html.twig' %}
-{% set module = 'bookings' %}
+{% set module = 'planning' %}
 
 {% block stylesheets %}
     {{ encore_entry_link_tags('newBooking') }}
@@ -11,19 +11,19 @@
 
 {% block title %}New Booking{% endblock %}
 
-{% block main_header %}New Booking{% endblock %}
+{% block main_header %}New Booking for {{ selectedUser.userIdentifier }}{% endblock %}
 
 {% block body %}
 
-    {% include "_parts/breadcrumbs/_createBookingBreadCrumb.html.twig" with { 'editStage': '0' } %}
+    {% include "_parts/breadcrumbs/_create_booking_bread_crumb.html.twig" with { 'editStage': '0' } %}
 
-    {% include "_parts/forms/_inputCreateBookingForm.html.twig" with {
-        'action': path('app_booking_new_confirm'),
-        'hasUserId': false,
+    {% include "_parts/forms/_input_create_booking_form.html.twig" with {
+        'action': path('app_planning_showconfirmbookingpage'),
+        'hasUserId': true,
         'hasErrors': true,
         'hasCsrf': true,
         'csrfName': '_csrf_token',
-        'csrfValue': csrf_token('newBooking'),
+        'csrfValue': csrf_token('newPlanningBooking'),
         'allBookables': allBookables,
         'todaysDate': todaysDate,
         'returnTo': 'window.history.back();',

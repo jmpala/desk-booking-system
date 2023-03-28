@@ -7,9 +7,9 @@
 
 {% block body %}
 
-    {% include "_parts/breadcrumbs/_createUnavailableDatesBreadCrumb.html.twig" with { 'createStage': 1 } %}
+    {% include "_parts/breadcrumbs/_create_unavailable_dates_bread_crumb.html.twig" with { 'createStage': 1 } %}
 
-    {% include "_parts/forms/_confirmCreateUnavailableDatesForm.html.twig" with {
+    {% include "_parts/forms/_confirm_create_unavailable_dates_form.html.twig" with {
         'action': path('app_unavailabledates_showconfirmationunavailabledatespage'),
         'hasCsrf': true,
         'csrfName': '_csrf_token',

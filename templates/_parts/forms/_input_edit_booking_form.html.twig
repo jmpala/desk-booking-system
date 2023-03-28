@@ -1,7 +1,7 @@
 <form class="form border border-primary bg-light rounded p-3" id="editBookingForm" action="{{ action }}" method="post">
 
     {% if hasErrors %}
-        {% include '_parts/errors/errorBusDisplay.html.twig' %}
+        {% include '_parts/errors/_error_bus_display.html.twig' %}
     {% endif %}
 
     {% if hasCsrf %}
