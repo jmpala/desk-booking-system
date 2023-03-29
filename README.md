@@ -28,10 +28,9 @@ This is a booking system webapplication, that allows the booking of "bookables" 
 8. run `ddev yarn install` or `ddev npm install`
 9. run 'yarn run dev-server` or `npm run dev-server` (run on local, no on docker)
 10. run `ddev php bin/console doctrine:database:create`
-11. run `ddev php bin/console doctrine:schema:create`
-12. run `ddev php bin/console doctrine:migrations:migrate`
-13. run `ddev php bin/console doctrine:fixtures:load`
-14. run `ddev status` and copy the url to the browser
+11. run `ddev php bin/console doctrine:migrations:migrate`
+12. run `ddev php bin/console doctrine:fixtures:load`
+13. run `ddev status` and copy the url to the browser
 
 ## Features
 
