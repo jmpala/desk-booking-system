@@ -1,6 +1,6 @@
 'use strict';
 
-import {validateEmail, validatePassword} from '../../src/pages/login/validation';
+import {validateEmail, validatePassword} from '../../src/utils/validation';
 import {test, expect} from '@jest/globals';
 
 test.each`

@@ -30,20 +30,7 @@ Encore
      * Each entry will result in one JavaScript file (e.g. app.js)
      * and one CSS file (e.g. app.css) if your JavaScript imports CSS.
      */
-    .addEntry('base', './assets/js/src/pages/base/base.js')
-    .addEntry('login', './assets/js/src/pages/login/login.js')
-    .addEntry('overview', './assets/js/src/pages/overview/overview.js')
-    .addEntry('newBooking', './assets/js/src/pages/booking/newBooking.js')
-    .addEntry('allBookings', './assets/js/src/pages/booking/allBookings.js')
-    .addEntry('editBooking', './assets/js/src/pages/booking/editBooking.js')
-    .addEntry('planning', './assets/js/src/pages/planning/planning.js')
-    .addEntry('manageBookables', './assets/js/src/pages/admin/manageBookables.js')
-    .addEntry('newUnavailableDates', './assets/js/src/pages/admin/unavailableDates/newUnavailableDate.js')
-    .addEntry('editUnavailableDates', './assets/js/src/pages/admin/unavailableDates/editUnavailableDate.js')
-    .addEntry('usersManagement', './assets/js/src/pages/admin/users/usersManagement.js')
-    .addEntry('createUser', './assets/js/src/pages/admin/users/createUser.js')
-
-    .addEntry('sketch', './assets/js/src/sketch/script.js')
+    .addEntry('script', './assets/js/src/script.js')
 
     // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
     // .enableStimulusBridge('./assets/controllers.json')

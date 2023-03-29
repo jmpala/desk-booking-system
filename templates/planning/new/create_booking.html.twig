@@ -1,14 +1,6 @@
 {% extends '_templates/base.html.twig' %}
 {% set module = 'planning' %}
 
-{% block stylesheets %}
-    {{ encore_entry_link_tags('newBooking') }}
-{% endblock %}
-
-{% block javascripts %}
-    {{ encore_entry_script_tags('newBooking') }}
-{% endblock %}
-
 {% block title %}New Booking{% endblock %}
 
 {% block main_header %}New Booking for {{ selectedUser.userIdentifier }}{% endblock %}
