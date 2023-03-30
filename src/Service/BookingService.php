@@ -210,7 +210,7 @@ class BookingService
     }
 
     /**t
-     * Deletes the given booking
+     * Deletes booking by a given id
      *
      * @param int $bookingId
      *
@@ -219,13 +219,13 @@ class BookingService
      */
     public function deleteBooking(int $bookingId): void
     {
-        $todayDate = new \DateTime((new \DateTime())->format('Y-m-d'));
         $booking = $this->bookingRepository->find($bookingId);
-
         if (!$booking) {
             throw new \RuntimeException('Booking not found');
         }
 
+        $todayDate = new \DateTime();
+        $todayDate->setTime(0, 0, 0);
         if ($booking->getEndDate() < $todayDate) {
             throw new NotAuthorizedException('You are not allowed to delete past bookings');
         }

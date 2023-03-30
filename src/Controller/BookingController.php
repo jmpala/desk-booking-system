@@ -75,12 +75,14 @@ class BookingController extends AbstractController
     #[Route('/booking/delete', name: 'app_booking_delete', methods: ['POST'])]
     public function deleteBooking(Request $request): Response
     {
+        // TODO: Erase when symfony forms are implemented
         if (!$this->isCsrfTokenValid('deleteBooking', $request->request->get('_csrf_token'))) {
             throw new \Exception('Invalid CSRF token');
         }
 
-        $bookingId = (int) $request->request->get('bookingId');
-        $this->bookingService->deleteBooking($bookingId);
+        $this->bookingService->deleteBooking(
+            (int) $request->request->get('bookingId')
+        );
         return $this->redirectToRoute('app_booking_showallbookings');
     }
 
