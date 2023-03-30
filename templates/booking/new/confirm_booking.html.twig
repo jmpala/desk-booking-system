@@ -16,8 +16,8 @@
         'csrfName': '_csrf_token',
         'csrfValue': csrf_token('newBookingConfirmation'),
         'bookable': bookable,
-        'fromDate': fromDate,
-        'toDate': toDate,
+        'fromDate': app.request.get('fromDate'),
+        'toDate': app.request.get('toDate'),
         'returnTo': 'window.history.back();',
         'returnLbl': 'Modify',
         'submitLbl': 'Confirm'

@@ -24,67 +24,40 @@ class BookingController extends AbstractController
     #[Route('/booking/new', name: 'app_booking_new', methods: ['GET'])]
     public function showNewBookingPage(Request $request): Response
     {
-        $bookableId = (int) $request->query->get('id');
-        $todaysDate = $request->query->get('date') ?
-            new \DateTime($request->query->get('date')) :
-            new \DateTime();
-
-        /* @var array<\App\Entity\Bookable> $allBookables */
-        $allBookables = $this->bookableService->getAllBookableAndRelatedCategories();
-
-        /* @var array<\App\Entity\Bookable> $selectedBookable */
-        $selectedBookable = array_filter($allBookables, fn ($b) => $b->getId() === $bookableId);
-
-        if (!empty($selectedBookable)) {
-            $selectedBookable = $selectedBookable[array_key_first($selectedBookable)];
-        } else {
-            $selectedBookable = $allBookables[array_key_first($allBookables)];
-        }
-
-        $errors = $request->getSession()->getFlashBag()->get('error');
-
         return $this->render('booking/new/create_booking.html.twig',[
-            'todaysDate' => $todaysDate,
-            'selectedBookable' => $selectedBookable,
-            'allBookables' => $allBookables,
-            'errors' => $errors
+            'allBookables' => $this->bookableService->getAllBookableAndRelatedCategories(),
         ]);
     }
 
     #[Route('/booking/confirm', name: 'app_booking_new_confirm', methods: ['POST'])]
     public function showConfirmBookingPage(Request $request): Response
     {
+        // TODO: Erase when symfony forms are implemented
         if (!$this->isCsrfTokenValid('newBooking', $request->request->get('_csrf_token'))) {
             throw new \Exception('Invalid CSRF token');
         }
 
-        $bookableId = (int) $request->request->get('bookable');
-        $bookable = $this->bookableService->findById($bookableId);
-        $fromDate = $request->request->get('fromDate');
-        $toDate = $request->request->get('toDate');
-
         return $this->render('booking/new/confirm_booking.html.twig', [
-            'bookable' => $bookable,
-            'fromDate' => $fromDate,
-            'toDate' => $toDate
+            'bookable' => $this->bookableService->findById(
+                $request->request->getInt('bookable')
+            ),
         ]);
     }
 
     #[Route('/booking/new/confirmation', name: 'app_booking_process_and_show_confirmation', methods: ['POST'])]
     public function processNewBookingAndShowConfirmation(Request $request): Response
     {
+        // TODO: Erase when symfony forms are implemented
         if (!$this->isCsrfTokenValid('newBookingConfirmation', $request->request->get('_csrf_token'))) {
             throw new \Exception('Invalid CSRF token');
         }
 
-        $bookableId = (int) $request->request->get('bookable');
-        $fromDate = new \DateTime($request->request->get('fromDate'));
-        $toDate = new \DateTime($request->request->get('toDate'));
-
-        $createdBooking = $this->bookingService->createNewBooking($bookableId, $fromDate, $toDate);
-
         return $this->render('booking/new/created_booking.html.twig', [
-            'booking' => $createdBooking
+            'booking' => $this->bookingService->createNewBooking(
+                (int) $request->request->get('bookable'),
+                new \DateTime($request->request->get('fromDate')),
+                new \DateTime($request->request->get('toDate'))
+            )
         ]);
     }
 

@@ -119,24 +119,12 @@ class BookingService
         \DateTime $fromDate,
         \DateTime $toDate
     ): Bookings {
-
-        if ($this->isBookableAlreadyBookedByDateRange($bookableId, $fromDate, $toDate)) {
-            throw new BookingOverlapException('The bookable is already booked for the given date range');
-        }
-
-        $bookable = $this->bookableRepository->find($bookableId);
-        $user = $this->security->getUser();
-
-        $newBooking = new Bookings();
-        $newBooking->setBookable($bookable);
-        $newBooking->setStartDate($fromDate);
-        $newBooking->setEndDate($toDate);
-        $newBooking->setUser($user);
-        $newBooking->setConfirmation(bin2hex(random_bytes(4)));
-
-        $this->bookingRepository->save($newBooking, true);
-
-        return $newBooking;
+        return $this->createNewBookingByUserId(
+            $bookableId,
+            $fromDate,
+            $toDate,
+            $this->security->getUser()->getId()
+        );
     }
 
     /**
@@ -166,7 +154,11 @@ class BookingService
         }
 
         $bookable = $this->bookableRepository->find($bookableId);
-        $user = $this->userRepository->find($userId);
+
+        $user = ($userId === $this->security->getUser()->getId())
+            ? $this->security->getUser()
+            : $this->userRepository->find($userId)
+        ;
 
         $newBooking = new Bookings();
         $newBooking->setBookable($bookable);

@@ -24,7 +24,7 @@ class AdminService
     public function getAllUnavailableDatesPaged(): Pagerfanta
     {
         return $this->pagerService->createAndConfigurePager(
-            $this->unavailableDatesRepository->getAllUnavailableDatesWithOrderedColumn()
+            $this->unavailableDatesRepository->getAllUnavailableDatesOrderedColumn()
         );
     }
 }

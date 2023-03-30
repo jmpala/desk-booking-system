@@ -16,7 +16,7 @@
         <select class="form-select" name="bookable" id="allBookables">
 
             {% for bookable in allBookables %}
-                <option value="{{ bookable.id }}"{{ bookable.id == selectedBookable.id ? 'selected' : '' }}> {{ bookable.code }}</option>
+                <option value="{{ bookable.id }}"{{ bookable.id == app.request.query.get('id') ? 'selected' : '' }}> {{ bookable.code }}</option>
             {% endfor %}
 
         </select>
@@ -24,12 +24,12 @@
     </div>
 
     <div class="form-floating m-3">
-        <input class="form-control" type="date" name="fromDate" id="fromDate" value="{{ todaysDate | date('Y-m-d') }}" min="{{ todaysDate | date('Y-m-d') }}">
+        <input class="form-control" type="date" name="fromDate" id="fromDate" value="{{ startingDate | date('Y-m-d') }}" min="{{ startingDate | date('Y-m-d') }}">
         <label for="fromDate">From Date</label>
     </div>
 
     <div class="form-floating m-3">
-        <input class="form-control" type="date" name="toDate" id="toDate" min="{{ todaysDate | date('Y-m-d') }}">
+        <input class="form-control" type="date" name="toDate" id="toDate" min="{{ startingDate | date('Y-m-d') }}">
         <label for="toDate">To Date</label>
     </div>
 
