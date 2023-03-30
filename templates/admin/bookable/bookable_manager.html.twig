@@ -1,5 +1,10 @@
 {% extends '_templates/base.html.twig' %}
+
 {% set module = 'admin' %}
+{% set selectedCol = app.request.query.alpha('col', 'bookable') %}
+{% set selectedOder = app.request.query.alpha('ord', 'asc') %}
+{% set pastUnavailabledates = app.request.query.boolean('past', false) %}
+{% set todaysDate = 'now'|date('Y-m-d') %}
 
 {% block title %}Admin Panel{% endblock %}
 
@@ -35,13 +40,13 @@
                 scope="col"
             >Notes</th>
             <th class="col-table text-center" scope="col">Past Unavailable Dates
-                <input id="pastUnavailabledates" class="form-check-input" type="checkbox" {{ (pastUnavailabledates == 'true') ? 'checked' : '' }}></th>
+                <input id="pastUnavailabledates" class="form-check-input" type="checkbox" {{ (pastUnavailabledates) ? 'checked' : '' }}></th>
         </tr>
         </thead>
         <tbody>
         {% if pager.nbResults > 0 %}
             {% for unavailableDates in pager %}
-                <tr class="{{ (unavailableDates.endDate <  todaysDate ) ? 'bg-dark bg-opacity-10' : '' }}">
+                <tr class="{{ (unavailableDates.endDate|date('Y-m-d') <  todaysDate ) ? 'bg-dark bg-opacity-10' : '' }}">
                     <td class="text-center">{{ unavailableDates.bookable.code }}</td>
                     <td class="text-center">{{ unavailableDates.startDate | date('d/m/Y') }}</td>
                     <td class="text-center">{{ unavailableDates.endDate | date('d/m/Y') }}</td>
@@ -49,13 +54,13 @@
                     <td class="text-center">
                         <button class="btn btn-outline-warning btn-sm edit-btn"
                                 data-bs-booking-id="{{ unavailableDates.id }}"
-                                {{ (unavailableDates.endDate <  todaysDate ) ? 'disabled' : '' }}
+                                {{ (unavailableDates.endDate|date('Y-m-d') < todaysDate ) ? 'disabled' : '' }}
                         >Modify</button>
                         <button type="button" class="btn btn-outline-danger btn-sm"
                                 data-bs-toggle="modal"
                                 data-bs-target="#deleteConfirmation"
                                 data-bs-booking-id="{{ unavailableDates.id }}"
-                                {{ (unavailableDates.endDate <  todaysDate ) ? 'disabled' : '' }}
+                                {{ (unavailableDates.endDate|date('Y-m-d') < todaysDate ) ? 'disabled' : '' }}
                          >Delete</button>
                     </td>
                 </tr>

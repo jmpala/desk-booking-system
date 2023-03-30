@@ -6,6 +6,7 @@ namespace App\EventSubscriber;
 
 use App\Exception\BookingOverlapException;
 use App\Exception\NotAuthorizedException;
+use App\Exception\OutOfIndexPagerException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
@@ -33,6 +34,10 @@ class ExceptionSubscriber implements EventSubscriberInterface
         if ($exception instanceof NotAuthorizedException) {
             $request->getSession()->getFlashBag()->add('error', 'You are not authorized to perform this action');
             $event->setResponse(new RedirectResponse('/'));
+        }
+
+        if ($exception instanceof OutOfIndexPagerException) {
+            $event->setResponse(new RedirectResponse($request->getPathInfo()));
         }
     }
 

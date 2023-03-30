@@ -659,13 +659,12 @@ const manageBookablesPage = (function () : void {
         const parentColumn: HTMLElement = target.closest('th');
 
         const urlParams = new URLSearchParams(window.location.search);
-        const userId = urlParams.get('userid');
         const page = urlParams.get('page') || '1';
 
         const col = parentColumn.dataset.colName;
         const order = parentColumn.dataset.colOrder === 'asc' ? 'desc' : 'asc';
 
-        let newUri = `${window.location.origin}${window.location.pathname}?userid=${userId}&page=${page}&col=${col}&ord=${order}`;
+        let newUri = `${window.location.origin}${window.location.pathname}?page=${page}&col=${col}&ord=${order}`;
 
         if (pastCheck.checked) {
             newUri += '&past=true';
@@ -686,12 +685,11 @@ const manageBookablesPage = (function () : void {
         if (target.id !== 'pastUnavailabledates') return;
 
         const urlParams = new URLSearchParams(window.location.search);
-        const userId = urlParams.get('userid');
         const page = urlParams.get('page') || '1';
         const col = urlParams.get('col') || 'bookable';
         const order = urlParams.get('ord') || 'asc';
 
-        let newUri = `${window.location.origin}${window.location.pathname}?userid=${userId}&page=${page}&col=${col}&ord=${order}`;
+        let newUri = `${window.location.origin}${window.location.pathname}?page=${page}&col=${col}&ord=${order}`;
 
         if (target.checked) {
             newUri += '&past=true';
