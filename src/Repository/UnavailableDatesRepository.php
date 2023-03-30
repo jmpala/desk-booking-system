@@ -68,6 +68,15 @@ class UnavailableDatesRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    /**
+     * Returns all the unavailable dates for a given bookable id and date range
+     *
+     * @param int       $id
+     * @param \DateTime $from
+     * @param \DateTime $to
+     *
+     * @return array
+     */
     public function getAllUnavailableDatesByBookableIdAndDateRange(
         int $id,
         \DateTime $from,

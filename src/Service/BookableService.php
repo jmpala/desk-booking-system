@@ -10,15 +10,22 @@ use App\Entity\UnavailableDates;
 use App\Repository\BookableRepository;
 use App\Repository\BookingsRepository;
 use App\Repository\UnavailableDatesRepository;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class BookableService
 {
+    private Request $request;
+
     public function __construct(
         private BookableRepository $bookableRepository,
         private BookingsRepository $bookingsRepository,
+        private BookingService $bookingsService,
         private UnavailableDatesRepository $unavailableDatesRepository,
+        private RequestStack $requestStack,
     )
     {
+        $this->request = $this->requestStack->getCurrentRequest();
     }
 
     /**
@@ -44,29 +51,52 @@ class BookableService
     }
 
     /**
-     * Checks if the given bookable is available for the given dates. The returnung array will contain booking and
-     * unavailable dates data when the bookable is not available, otherwise this data will be empty. For convienience
-     * the isAvailable key will be set to true or false, depending the case.
+     * Checks if the given bookable is available for the given dates. The returning array will contain booking and
+     * unavailable dates data when the bookable is not available, otherwise this data will be empty. For convenience
+     * the isAvailable key will be set to true or false, depending on the case.
      *
      * The $ignore parameter is used to ignore a booking when checking availability. This is used when updating a booking
      *
-     * @param int       $id
-     * @param \DateTime $from
-     * @param \DateTime $to
-     *
      * @return bool[]
+     * @throws \JsonException
      */
-    public function checkAvailabilityByDate(int $id, \DateTime $from, \DateTime $to, ?Bookings $ignore = null): array
+    public function checkBookableAvailabilityByDate(): array
     {
-        /** @var array<\App\Entity\Bookings> $bookings */
-        $bookings = $this->bookingsRepository->getAllBookingsByBookableIdAndDateRange($id, $from, $to);
+        $bookableId = (int) $this->request->get('id');
+        $data = json_decode(
+            $this->request->getContent(),
+            true,
+            512,
+            JSON_THROW_ON_ERROR
+        );
+        $from = new \DateTime($data['from']);
+        $to = new \DateTime($data['to']);
 
-        if ($ignore) {
-            $bookings = array_filter($bookings, static fn (Bookings $booking) => $booking->getId() !== $ignore->getId());
+        $bookingToIgnore =  null;
+        if ($data['ignoreBooking']) {
+            $bookingToIgnore = $this->bookingsService->findById((int) $data['ignoreBookingId']);
+        }
+
+        /** @var array<\App\Entity\Bookings> $bookings */
+        $bookings = $this->bookingsRepository->getAllBookingsByBookableIdAndDateRange(
+            $bookableId,
+            $from,
+            $to,
+        );
+
+        if ($bookingToIgnore) {
+            $bookings = array_filter(
+                $bookings,
+                static fn (Bookings $booking) => $booking->getId() !== $bookingToIgnore->getId()
+            );
         }
 
         /** @var array<\App\Entity\UnavailableDates> $unavailable_dates */
-        $unavailable_dates = $this->unavailableDatesRepository->getAllUnavailableDatesByBookableIdAndDateRange($id, $from, $to);
+        $unavailable_dates = $this->unavailableDatesRepository->getAllUnavailableDatesByBookableIdAndDateRange(
+            $bookableId,
+            $from,
+            $to,
+        );
 
         $status = [
             'isAvailable' => empty($bookings) && empty($unavailable_dates)
