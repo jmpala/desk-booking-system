@@ -9,6 +9,7 @@ use App\Entity\UnavailableDates;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -21,12 +22,15 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 class UnavailableDatesRepository extends ServiceEntityRepository
 {
+    private Request $request;
+    
     public function __construct(
         private ManagerRegistry $registry,
         private RequestStack $requestStack,
     )
     {
         parent::__construct($registry, UnavailableDates::class);
+        $this->request = $this->requestStack->getCurrentRequest();
     }
 
     public function save(UnavailableDates $entity, bool $flush = false): void
@@ -89,27 +93,30 @@ class UnavailableDatesRepository extends ServiceEntityRepository
      *
      * @return \Doctrine\ORM\QueryBuilder
      */
-    public function getAllUnavailableDatesWithOrderedColumn(): QueryBuilder
+    public function getAllUnavailableDatesOrderedColumn(): QueryBuilder
     {
-        $request = $this->requestStack->getCurrentRequest();
-        $columnName = $request->query->getAlpha('col', 'bookable');
-        $oder = $request->query->getAlpha('ord', 'asc');
-        $isPastDatesChecked = $request->query->getBoolean('past', false);
-
-        $selectedColumn = match ($columnName) {
+        $selectedColumn = match (
+            $this->request->query->getAlpha('col', 'bookable')
+        ) {
             'bookable' => 'bk.code',
             'startdate' => 'ud.start_date',
             'enddate' => 'ud.end_date',
             default => 'ud.start_date',
         };
 
-        $selectedOrder = match ($oder) {
+        $selectedOrder = match (
+            $this->request->query->getAlpha('ord', 'asc')
+        ) {
             'asc' => 'ASC',
             'desc' => 'DESC',
             default => 'ASC',
         };
 
-        $selectedPast = $isPastDatesChecked ? '' : 'AND ud.end_date >= CURRENT_DATE()';
+        $selectedPast =
+            $this->request->query->getBoolean('past', false)
+                ? ''
+                : 'AND ud.end_date >= CURRENT_DATE()'
+        ;
 
         return $this->createQueryBuilder('ud')
             ->select('ud', 'bk')
