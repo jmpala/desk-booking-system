@@ -57,8 +57,7 @@ class BookingsRepository extends ServiceEntityRepository
      * @return array
      * @throws \Exception
      */
-    public function getBookingsWithBookableByDate(): array {
-        $date = new \DateTime($this->request->get('date'));
+    public function getBookingsWithBookableByDate(\DateTime $date): array {
         return $this->createQueryBuilder('b')
             ->select('b', 'bk')
             ->leftJoin('b.bookable', 'bk')

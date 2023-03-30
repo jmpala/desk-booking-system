@@ -56,9 +56,8 @@ class UnavailableDatesRepository extends ServiceEntityRepository
      *
      * @return array
      */
-    public function getUnavailableDatesByDate(): array
+    public function getUnavailableDatesByDate(\DateTime $date): array
     {
-        $date = new \DateTime($this->request->get('date'));
         return  $this->createQueryBuilder('u')
             ->select('u', 'bk')
             ->leftJoin('u.bookable', 'bk')

@@ -45,6 +45,8 @@ class BookingService
      */
     public function retrieveSeatStatusByDate(): SeatmapStatusDTO
     {
+        $date = new \DateTime($this->request->get('date'));
+
         /** @var Array<\App\Entity\Bookable> $bookables */
         $bookables = $this->bookableRepository->getAllBookableAndRelatedCategories();
         if (empty($bookables)) {
@@ -52,13 +54,13 @@ class BookingService
         }
 
         /** @var Array<\App\Entity\Bookings> $bookings */
-        $bookings = $this->bookingRepository->getBookingsWithBookableByDate();
+        $bookings = $this->bookingRepository->getBookingsWithBookableByDate($date);
 
         /** @var Array<\App\Entity\UnavailableDates> $unavailableDates */
-        $unavailableDates = $this->unavailableDatesRepository->getUnavailableDatesByDate();
+        $unavailableDates = $this->unavailableDatesRepository->getUnavailableDatesByDate($date);
 
         $seatmapStatusDTO = new SeatmapStatusDTO(
-            date: new \DateTime($this->request->get('date')),
+            date: $date,
         );
 
         // We add all the bookables to the DTO
