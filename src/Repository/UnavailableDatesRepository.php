@@ -54,12 +54,11 @@ class UnavailableDatesRepository extends ServiceEntityRepository
     /**
      * Retrives all unavailale date that overlap the given date
      *
-     * @param \DateTime $date
-     *
      * @return array
      */
-    public function getUnavailableDatesByDate(\DateTime $date): array
+    public function getUnavailableDatesByDate(): array
     {
+        $date = new \DateTime($this->request->get('date'));
         return  $this->createQueryBuilder('u')
             ->select('u', 'bk')
             ->leftJoin('u.bookable', 'bk')

@@ -73,6 +73,14 @@ class BookableInformationDTO
     #[Groups(['seatmapStatusDTO:read'])]
     private ?string $disabledNotes = null;
 
+
+    public function __construct(
+        Bookable $bookable,
+    )
+    {
+        $this->populateWithBookableEntity($bookable);
+    }
+
     public function populateWithBookingEntity(Bookings $entity): static {
         $this->isBooked = true;
         $this->bookingId = $entity->getId();

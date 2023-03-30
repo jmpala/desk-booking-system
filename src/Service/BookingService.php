@@ -14,30 +14,36 @@ use App\Repository\BookableRepository;
 use App\Repository\BookingsRepository;
 use App\Repository\UnavailableDatesRepository;
 use App\Repository\UserRepository;
+use App\Service\Utilities\PagerService;
 use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class BookingService
 {
+    private Request $request;
+
     public function __construct(
         private Security $security,
         private BookableRepository $bookableRepository,
         private BookingsRepository $bookingRepository,
         private UnavailableDatesRepository $unavailableDatesRepository,
         private UserRepository $userRepository,
-        private PagerService $pagerService
+        private PagerService $pagerService,
+        private RequestStack $requestStack,
     )
     {
+        $this->request = $this->requestStack->getCurrentRequest();
     }
 
     /**
      * Returns the status of all seats for a given date
      *
-     * @param \DateTime $date
      * @return SeatmapStatusDTO
      * @throws \Exception
      */
-    public function retrieveSeatStatusByDate(\DateTime $date): SeatmapStatusDTO
+    public function retrieveSeatStatusByDate(): SeatmapStatusDTO
     {
         /** @var Array<\App\Entity\Bookable> $bookables */
         $bookables = $this->bookableRepository->getAllBookableAndRelatedCategories();
@@ -46,30 +52,32 @@ class BookingService
         }
 
         /** @var Array<\App\Entity\Bookings> $bookings */
-        $bookings = $this->bookingRepository->getBookingsWithBookable($date);
+        $bookings = $this->bookingRepository->getBookingsWithBookableByDate();
 
-        $unavailableDates = $this->unavailableDatesRepository->getUnavailableDatesByDate($date);
+        /** @var Array<\App\Entity\UnavailableDates> $unavailableDates */
+        $unavailableDates = $this->unavailableDatesRepository->getUnavailableDatesByDate();
 
-        $seatmapStatusDTO = new SeatmapStatusDTO($date);
+        $seatmapStatusDTO = new SeatmapStatusDTO(
+            date: new \DateTime($this->request->get('date')),
+        );
 
         // We add all the bookables to the DTO
         foreach ($bookables as $bookable) {
-            $bookableInformationDTO = new BookableInformationDTO();
-            $bookableInformationDTO->populateWithBookableEntity($bookable);
+            $bookableInformationDTO = new BookableInformationDTO($bookable);
             $seatmapStatusDTO->addBookable($bookableInformationDTO);
         }
 
         $user = $this->security->getUser();
-        $userUdentifier = '';
+        $userIdentifier = '';
         if ($user) {
-            $userUdentifier = $user->getUserIdentifier();
+            $userIdentifier = $user->getUserIdentifier();
         }
 
         // We set the state of bookables that are booked
         foreach ($bookings as $booking) {
-            foreach ($seatmapStatusDTO->getBookables() as $bookableInformationDTO) {
+             foreach ($seatmapStatusDTO->getBookables() as $bookableInformationDTO) {
                 if ($bookableInformationDTO->getBookableId() === $booking->getBookable()->getId()) {
-                    if ($booking->getUser()->getUserIdentifier() === $userUdentifier) {
+                    if ($booking->getUser()->getUserIdentifier() === $userIdentifier) {
                         $bookableInformationDTO->setIsBookedByLoggedUser(true);
                     }
                     $bookableInformationDTO->populateWithBookingEntity($booking);

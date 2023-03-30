@@ -21,9 +21,9 @@ class BookingAPIController extends AbstractController
     }
 
     #[Route('/api/booking/overview/{date}', name: 'app_booking_retrieve_seatstatus_by_date', methods: ['GET'])]
-    public function retrieveSeatStatusByDate(\DateTime $date): Response {
+    public function retrieveSeatStatusByDate(): Response {
         return $this->json(
-            $this->bookingService->retrieveSeatStatusByDate($date),
+            $this->bookingService->retrieveSeatStatusByDate(),
             200,
             [],
             ['groups' => 'seatmapStatusDTO:read']);

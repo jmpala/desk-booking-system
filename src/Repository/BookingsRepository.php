@@ -9,6 +9,8 @@ use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * @extends ServiceEntityRepository<Bookings>
@@ -20,9 +22,15 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class BookingsRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    private Request $request;
+
+    public function __construct(
+        private ManagerRegistry $registry,
+        private RequestStack $requestStack,
+    )
     {
         parent::__construct($registry, Bookings::class);
+        $this->request = $this->requestStack->getCurrentRequest();
     }
 
     public function save(Bookings $entity, bool $flush = false): void
@@ -46,16 +54,16 @@ class BookingsRepository extends ServiceEntityRepository
     /**
      * Retrieves all bookings that overlap the given date
      *
-     * @param \DateTime $date
-     *
      * @return array
+     * @throws \Exception
      */
-    public function getBookingsWithBookable(DateTime $date): array {
+    public function getBookingsWithBookableByDate(): array {
+        $date = new \DateTime($this->request->get('date'));
         return $this->createQueryBuilder('b')
             ->select('b', 'bk')
             ->leftJoin('b.bookable', 'bk')
             ->where('DATE(:date) BETWEEN DATE(b.start_date)  AND DATE(b.end_date)')
-            ->setParameter('date', $date->format('Y-m-d'))
+            ->setParameter('date', $date)
             ->getQuery()
             ->getResult();
     }
