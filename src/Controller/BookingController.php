@@ -62,35 +62,13 @@ class BookingController extends AbstractController
     }
 
     #[Route('/booking/all', name: 'app_booking_showallbookings', methods: ['GET'])]
-    public function showAllBookings(Request $request): Response
+    public function showAllBookings(): Response
     {
         $userId = $this->getUser()->getId();
-        $hasOngoingBookings = $this->bookingService->countAllNonPastBookingsByUserID($userId) >= 1;
-
-        $pageNum = $request->query->getInt('page', 1);
-        $col = $request->query->getAlpha('col', 'resource');
-        $order = $request->query->getAlpha('ord', 'asc');
-        $past = $hasOngoingBookings ? $request->query->get('past', 'false') : 'true';
-
-        $pagerfanta = $this->bookingService->getAllBookingsPagedByUserID($pageNum, $col, $order, $past, $userId);
-
-        if ($pagerfanta->getCurrentPage() < $pageNum) {
-            return $this->redirectToRoute('app_booking_showallbookings', [
-                'page' => $pagerfanta->getCurrentPage(),
-                'col' => $col,
-                'ord' => $order,
-                'past' => $past,
-            ]);
-        }
-
         return $this->render('booking/all_bookings.html.twig', [
-            'pager' => $pagerfanta,
-            'selectedCol' => $col,
-            'selectedOder' => $order,
-            'todaysDate' => new \DateTime((new \DateTime())->format('Y-m-d')),
-            'pastBookings' => $past,
-            'hasBookingsMade' => $this->bookingService->countAllBookingsByUserID($userId) > 0,
-            'hasOngoingBookings' => $hasOngoingBookings
+            'pager' => $this->bookingService->getAllBookingsPagedByUserID($userId),
+            'hasBookingsMade' => $this->bookingService->countAllBookingsByUserID($userId) >= 1,
+            'hasOngoingBookings' => $this->bookingService->countAllNonPastBookingsByUserID($userId) >= 1
         ]);
     }
 

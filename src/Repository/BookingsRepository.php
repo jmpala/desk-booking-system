@@ -95,24 +95,27 @@ class BookingsRepository extends ServiceEntityRepository
 
     /**
      * Generates and returns a QueryBuilder for all bookings by user id,
-     * ordered by column
+     * ordered and filtered by the query parameters described next:
      *
-     * It can also filter past bookings
+     * Column to apply order
+     * - col=resource|confirmation|startdate|enddate or default startdate
      *
-     * @param string $columnName
-     * @param string $oder
-     * @param string $pastBookings
+     * Order of the Column
+     * - ord=asc|desc or default asc
+     *
+     * Filter by past bookings, finish_date < current_date
+     * - past=true|false or default false
+     *
      * @param int    $userId
      *
      * @return \Doctrine\ORM\QueryBuilder
      */
     public function getAllBookingsByUserIDOrderedByColumnQueryBuilder(
-        string $columnName,
-        string $oder,
-        string $pastBookings,
         int $userId
     ): QueryBuilder {
-        $selectedColumn = match ($columnName) {
+        $selectedColumn = match (
+            $this->request->query->getAlpha('col', 'resource')
+        ) {
             'resource' => 'bk.code',
             'confirmation' => 'b.confirmation',
             'startdate' => 'b.start_date',
@@ -120,17 +123,17 @@ class BookingsRepository extends ServiceEntityRepository
             default => 'b.start_date',
         };
 
-        $selectedOrder = match ($oder) {
+        $selectedOrder = match (
+            $this->request->query->getAlpha('ord', 'asc')
+        ) {
             'asc' => 'ASC',
             'desc' => 'DESC',
             default => 'ASC',
         };
 
-        $selectedPast = match ($pastBookings) {
-            'true' => '',
-            'false' => ' AND b.end_date >= CURRENT_DATE()',
-            default => ' AND b.end_date >= CURRENT_DATE()',
-        };
+        $selectedPast = $this->request->query->getBoolean('past', false)
+            ? ''
+            : ' AND b.end_date >= CURRENT_DATE()';
 
         return $this->createQueryBuilder('b')
             ->select('b', 'bk')

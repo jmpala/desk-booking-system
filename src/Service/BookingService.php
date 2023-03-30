@@ -196,24 +196,16 @@ class BookingService
     /**
      * Returns all bookings for the given user
      *
-     * @param int    $pageNumber
-     * @param string $columnName
-     * @param string $oder
-     * @param string $pastBookings
      * @param int    $userId
      *
      * @return \Pagerfanta\Pagerfanta
+     * @throws \App\Exception\OutOfIndexPagerException
      */
     public function getAllBookingsPagedByUserID(
-        int $pageNumber,
-        string $columnName,
-        string $oder,
-        string $pastBookings,
         int $userId
     ): Pagerfanta {
         return  $this->pagerService->createAndConfigurePager(
-            $this->bookingRepository->getAllBookingsByUserIDOrderedByColumnQueryBuilder($columnName, $oder, $pastBookings, $userId),
-            $pageNumber
+            $this->bookingRepository->getAllBookingsByUserIDOrderedByColumnQueryBuilder($userId)
         );
     }
 

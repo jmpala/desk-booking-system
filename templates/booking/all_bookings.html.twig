@@ -16,11 +16,11 @@
         {% endif %}
 
         {% include "_parts/tables/_list_all_bookings_table.html.twig" with {
-            "selectedCol": selectedCol,
-            "selectedOder": selectedOder,
-            "pastBookings": pastBookings,
+            "selectedCol": app.request.query.alpha('col')|default('resource'),
+            "selectedOder": app.request.query.alpha('ord')|default('asc'),
+            "pastBookings": app.request.query.boolean('past')|default(false),
             "pager": pager,
-            "todaysDate": todaysDate
+            "currentDate": 'now'|date_modify('midnight')|date(),
         } %}
 
         {% if pager.nbPages > 1 %}
@@ -38,9 +38,7 @@
     {% endif %}
 
     {% if not hasBookingsMade %}
-        <div class="{{ (hasBookingsMade <= 0) ? '': 'visually-hidden' }}">
-            <p class="text-center">No past or ongoing Booking found, make a <a href="{{ path('app_booking_new') }}">new booking</a>
-        </div>
+        <p class="text-center">No past or ongoing Booking found, make a <a href="{{ path('app_booking_new') }}">new booking</a>
     {% endif %}
 
 {% endblock %}
