@@ -13,9 +13,6 @@ class OfficeOverviewController extends AbstractController
     #[Route('/', name: 'app_office_overview')]
     public function index(): Response
     {
-
-        return $this->render('office_overview/index.html.twig', [
-            'today' => new \DateTime(),
-        ]);
+        return $this->render('office_overview/index.html.twig');
     }
 }
