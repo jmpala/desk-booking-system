@@ -15,10 +15,10 @@
         "csrfName": '_csrf_token',
         "csrfValue": csrf_token('confirmEditBooking'),
         "hasSelectedUser": false,
-        "booking": booking,
+        "bookingId": app.request.request.int('bookingId'),
         "bookable": bookable,
-        "fromDate": fromDate,
-        "toDate": toDate,
+        "fromDate": app.request.request.get('fromDate'),
+        "toDate": app.request.request.get('toDate'),
         "returnTo": "window.history.back();",
         "returnLbl": "Modify",
         "submitLbl": "Confirm"

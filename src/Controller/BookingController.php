@@ -99,22 +99,15 @@ class BookingController extends AbstractController
     #[Route('/booking/edit/confirm', name: 'app_booking_showconfirmeditbookingpage', methods: ['POST'])]
     public function showConfirmEditBookingPage(Request $request): Response
     {
+        // TODO: Erase when symfony forms are implemented
         if (!$this->isCsrfTokenValid('editBooking', $request->request->get('_csrf_token'))) {
             throw new \Exception('Invalid CSRF token');
         }
 
-        $bookingId = (int) $request->request->get('bookingId');
-        $booking = $this->bookingService->findById($bookingId);
-        $bookableId = (int) $request->request->get('bookable');
-        $bookable = $this->bookableService->findById($bookableId);
-        $fromDate = $request->request->get('fromDate');
-        $toDate = $request->request->get('toDate');
-
         return $this->render('booking/edit/confirm_edit_booking.html.twig', [
-            'booking' => $booking,
-            'bookable' => $bookable,
-            'fromDate' => $fromDate,
-            'toDate' => $toDate
+            'bookable' => $this->bookableService->findById(
+                $request->request->getInt('bookable')
+            ),
         ]);
     }
 
