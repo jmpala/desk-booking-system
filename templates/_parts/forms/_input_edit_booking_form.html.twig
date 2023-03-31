@@ -25,11 +25,11 @@
         <label for="allBookables">Available Bookables</label>
     </div>
     <div class="form-floating m-3">
-        <input class="form-control" type="date" name="fromDate" id="fromDate" value="{{ booking.startDate | date('Y-m-d') }}" min="{{ todaysDate | date('Y-m-d') }}" {{ booking.startDate | date('Y-m-d') < todaysDate | date('Y-m-d') ? 'disabled' : '' }}>
+        <input class="form-control" type="date" name="fromDate" id="fromDate" value="{{ booking.startDate|date('Y-m-d') }}" min="{{ currentDate|date('Y-m-d') }}" {{ booking.startDate|date('Ymd') < currentDate|date('Ymd') ? 'disabled' : '' }}>
         <label for="fromDate">From Date</label>
     </div>
     <div class="form-floating m-3">
-        <input class="form-control" type="date" name="toDate" id="toDate" value="{{ booking.endDate | date('Y-m-d') }}" min="{{ booking.startDate | date('Y-m-d') }}">
+        <input class="form-control" type="date" name="toDate" id="toDate" value="{{ booking.endDate|date('Y-m-d') }}" min="{{ booking.startDate|date('Y-m-d') }}">
         <label for="toDate">To Date</label>
     </div>
 

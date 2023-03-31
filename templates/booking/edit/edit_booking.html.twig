@@ -18,7 +18,7 @@
         "csrfValue": csrf_token('editBooking'),
         "booking": booking,
         "allBookables": allBookables,
-        "todaysDate": todaysDate,
+        "currentDate": 'now'|date_modify('midnight')|date(),
         "returnTo": "window.history.back();",
         "returnLbl": "Return",
         "submitLbl": "Edit",

@@ -88,32 +88,11 @@ class BookingController extends AbstractController
 
 
     #[Route('/booking/edit/{id}', name: 'app_booking_edit', methods: ['GET'])]
-    public function showEditBookingPage(Request $request, Bookings $booking): Response
+    public function showEditBookingPage(Bookings $booking): Response
     {
-        $bookableId = $booking->getBookable()->getId();
-        $todaysDate = $request->query->get('date') ?
-            new \DateTime($request->query->get('date')) :
-            new \DateTime();
-
-        /* @var array<\App\Entity\Bookable> $allBookables */
-        $allBookables = $this->bookableService->getAllBookableAndRelatedCategories();
-
-        $selectedBookable = array_filter($allBookables, fn ($b) => $b->getId() === $bookableId);
-
-        if (!empty($selectedBookable)) {
-            $selectedBookable = $selectedBookable[array_key_first($selectedBookable)];
-        } else {
-            $selectedBookable = $allBookables[array_key_first($allBookables)];
-        }
-
-        $errors = $request->getSession()->getFlashBag()->get('error');
-
         return $this->render('booking/edit/edit_booking.html.twig',[
-            'booking' => $booking,
-            'todaysDate' => $todaysDate,
-            'selectedBookable' => $selectedBookable,
-            'allBookables' => $allBookables,
-            'errors' => $errors
+            'booking' => $this->bookingService->findById($booking->getId()),
+            'allBookables' => $this->bookableService->getAllBookableAndRelatedCategories(),
         ]);
     }
 
