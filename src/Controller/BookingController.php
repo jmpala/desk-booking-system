@@ -114,19 +114,18 @@ class BookingController extends AbstractController
     #[Route('/booking/edit/confirmation', name: 'app_booking_processeditbookingandshowconfirmation', methods: ['POST'])]
     public function processEditBookingAndShowConfirmation(Request $request): Response
     {
+        // TODO: Erase when symfony forms are implemented
         if (!$this->isCsrfTokenValid('confirmEditBooking', $request->request->get('_csrf_token'))) {
             throw new \Exception('Invalid CSRF token');
         }
 
-        $bookingId = (int) $request->request->get('bookingId');
-        $bookableId = (int) $request->request->get('bookable');
-        $fromDate = new \DateTime($request->request->get('fromDate'));
-        $toDate = new \DateTime($request->request->get('toDate'));
-
-        $editerBooking = $this->bookingService->editBooking($bookingId, $bookableId, $fromDate, $toDate);
-
         return $this->render('booking/edit/edited_booking.html.twig', [
-            'booking' => $editerBooking
+            'booking' => $this->bookingService->editBooking(
+                $request->request->getInt('bookingId'),
+                $request->request->getInt('bookable'),
+                new \DateTime($request->request->get('fromDate')),
+                new \DateTime($request->request->get('toDate'))
+            ),
         ]);
     }
 }
