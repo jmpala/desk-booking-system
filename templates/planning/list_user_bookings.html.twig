@@ -1,0 +1,52 @@
+{% extends '_templates/base.html.twig' %}
+{% set module = 'planning' %}
+{% set has_bookings = app.session.get("has_bookings_#{selected_user.id}", false) %}
+{% set has_ongoing_bookings = app.session.get("has_ongoing_bookings_#{selected_user.id}", false) %}
+{% set has_only_past_bookings = app.session.get("has_only_past_bookings_#{selected_user.id}", false) %}
+{% set create_booking_link = "#{path('app_planning_createbookingbyuseidpage')}?user-id=#{selected_user.id}" %}
+
+{% block title %}Planning{% endblock %}
+
+{% block body %}
+
+    {% if has_bookings %}
+        <h1 class="mt-4 mb-3 text-center">All Bookings from:
+            <select class="h5" id="userSelect">
+                {% for  user in all_users %}
+                    <option value="{{ user.id }}" {{ (user.id == selected_user.id) ? 'selected' : '' }}>{{ user.userIdentifier }}</option>
+                {% endfor %}
+            </select>
+        </h1>
+
+        {% set optional_message = has_ongoing_bookings ? "Make a" : "No ongoing bookings, make a" %}
+        <p class="text-center">{{ optional_message }} <a href="{{ create_booking_link }}">new booking</a>
+
+        {% include "_parts/tables/_list_all_bookings_table.html.twig" %}
+
+        {% if pager.nbPages > 1 %}
+            {% include "_parts/pagers/_list_bookings_pager.html.twig" %}
+        {% endif %}
+
+        {% include "_parts/modals/_confirm_deletion_modal.html.twig" with {
+            "action": path('app_planning_deletebooking'),
+            "hasSelecteduser": true,
+            "selectedUser": selected_user,
+            "csrfValue": csrf_token('deleteBooking'),
+        } %}
+
+    {% endif %}
+
+    {% if not has_bookings %}
+        <div class="{{ (pager.nbResults > 0) ? 'visually-hidden': '' }}">
+            <h1 class="mt-4 mb-3 text-center">All Bookings for
+                <select class="h5" id="userSelect">
+                    {% for user in all_users %}
+                        <option value="{{ user.id }}" {{ (user.id == selected_user.id) ? 'selected' : '' }}>{{ user.userIdentifier }}</option>
+                    {% endfor %}
+                </select>
+            </h1>
+            <p class="text-center">No past or ongoing Booking found, make a <a href="{{ create_booking_link }}">new booking</a>
+        </div>
+    {% endif %}
+
+{% endblock %}

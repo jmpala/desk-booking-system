@@ -8,6 +8,7 @@ use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
@@ -22,7 +23,10 @@ use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
  */
 class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(
+        private ManagerRegistry $registry,
+        private RequestStack $requestStack,
+    )
     {
         parent::__construct($registry, User::class);
     }
@@ -60,27 +64,28 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     }
 
     /**
-     * Return a @QueryBuilder with all the Users ordered by column and order
-     *
-     * @param string $col
-     * @param string $order
+     * Return a @QueryBuilder with all the Users ordered by column and order.
+     * Column and order are obtained from the request.
      *
      * @return \Doctrine\ORM\QueryBuilder
      */
-    public function findAllUsersOrderedQueryBuilder(
-        string $col,
-        string $order
-    ): QueryBuilder {
-
-        $col = match ($col) {
+    public function findAllUsersOrderedQueryBuilder(): QueryBuilder
+    {
+        $col = match (
+            $this->requestStack->getCurrentRequest()->query->getAlpha('col')
+        ) {
             'id' => 'id',
             'email' => 'email',
-            'roles' => 'roles'
+            'roles' => 'roles',
+            default => 'id'
         };
 
-        $order = match ($order) {
+        $order = match (
+            $this->requestStack->getCurrentRequest()->query->getAlpha('ord')
+        ) {
             'asc' => 'asc',
-            'desc' => 'desc'
+            'desc' => 'desc',
+            default => 'asc'
         };
 
         $queryBuilder = $this->createQueryBuilder('u')

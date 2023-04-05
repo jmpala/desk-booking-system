@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Entity\Bookings;
+use App\Service\BookingService;
 use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
@@ -131,7 +132,10 @@ class BookingsRepository extends ServiceEntityRepository
             default => 'ASC',
         };
 
-        $selectedPast = $this->request->query->getBoolean('past', false)
+        $selectedPast = (
+            $this->request->query->getBoolean('past', false)
+            or $this->requestStack->getSession()->get(BookingService::HAS_ONLY_PAST_BOOKINGS . $userId)
+        )
             ? ''
             : ' AND b.end_date >= CURRENT_DATE()';
 

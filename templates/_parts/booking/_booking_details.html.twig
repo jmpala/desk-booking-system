@@ -3,7 +3,7 @@
         <h2 class="text-center">Booking Details</h2>
         <div class="d-flex flex-column m-4 text-center fs-4">
             {% if isBookedInPlanning %}
-                <p>Booked for: {{ selectedUser.userIdentifier }}</p>
+                <p>Booked for: {{ booking.user.userIdentifier }}</p>
             {% endif %}
             <p>Booked Resource: {{ booking.bookable.code }}</p>
             <p>Booking Confirmation: {{ booking.confirmation }}</p>

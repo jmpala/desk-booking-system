@@ -3,26 +3,16 @@
 
 {% block title %}Edit Booking{% endblock %}
 
-{% block main_header %}Editing Booking {{ booking.confirmation }} for {{ selectedUser.userIdentifier }}{% endblock %}
+{% block main_header %}Editing Booking {{ booking.confirmation }} for {{ booking.user.userIdentifier }}{% endblock %}
 
 {% block body %}
 
     {% include "_parts/breadcrumbs/_edit_booking_bread_crumb.html.twig" with { 'editStage': '0' } %}
 
     {% include "_parts/forms/_input_edit_booking_form.html.twig" with {
-        "action": path('app_planning_showconfirmeditbookingpage'),
-        "hasErrors": true,
-        "hasCsrf": true,
-        "csrfName": "_csrf_token",
+        "action": path('app_planning_showconfirmeditbookingpage', { 'id': booking.id }),
         "csrfValue": csrf_token('editBooking'),
-        "hasSelectedUser": true,
-        "selectedUser": selectedUser,
-        "booking": booking,
-        "allBookables": allBookables,
-        "todaysDate": todaysDate,
-        "returnTo": "window.history.back();",
-        "returnLbl": "Return",
-        "submitLbl": "Edit",
+        "hasSelectedUser": true
     } %}
 
 {% endblock %}

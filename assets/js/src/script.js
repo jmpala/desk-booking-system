@@ -5,8 +5,22 @@ import "bootstrap/dist/js/bootstrap.bundle.js";
 
 import '../../sass/style.scss';
 
+const selectUserPage = (function () : void {
+    const submitBtn: HTMLButtonElement = document.getElementById('submitBtn');
+    const userSelect: HTMLSelectElement = document.getElementById('userSelect');
+
+    submitBtn.addEventListener('click', onSubmitBtnClick);
+
+    function onSubmitBtnClick(event: Event): void {
+        const target: HTMLButtonElement = event.target;
+        if (target.id !== 'submitBtn') return;
+        const userId = userSelect.value;
+        window.location.href = window.location.origin + `/planning/${userId}`;
+    }
+});
+
 const planningPage = (function (): void {
-    const userSelects: NodeListOf = document.querySelectorAll('#userSelect');
+    const userSelect: HTMLSelectElement = document.getElementById('userSelect');
 
     const table: HTMLElement = document.getElementById('bookingsTable');
     if (table) {
@@ -26,10 +40,6 @@ const planningPage = (function (): void {
         table.addEventListener('click', onClickEditBooking);
         pastCheck.addEventListener('change', onCheckedPastBookings);
         deleteConmfirmationModal.addEventListener('show.bs.modal', onShowDeleteConfirmationModal);
-
-        userSelects.forEach((userSelect) => {
-            userSelect.addEventListener('change', onUserSelectChange);
-        });
 
         function orderTable(event: Event): void {
             const target: HTMLElement = event.target;
@@ -96,29 +106,27 @@ const planningPage = (function (): void {
         function onClickEditBooking(event: Event): void {
             const target: HTMLElement = event.target;
             if (!target.classList.contains('edit-btn')) return;
-
             event.stopPropagation();
-
-            const urlParams = new URLSearchParams(window.location.search);
-            const userId = urlParams.get('userid');
             const bookingId = target.getAttribute('data-bs-booking-id');
-
-            window.location.href = window.location.origin + '/planning/booking/edit/' + bookingId + '?userid=' + userId;
+            window.location.href = window.location.origin + '/planning/booking/edit/' + bookingId;
         }
+    }
 
 
-        function onUserSelectChange(event: Event): void {
-            const target: HTMLElement = event.target;
+    userSelect.addEventListener('change', onUserSelectChange);
 
-            if (target.id !== 'userSelect') return;
 
-            const urlParams = new URLSearchParams(window.location.search);
-            const userId = target.value;
+    function onUserSelectChange(event: Event): void {
+        const target: HTMLElement = event.target;
 
-            let newUri = `${window.location.origin}${window.location.pathname}?userid=${userId}`;
+        if (target.id !== 'userSelect') return;
 
-            window.location.href = newUri;
-        }
+        const urlParams = new URLSearchParams(window.location.search);
+        const userId = target.value;
+
+        let newUri = `${window.location.origin}/planning/${userId}`;
+
+        window.location.href = newUri;
     }
 });
 
@@ -1135,12 +1143,15 @@ const newUnavailableDate = (function () : void {
 
 const currentPage = window.location.pathname;
 
+const planningPageRegex = /\/planning\/(\d+)/;
 const editBookingRegex = /\/booking\/edit\/(\d+)/;
 const editBookingPlaningRegex = /\/planning\/booking\/edit\/(\d+)/;
 const editAdminUsersRegex = /\/admin\/users\/edit\/(\d+)/;
 const editUnavailableDateRegex = /\/admin\/unavailableDates\/(\d+)\/edit/;
 
 if (currentPage === '/planning') {
+    selectUserPage();
+} else if (planningPageRegex.test(currentPage)) {
     planningPage();
 } else if (currentPage === '/') {
     overviewPage();

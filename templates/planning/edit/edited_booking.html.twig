@@ -3,7 +3,7 @@
 
 {% block title %}Confirmation{% endblock %}
 
-{% block main_header %}Editing Booking {{ booking.confirmation }} for {{ selectedUser.userIdentifier }}{% endblock %}
+{% block main_header %}Editing Booking {{ booking.confirmation }} for {{ booking.user.userIdentifier }}{% endblock %}
 
 {% block body %}
 
@@ -11,8 +11,7 @@
 
     {% include "_parts/booking/_booking_details.html.twig" with {
         'isBookedInPlanning': true,
-        'booking': booking,
-        'goToPath': path('app_planning') ~ '?userid=' ~ selectedUser.id,
+        'goToPath': path('app_planning_showbookingslistforuser', { 'userId': booking.user.id }),
         'goToLbl': 'To Bookings'
     } %}
 

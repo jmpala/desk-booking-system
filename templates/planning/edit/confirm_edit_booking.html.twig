@@ -3,7 +3,7 @@
 
 {% block title %}Edit Booking{% endblock %}
 
-{% block main_header %}Editing Booking {{ booking.confirmation }} for {{ selectedUser.userIdentifier }}{% endblock %}
+{% block main_header %}Editing Booking {{ booking.confirmation }} for {{ booking.user.userIdentifier }}{% endblock %}
 
 {% block body %}
 
@@ -11,18 +11,8 @@
 
     {% include "_parts/forms/_confirm_edit_booking.html.twig" with {
         "action": path('app_planning_processeditbookingandshowconfirmation'),
-        "hasCsrf": true,
-        "csrfName": '_csrf_token',
         "csrfValue": csrf_token('confirmEditBooking'),
-        "hasSelectedUser": true,
-        "selectedUser": selectedUser,
-        "booking": booking,
-        "bookable": bookable,
-        "fromDate": fromDate,
-        "toDate": toDate,
-        "returnTo": "window.history.back();",
-        "returnLbl": "Modify",
-        "submitLbl": "Confirm"
+        "hasSelectedUser": true
     } %}
 
 {% endblock %}

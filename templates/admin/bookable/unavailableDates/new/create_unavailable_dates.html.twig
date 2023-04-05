@@ -11,16 +11,7 @@
 
     {% include "_parts/forms/_input_create_unavailable_dates_from.html.twig" with {
         'action': path('app_unavailabledates_showconfirmcreateunavailabledatespage'),
-        'hasErrors': true,
-        'errors': errors,
-        'hasCsrf': true,
-        'csrfName': '_csrf_token',
         'csrfValue': csrf_token('newUnavailableDates'),
-        'allBookables': allBookables,
-        'todaysDate': todaysDate,
-        'returnTo': 'window.history.back();',
-        'returnLbl': 'Return',
-        'submitLbl': 'Create'
     } %}
 
 {% endblock %}

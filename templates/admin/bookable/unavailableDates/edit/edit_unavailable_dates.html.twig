@@ -11,18 +11,7 @@
 
     {% include "_parts/forms/_input_edit_unavailable_dates_from.html.twig" with {
         'action': path('app_unavailabledates_showconfirmeditunavailabledatespage', { 'id': unavailableDate.id }),
-        'hasErrors': true,
-        'errors': errors,
-        'hasCsrf': true,
-        'csrfName': '_csrf_token',
-        'csrfValue': csrf_token('editUnavailableDates'),
-        'unavailableDate': unavailableDate,
-        'todaysDate': todaysDate,
-        'fromDate': unavailableDate.startDate,
-        'toDate': unavailableDate.endDate,
-        'returnTo': 'window.history.back();',
-        'returnLbl': 'Return',
-        'submitLbl': 'Edit'
+        'csrfValue': csrf_token('editUnavailableDates')
     } %}
 
 {% endblock %}

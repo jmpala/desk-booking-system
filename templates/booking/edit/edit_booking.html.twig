@@ -11,17 +11,8 @@
 
     {% include "_parts/forms/_input_edit_booking_form.html.twig" with {
         "action": path('app_booking_showconfirmeditbookingpage'),
-        "hasErrors": true,
-        "hasCsrf": true,
-        "hasSelectedUser": false,
-        "csrfName": "_csrf_token",
         "csrfValue": csrf_token('editBooking'),
-        "booking": booking,
-        "allBookables": allBookables,
-        "currentDate": 'now'|date_modify('midnight')|date(),
-        "returnTo": "window.history.back();",
-        "returnLbl": "Return",
-        "submitLbl": "Edit",
+        "hasSelectedUser": false
     } %}
 
 {% endblock %}

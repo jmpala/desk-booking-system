@@ -10,8 +10,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
-
 
 class UnavailableDatesAPIController extends AbstractController
 {
@@ -28,19 +26,16 @@ class UnavailableDatesAPIController extends AbstractController
             512,
             JSON_THROW_ON_ERROR
         );
-        $from = new \DateTime($data['from']);
-        $to = new \DateTime($data['to']);
-
-        $isIgnoreActive = (bool) ($data['ignoreSelectedUnavailableDate'] ?? false);
-        $ignore = $data['ignoreSelectedUnavailableDateId'] ?? null;
-        if ($isIgnoreActive) {
-            $ignore = $this->unavailableDatesService->findById((int) $ignore);
-        }
-
-        $unavailableDates = $this->unavailableDatesService->checkAvailabilityByDate($bookable, $from, $to, $ignore);
 
         return $this->json(
-            $unavailableDates,
+            $this->unavailableDatesService->checkAvailabilityByDate(
+                $bookable,
+                new \DateTime($data['from']),
+                new \DateTime($data['to']),
+                $data['ignoreSelectedUnavailableDate']
+                    ? $this->unavailableDatesService->findById((int) $data['ignoreSelectedUnavailableDateId'])
+                    : null
+            ),
             200,
             [],
             ['groups' => 'unavailableDates:read']

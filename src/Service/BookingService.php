@@ -5,6 +5,7 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use App\Commons\RequestParameters;
 use App\dto\BookableInformationDTO;
 use App\dto\SeatmapStatusDTO;
 use App\Entity\Bookings;
@@ -22,6 +23,9 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class BookingService
 {
+    public const HAS_BOOKINGS = 'has_bookings_';
+    public const HAS_ONGOING_BOOKINGS = 'has_ongoing_bookings_';
+    public const HAS_ONLY_PAST_BOOKINGS = 'has_only_past_bookings_';
     private Request $request;
 
     public function __construct(
@@ -30,8 +34,8 @@ class BookingService
         private BookingsRepository $bookingRepository,
         private UnavailableDatesRepository $unavailableDatesRepository,
         private UserRepository $userRepository,
-        private PagerService $pagerService,
         private RequestStack $requestStack,
+        private PagerService $pagerService,
     )
     {
         $this->request = $this->requestStack->getCurrentRequest();
@@ -101,54 +105,44 @@ class BookingService
     }
 
     /**
-     * Creates a new bookings for the given bookable and date-range
+     * Creates a new bookings for the given as request parameters
+     * bookable and date-range
      *
      * To prevent errors when booking the same bookable with similar dates at
      * the same time, @function isBookableAlreadyBookedByDateRange is called.
-     * In case duplicates are found, @throws \App\Exception\BookingOverlapException
-     *
-     * @param int       $bookableId
-     * @param \DateTime $fromDate
-     * @param \DateTime $toDate
+     * In case duplicates are found,
      *
      * @return \App\Entity\Bookings
-     * @throws \Exception
+     * @throws \App\Exception\BookingOverlapException
      */
     public function createNewBooking(
-        int $bookableId,
-        \DateTime $fromDate,
-        \DateTime $toDate
     ): Bookings {
         return $this->createNewBookingByUserId(
-            $bookableId,
-            $fromDate,
-            $toDate,
             $this->security->getUser()->getId()
         );
     }
 
     /**
-     * Creates a new bookings for the given bookable, date-range and userid
+     * Creates a new bookings for the given as request parameter
+     * bookable and date-range and userid as parameter
      *
      * To prevent errors when booking the same bookable with similar dates at
      * the same time, @function isBookableAlreadyBookedByDateRange is called.
-     * In case duplicates are found, @throws \App\Exception\BookingOverlapException
+     * In case duplicates are found,
      *
-     * @param int       $bookableId
-     * @param \DateTime $fromDate
-     * @param \DateTime $toDate
-     * @param int       $userId
+     * @param int $userId
      *
      * @return \App\Entity\Bookings
-     * @throws \Exception
+     * @throws \App\Exception\BookingOverlapException
      */
     public function createNewBookingByUserId(
-        int $bookableId,
-        \DateTime $fromDate,
-        \DateTime $toDate,
         int $userId
     ): Bookings
     {
+        $bookableId = $this->request->request->getInt(RequestParameters::BOOKABLE_ID);
+        $fromDate = new \DateTime($this->request->request->get(RequestParameters::FROM_DATE));
+        $toDate = new \DateTime($this->request->request->get(RequestParameters::TO_DATE));
+
         if ($this->isBookableAlreadyBookedByDateRange($bookableId, $fromDate, $toDate)) {
             throw new BookingOverlapException('The bookable is already booked for the given date range');
         }
@@ -204,6 +198,7 @@ class BookingService
     public function getAllBookingsPagedByUserID(
         int $userId
     ): Pagerfanta {
+        $this->updateSessionShowPastBookings($userId);
         return  $this->pagerService->createAndConfigurePager(
             $this->bookingRepository->getAllBookingsByUserIDOrderedByColumnQueryBuilder($userId)
         );
@@ -303,4 +298,32 @@ class BookingService
         return $booking;
     }
 
+    /**
+     * Updates the session to keep track if the user has bookings or not, and
+     * if the user has past bookings or not
+     *
+     * @param int $userId
+     *
+     * @return void
+     */
+    public function updateSessionShowPastBookings(int $userId): void
+    {
+        $hasBookings = $this->countAllBookingsByUserID($userId) >= 1;
+        $hasOngoingBookings = $this->countAllNonPastBookingsByUserID($userId) >= 1;
+
+        $this->requestStack->getSession()->set(
+            $this::HAS_BOOKINGS . $userId,
+            $hasBookings
+        );
+
+        $this->requestStack->getSession()->set(
+            $this::HAS_ONGOING_BOOKINGS . $userId,
+            $hasOngoingBookings
+        );
+
+        $this->requestStack->getSession()->set(
+            $this::HAS_ONLY_PAST_BOOKINGS . $userId,
+            $hasBookings && !$hasOngoingBookings
+        );
+    }
 }

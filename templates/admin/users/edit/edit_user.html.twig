@@ -19,11 +19,14 @@
     </div>
     <div class="row justify-content-center m-3">
         {{ form_widget(form.return, {'attr': {'class': 'btn btn-outline-primary btn-lg col-2 m-2'}}) }}
-        {{ form_widget(form.submit, {'attr': {
-            'class': 'btn btn-primary btn-lg col-2 bg-primary m-2',
-            'data-bs-toggle': 'modal',
-            'data-bs-target': '#createConfirmation'
-        }}) }}
+        {{ form_widget(form.submit, {
+            'label': 'Edit',
+            'attr': {
+                'class': 'btn btn-primary btn-lg col-2 bg-primary m-2',
+                'data-bs-toggle': 'modal',
+                'data-bs-target': '#createConfirmation'
+            }})
+        }}
     </div>
     {{ form_end(form) }}
 

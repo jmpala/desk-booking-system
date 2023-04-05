@@ -1,5 +1,7 @@
 {% extends "_templates/base.html.twig" %}
 {% set module = 'admin' %}
+{% set selected_col = app.request.query.get('col', 'email') %}
+{% set selected_order = app.request.query.get('ord', 'email') %}
 
 {% block title %}Admin Panel{% endblock %}
 
@@ -14,14 +16,14 @@
         <tr>
             <th class="col-table text-center"
                 data-col-name="id"
-                data-col-selected="{{ (selectedCol == 'id') ? 'true' : 'false' }}"
-                data-col-order="{{ (selectedCol == 'id') ? selectedOrder : 'desc' }}"
+                data-col-selected="{{ (selected_col == 'id') ? 'true' : 'false' }}"
+                data-col-order="{{ (selected_col == 'id') ? selected_order : 'desc' }}"
                 scope="col"
             >ID<button class="order-btn mx-3 btn btn-outline-dark btn-sm"><i class="bi bi-arrow-down-up"></i></button></th>
             <th class="col-table text-center"
                 data-col-name="email"
-                data-col-selected="{{ (selectedCol == 'email') ? 'true' : 'false' }}"
-                data-col-order="{{ (selectedCol == 'email') ? selectedOrder : 'desc' }}"
+                data-col-selected="{{ (selected_col == 'email') ? 'true' : 'false' }}"
+                data-col-order="{{ (selected_col == 'email') ? selected_order : 'desc' }}"
                 scope="col"
             >E-Mail<button class="order-btn mx-3 btn btn-outline-dark btn-sm"><i class="bi bi-arrow-down-up"></i></button></th>
             <th class="col-table text-center"

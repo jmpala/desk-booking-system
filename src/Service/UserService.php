@@ -6,6 +6,7 @@ namespace App\Service;
 
 use App\Entity\User;
 use App\Repository\UserRepository;
+use App\Service\Utilities\PagerService;
 use Doctrine\ORM\EntityNotFoundException;
 use Pagerfanta\Pagerfanta;
 
@@ -19,20 +20,15 @@ class UserService
     ){}
 
     /**
-     * Gets all the users from the database and returns a pagerfanta object,
-     * ordered by the given page number, column and order, obtained from the request
-     *
-     * @param int    $pageNum
-     * @param string $col
-     * @param string $order
+     * Gets all the users from the database and returns a pagerfanta object
      *
      * @return \Pagerfanta\Pagerfanta
+     * @throws \App\Exception\OutOfIndexPagerException
      */
-    public function getAllUsersPaged(int $pageNum, string $col, string $order) : Pagerfanta
+    public function getAllUsersPaged() : Pagerfanta
     {
         return $this->pagerService->createAndConfigurePager(
-            $this->userRepository->findAllUsersOrderedQueryBuilder($col, $order),
-            $pageNum
+            $this->userRepository->findAllUsersOrderedQueryBuilder(),
         );
     }
 

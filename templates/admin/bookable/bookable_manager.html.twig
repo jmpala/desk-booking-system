@@ -91,7 +91,7 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
                     <form action="{{ path('app_unavailabledates_deleteunavailabledateperiod') }}" method="post">
-                        <input type="hidden" name="unavailableId" id="unavailableId" value="">
+                        <input type="hidden" name="unavailable_date" id="unavailableId" value="">
                         <input type="hidden" name="_csrf_token" value="{{ csrf_token('deleteUnavailableDate') }}">
                         <button id="deleteConfirmationBtn" type="submit" class="btn btn-danger" data-booking-id="">DELETE</button>
                     </form>

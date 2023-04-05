@@ -1,14 +1,15 @@
+{% set from_date = app.request.request.get('from_date') %}
+{% set to_date = app.request.request.get('to_date') %}
+
 <form class="form border border-primary bg-light rounded p-3" action="{{ action }}" method="post">
 
-    {% if hasCsrf %}
-        <input type="hidden" name="{{ csrfName }}" value="{{ csrfValue }}">
-    {% endif %}
+    <input type="hidden" name="_csrf_token" value="{{ csrfValue }}">
 
     {% if hasSelectedUser %}
-        <input type="hidden" name="userid" value="{{ selectedUser.id }}">
+        <input type="hidden" name="user" value="{{ booking.user.id }}">
     {% endif %}
 
-    <input type="hidden" name="bookingId" value="{{ bookingId }}">
+    <input type="hidden" name="booking" value="{{ booking.id }}">
 
     <div class="form-floating m-3">
         <select class="form-select" id="allBookables" disabled>
@@ -18,19 +19,19 @@
         <label for="allBookables">Available Bookables</label>
     </div>
     <div class="form-floating m-3">
-        <input class="form-control" type="date" id="fromDate" value="{{ fromDate | date('Y-m-d') }}" disabled>
-        <input type="hidden" value="{{ fromDate | date('Y-m-d') }}" name="fromDate" />
+        <input class="form-control" type="date" id="fromDate" value="{{ from_date | date('Y-m-d') }}" disabled>
+        <input type="hidden" value="{{ from_date | date('Y-m-d') }}" name="from_date" />
         <label for="fromDate">From Date</label>
     </div>
     <div class="form-floating m-3">
-        <input class="form-control" type="date" name="toDate" id="toDate" value="{{ toDate | date('Y-m-d') }}" disabled>
-        <input type="hidden" value="{{ toDate | date('Y-m-d') }}" name="toDate" />
+        <input class="form-control" type="date" id="toDate" value="{{ to_date | date('Y-m-d') }}" disabled>
+        <input type="hidden" value="{{ to_date | date('Y-m-d') }}" name="to_date" />
         <label for="toDate">To Date</label>
     </div>
 
     <div class="row justify-content-center m-3">
-        <a href="#" class="btn btn-outline-primary btn-lg col-2 m-2" onclick="{{ returnTo }}">{{ returnLbl }}</a>
-        <button type="submit" class="btn btn-primary btn-lg col-2 bg-primary m-2" id="submitBtn">{{ submitLbl }}</button>
+        <a href="#" class="btn btn-outline-primary btn-lg col-2 m-2" onclick="window.history.back();">Modify</a>
+        <button type="submit" class="btn btn-primary btn-lg col-2 bg-primary m-2" id="submitBtn">Confirm</button>
     </div>
 
 </form>

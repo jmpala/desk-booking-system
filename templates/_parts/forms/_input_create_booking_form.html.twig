@@ -1,15 +1,11 @@
 <form class="form border border-primary bg-light rounded p-3" id="newBookingForm" action="{{ action }}" method="post">
 
-    {% if hasErrors %}
-        {% include '_parts/errors/_error_bus_display.html.twig' %}
-    {% endif %}
+    {% include '_parts/errors/_error_bus_display.html.twig' %}
 
-    {% if hasCsrf %}
-        <input type="hidden" name="{{ csrfName }}" value="{{ csrfValue }}">
-    {% endif %}
+    <input type="hidden" name="_csrf_token" value="{{ csrfValue }}">
 
     {% if hasUserId %}
-        <input type="hidden" name="userid" value="{{ userid }}">
+        <input type="hidden" name="user" value="{{ app.request.query.get('user-id') }}">
     {% endif %}
 
     <div class="form-floating m-3">
@@ -24,18 +20,18 @@
     </div>
 
     <div class="form-floating m-3">
-        <input class="form-control" type="date" name="fromDate" id="fromDate" value="{{ startingDate | date('Y-m-d') }}" min="{{ startingDate | date('Y-m-d') }}">
+        <input class="form-control" type="date" name="from_date" id="fromDate" value="{{ startingDate | date('Y-m-d') }}" min="{{ startingDate | date('Y-m-d') }}">
         <label for="fromDate">From Date</label>
     </div>
 
     <div class="form-floating m-3">
-        <input class="form-control" type="date" name="toDate" id="toDate" min="{{ startingDate | date('Y-m-d') }}">
+        <input class="form-control" type="date" name="to_date" id="toDate" min="{{ startingDate | date('Y-m-d') }}">
         <label for="toDate">To Date</label>
     </div>
 
     <div class="row justify-content-center m-3">
-        <button type="button" class="btn btn-outline-primary btn-lg col-2 m-2" onclick="{{ returnTo }}">{{ returnLbl }}</button>
-        <button type="submit" class="btn btn-primary btn-lg col-2 bg-primary m-2" id="submitBtn" disabled>{{ submitLbl }}</button>
+        <button type="button" class="btn btn-outline-primary btn-lg col-2 m-2" onclick="window.history.back();">Return</button>
+        <button type="submit" class="btn btn-primary btn-lg col-2 bg-primary m-2" id="submitBtn" disabled>Create</button>
     </div>
 
 </form>

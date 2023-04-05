@@ -1,18 +1,16 @@
+{% set currentDate = 'now'|date_modify('midnight')|date() %}
+
 <form class="form border border-primary bg-light rounded p-3" id="editBookingForm" action="{{ action }}" method="post">
 
-    {% if hasErrors %}
-        {% include '_parts/errors/_error_bus_display.html.twig' %}
-    {% endif %}
+    {% include '_parts/errors/_error_bus_display.html.twig' %}
 
-    {% if hasCsrf %}
-        <input type="hidden" name="{{ csrfName }}" value="{{ csrfValue }}">
-    {% endif %}
+    <input type="hidden" name="_csrf_token" value="{{ csrfValue }}">
 
     {% if hasSelectedUser %}
-        <input type="hidden" name="userid" value="{{ selectedUser.id }}">
+        <input type="hidden" name="user" value="{{ booking.user.id }}">
     {% endif %}
 
-    <input id="bookingId" type="hidden" name="bookingId" value="{{ booking.id }}">
+    <input id="bookingId" type="hidden" name="booking" value="{{ booking.id }}">
 
     <div class="form-floating m-3">
         <select class="form-select" name="bookable" id="allBookables">
@@ -25,17 +23,17 @@
         <label for="allBookables">Available Bookables</label>
     </div>
     <div class="form-floating m-3">
-        <input class="form-control" type="date" name="fromDate" id="fromDate" value="{{ booking.startDate|date('Y-m-d') }}" min="{{ currentDate|date('Y-m-d') }}" {{ booking.startDate|date('Ymd') < currentDate|date('Ymd') ? 'disabled' : '' }}>
+        <input class="form-control" type="date" name="from_date" id="fromDate" value="{{ booking.startDate|date('Y-m-d') }}" min="{{ currentDate|date('Y-m-d') }}" {{ booking.startDate|date('Ymd') < currentDate|date('Ymd') ? 'disabled' : '' }}>
         <label for="fromDate">From Date</label>
     </div>
     <div class="form-floating m-3">
-        <input class="form-control" type="date" name="toDate" id="toDate" value="{{ booking.endDate|date('Y-m-d') }}" min="{{ booking.startDate|date('Y-m-d') }}">
+        <input class="form-control" type="date" name="to_date" id="toDate" value="{{ booking.endDate|date('Y-m-d') }}" min="{{ booking.startDate|date('Y-m-d') }}">
         <label for="toDate">To Date</label>
     </div>
 
     <div class="row justify-content-center m-3">
-        <button type="button" class="btn btn-outline-primary btn-lg col-2 m-2" onclick="{{ returnTo }}">{{ returnLbl }}</button>
-        <button type="submit" class="btn btn-primary btn-lg col-2 bg-primary m-2" id="submitBtn" disabled>{{ submitLbl }}</button>
+        <button type="button" class="btn btn-outline-primary btn-lg col-2 m-2" onclick="window.history.back();">Return</button>
+        <button type="submit" class="btn btn-primary btn-lg col-2 bg-primary m-2" id="submitBtn" disabled>Edit</button>
     </div>
 
 </form>

@@ -1,3 +1,8 @@
+{% set selectedCol = app.request.query.alpha('col', 'resource') %}
+{% set selectedOder = app.request.query.alpha('ord', 'asc') %}
+{% set pastBookings = app.request.query.boolean('past', false) %}
+{% set currentDate = 'now'|date_modify('midnight')|date() %}
+
 <table id="bookingsTable" class="table">
     <thead>
     <tr>
@@ -26,7 +31,7 @@
             scope="col"
         >End Date<button class="order-btn mx-3 btn btn-outline-dark btn-sm"><i class="bi bi-arrow-down-up"></i></button></th>
         <th class="col-table text-center" scope="col">Past Bookings
-            <input id="pastBookings" class="form-check-input" type="checkbox" {{ (pastBookings == 'true') ? 'checked' : '' }}></th>
+            <input id="pastBookings" class="form-check-input" type="checkbox" {{ pastBookings or has_only_past_bookings ? 'checked' : '' }}></th>
     </tr>
     </thead>
     <tbody>

@@ -1,10 +1,8 @@
 <form class="form border border-primary bg-light rounded p-3" id="newUnavailableDateForm" action="{{ action }}" method="post">
 
-    {% if hasCsrf %}
-        <input type="hidden" name="{{ csrfName }}" value="{{ csrfValue }}">
-    {% endif %}
+    <input type="hidden" name="_csrf_token" value="{{ csrfValue }}">
 
-    <input type="hidden" name="unavailableDateId" id="unavailableDateId" value="{{ unavailableDate.id }}">
+    <input type="hidden" name="unavailable_date" id="unavailableDateId" value="{{ unavailableDate.id }}">
 
     <div class="form-floating m-3">
         <select class="form-select" id="allBookables" disabled>
@@ -15,26 +13,26 @@
     </div>
 
     <div class="form-floating m-3">
-            <input class="form-control" type="date" id="fromDate" value="{{ fromDate | date('Y-m-d') }}" disabled>
-            <input type="hidden" name="fromDate" value="{{ fromDate | date('Y-m-d') }}">
+            <input class="form-control" type="date" id="fromDate" value="{{ app.request.get('start_date') | date('Y-m-d') }}" disabled>
+            <input type="hidden" name="start_date" value="{{ app.request.get('start_date') | date('Y-m-d') }}">
         <label for="fromDate">From Date</label>
     </div>
 
     <div class="form-floating m-3">
-        <input class="form-control" type="date" id="toDate" value="{{ toDate | date('Y-m-d') }}" min="{{ fromDate | date('Y-m-d') }}" disabled>
-        <input type="hidden" name="toDate" value="{{ toDate | date('Y-m-d') }}">
+        <input class="form-control" type="date" id="toDate" value="{{ app.request.get('end_date') | date('Y-m-d') }}" min="{{ app.request.get('start_date') | date('Y-m-d') }}" disabled>
+        <input type="hidden" name="end_date" value="{{ app.request.get('end_date') | date('Y-m-d') }}">
         <label for="toDate">To Date</label>
     </div>
 
     <div class="form-floating m-3">
-        <textarea class="form-control" placeholder="Enter notes..." name="notes" id="notes" disabled>{{ unavailableDate.notes }}</textarea>
-        <input type="hidden" name="notes" value="{{ unavailableDate.notes }}">
+        <textarea class="form-control" placeholder="Enter notes..." id="notes" disabled>{{ app.request.get('notes') }}</textarea>
+        <input type="hidden" name="notes" value="{{ app.request.get('notes') }}">
         <label for="toDate">Notes</label>
     </div>
 
     <div class="row justify-content-center m-3">
-        <button type="button" class="btn btn-outline-primary btn-lg col-2 m-2" onclick="{{ returnTo }}">{{ returnLbl }}</button>
-        <button type="submit" class="btn btn-primary btn-lg col-2 bg-primary m-2" id="submitBtn">{{ submitLbl }}</button>
+        <button type="button" class="btn btn-outline-primary btn-lg col-2 m-2" onclick="window.history.back();">Modify</button>
+        <button type="submit" class="btn btn-primary btn-lg col-2 bg-primary m-2" id="submitBtn">Confirm</button>
     </div>
 
 </form>

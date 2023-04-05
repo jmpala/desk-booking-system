@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Commons\QueryParameters;
+use App\Commons\RequestParameters;
 use App\Entity\Bookings;
 use App\Service\BookableService;
 use App\Service\BookingService;
@@ -39,7 +41,7 @@ class BookingController extends AbstractController
 
         return $this->render('booking/new/confirm_booking.html.twig', [
             'bookable' => $this->bookableService->findById(
-                $request->request->getInt('bookable')
+                $request->request->getInt(QueryParameters::$BOOKABLE_ID)
             ),
         ]);
     }
@@ -53,22 +55,17 @@ class BookingController extends AbstractController
         }
 
         return $this->render('booking/new/created_booking.html.twig', [
-            'booking' => $this->bookingService->createNewBooking(
-                (int) $request->request->get('bookable'),
-                new \DateTime($request->request->get('fromDate')),
-                new \DateTime($request->request->get('toDate'))
-            )
+            'booking' => $this->bookingService->createNewBooking()
         ]);
     }
 
     #[Route('/booking/all', name: 'app_booking_showallbookings', methods: ['GET'])]
     public function showAllBookings(): Response
     {
-        $userId = $this->getUser()->getId();
         return $this->render('booking/all_bookings.html.twig', [
-            'pager' => $this->bookingService->getAllBookingsPagedByUserID($userId),
-            'hasBookingsMade' => $this->bookingService->countAllBookingsByUserID($userId) >= 1,
-            'hasOngoingBookings' => $this->bookingService->countAllNonPastBookingsByUserID($userId) >= 1
+            'pager' => $this->bookingService->getAllBookingsPagedByUserID(
+                $this->getUser()->getId()
+            )
         ]);
     }
 
@@ -81,7 +78,7 @@ class BookingController extends AbstractController
         }
 
         $this->bookingService->deleteBooking(
-            (int) $request->request->get('bookingId')
+            (int) $request->request->get(RequestParameters::BOOKING_ID)
         );
         return $this->redirectToRoute('app_booking_showallbookings');
     }
@@ -105,8 +102,11 @@ class BookingController extends AbstractController
         }
 
         return $this->render('booking/edit/confirm_edit_booking.html.twig', [
+            'booking' => $this->bookingService->findById(
+                $request->request->getInt(RequestParameters::BOOKING_ID)
+            ),
             'bookable' => $this->bookableService->findById(
-                $request->request->getInt('bookable')
+                $request->request->getInt(RequestParameters::BOOKABLE_ID)
             ),
         ]);
     }
@@ -121,10 +121,10 @@ class BookingController extends AbstractController
 
         return $this->render('booking/edit/edited_booking.html.twig', [
             'booking' => $this->bookingService->editBooking(
-                $request->request->getInt('bookingId'),
-                $request->request->getInt('bookable'),
-                new \DateTime($request->request->get('fromDate')),
-                new \DateTime($request->request->get('toDate'))
+                $request->request->getInt(RequestParameters::BOOKING_ID),
+                $request->request->getInt(RequestParameters::BOOKABLE_ID),
+                new \DateTime($request->request->get(RequestParameters::FROM_DATE)),
+                new \DateTime($request->request->get(RequestParameters::TO_DATE))
             ),
         ]);
     }

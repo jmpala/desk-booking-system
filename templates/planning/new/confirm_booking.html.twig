@@ -12,15 +12,7 @@
     {% include "_parts/forms/_confirm_create_booking_form.html.twig" with {
         'action': path('app_planning_processnewbookingandshowconfirmation'),
         'hasUserId': true,
-        "hasCsrf": true,
-        'csrfName': '_csrf_token',
-        'csrfValue': csrf_token('newPlanningBooking'),
-        'bookable': bookable,
-        'fromDate': fromDate,
-        'toDate': toDate,
-        'returnTo': 'window.history.back();',
-        'returnLbl': 'Modify',
-        'submitLbl': 'Confirm'
+        'csrfValue': csrf_token('newPlanningBooking')
     } %}
 
 {% endblock %}

@@ -1,6 +1,5 @@
 {% extends '_templates/base.html.twig' %}
 {% set module = 'planning' %}
-{% set date = 'now'|date_modify('midnight')|date() %}
 
 {% block title %}New Booking{% endblock %}
 
@@ -13,15 +12,8 @@
     {% include "_parts/forms/_input_create_booking_form.html.twig" with {
         'action': path('app_planning_showconfirmbookingpage'),
         'hasUserId': true,
-        'hasErrors': true,
-        'hasCsrf': true,
-        'csrfName': '_csrf_token',
         'csrfValue': csrf_token('newPlanningBooking'),
-        'allBookables': allBookables,
-        'startingDate': date,
-        'returnTo': 'window.history.back();',
-        'returnLbl': 'Return',
-        'submitLbl': 'Create',
+        'startingDate': 'now'|date_modify('midnight')|date()
     } %}
 
 {% endblock %}

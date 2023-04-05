@@ -37,6 +37,8 @@ class ExceptionSubscriber implements EventSubscriberInterface
         }
 
         if ($exception instanceof OutOfIndexPagerException) {
+            // TODO: When last bookings of user with past bookings is deleted, the pager is out of index but it tries to
+            // Redirect to an unexistant page
             $event->setResponse(new RedirectResponse($request->getPathInfo()));
         }
     }
