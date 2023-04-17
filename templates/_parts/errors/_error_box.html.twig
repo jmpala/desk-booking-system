@@ -1,0 +1,9 @@
+<div class="error-box">
+    <div class="{{ app.flashes('error') is empty ? 'error-display' : 'error-display__show' }} alert alert-danger" id="errorArea">
+        <ul class="m-0 p-0 px-2" id="errorList">
+            {% for error in app.flashes('error') %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>

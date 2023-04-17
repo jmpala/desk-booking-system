@@ -1,0 +1,60 @@
+{% extends '_templates/base.html.twig' %}
+{% set module = 'bookings' %}
+{% set has_bookings = app.session.get("has_bookings_#{app.user.id}", false) %}
+{% set has_ongoing_bookings = app.session.get("has_ongoing_bookings_#{app.user.id}", false) %}
+{% set has_only_past_bookings = app.session.get("has_only_past_bookings_#{app.user.id}", false) %}
+
+{% block title %}All Bookings{% endblock %}
+
+{% block body %}
+
+    <h1 class="mt-4 mb-3 text-center">All Bookings</h1>
+
+    {% if has_bookings %}
+
+        {% if has_ongoing_bookings %}
+            <p class="text-center">Make a <a href="{{ path('app_booking_new') }}">new booking</a>
+        {% else %}
+            <p class="text-center">No ongoing bookings, make a <a href="{{ path('app_booking_new') }}">new booking</a>
+        {% endif %}
+
+        {% include "_parts/tables/_list_all_bookings_table.html.twig" %}
+
+        {% if pager.nbPages > 1 %}
+            <div class="d-flex mt-3 mb-4 justify-content-center pagerfanta">
+                {{ pagerfanta(pager, 'twitter_bootstrap5') }}
+            </div>
+        {% endif %}
+
+        <!-- Modal -->
+        <div class="modal fade" id="deleteConfirmation" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+             aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Confirm</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure you want to delete booking confirmation <span id="data-bs-confirmation"></span>?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
+
+                        {{ form_start(deleteForm) }}
+                            {{ form_widget(deleteForm) }}
+                            <button type="submit" class="btn btn-danger" id="deleteConfirmationBtn">Delete</button>
+                        {{ form_end(deleteForm) }}
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if not has_bookings %}
+        <p class="text-center">No past or ongoing Booking found, make a <a href="{{ path('app_booking_new') }}">new
+        booking</a>
+    {% endif %}
+
+{% endblock %}

@@ -95,11 +95,13 @@ const planningPage = (function (): void {
             const bookingId = button.getAttribute('data-bs-booking-id');
             const confirmationLabel = document.getElementById('data-bs-confirmation');
             const deleteConfirmationBtn = document.getElementById('deleteConfirmationBtn');
-            const hiddenInput = document.getElementById('bookingId');
+            const hiddenInput = document.getElementById('delete_booking_bookingId');
+            const deleteForm: HTMLFormElement = hiddenInput.closest('form');
 
             deleteConfirmationBtn.setAttribute('data-booking-id', bookingId);
             confirmationLabel.textContent = confirmationNumber;
             hiddenInput.value = bookingId;
+            deleteForm.setAttribute('action', `/booking/${bookingId}/delete`);
         }
 
 
@@ -239,11 +241,10 @@ const newBookingPage = (function() : void {
 
     const dateDisplayFormat = 'en-GB';
 
-
-    const bookingFrom: HTMLFormElement = document.getElementById("newBookingForm");
-    const availableBookables: HTMLElement = document.getElementById("allBookables");
-    const fromDateDOMElement: HTMLElement = document.getElementById("fromDate");
-    const toDateDOMElement: HTMLElement = document.getElementById("toDate");
+    const bookingFrom: HTMLFormElement = document.querySelector('form[name="booking"]');
+    const availableBookables: HTMLElement = document.getElementById("booking_bookable");
+    const fromDateDOMElement: HTMLElement = document.getElementById("booking_start_date");
+    const toDateDOMElement: HTMLElement = document.getElementById("booking_end_date");
     const submitBtn: HTMLElement = document.getElementById("submitBtn");
     const errorArea: HTMLElement = document.getElementById("errorArea");
     const errorList: HTMLElement = document.getElementById("errorList");
@@ -535,7 +536,7 @@ const editBookingPage = (function () : void {
     }
 });
 
-const allBookingsPage = (function () : void {
+const listBookingsPage = (function () : void {
     const table: HTMLElement = document.getElementById('bookingsTable');
     const selectedColumn: HTMLElement = document.querySelector('[data-col-selected="true"]');
     const iconSelected: HTMLElement = selectedColumn.querySelector('i');
@@ -610,11 +611,13 @@ const allBookingsPage = (function () : void {
         const bookingId = button.getAttribute('data-bs-booking-id');
         const confirmationLabel = document.getElementById('data-bs-confirmation');
         const deleteConfirmationBtn = document.getElementById('deleteConfirmationBtn');
-        const hiddenInput = document.getElementById('bookingId');
+        const hiddenInput = document.getElementById('delete_booking_bookingId');
+        const deleteForm: HTMLFormElement = hiddenInput.closest('form');
 
         deleteConfirmationBtn.setAttribute('data-booking-id', bookingId);
         confirmationLabel.textContent = confirmationNumber;
         hiddenInput.value = bookingId;
+        deleteForm.setAttribute('action', `/booking/${bookingId}/delete`);
     }
 
 
@@ -626,7 +629,7 @@ const allBookingsPage = (function () : void {
 
         const bookingId = target.getAttribute('data-bs-booking-id');
 
-        window.location.href = window.location.origin + '/booking/edit/' + bookingId;
+        window.location.href = window.location.origin + `/booking/${bookingId}/edit`;
     }
 });
 
@@ -1144,7 +1147,7 @@ const newUnavailableDate = (function () : void {
 const currentPage = window.location.pathname;
 
 const planningPageRegex = /\/planning\/(\d+)/;
-const editBookingRegex = /\/booking\/edit\/(\d+)/;
+const editBookingRegex = /\/booking\/(\d+)\/edit/;
 const editBookingPlaningRegex = /\/planning\/booking\/edit\/(\d+)/;
 const editAdminUsersRegex = /\/admin\/users\/edit\/(\d+)/;
 const editUnavailableDateRegex = /\/admin\/unavailableDates\/(\d+)\/edit/;
@@ -1161,8 +1164,8 @@ if (currentPage === '/planning') {
     newBookingPage();
 } else if (editBookingRegex.test(currentPage) || editBookingPlaningRegex.test(currentPage)) {
     editBookingPage();
-} else if (currentPage === '/booking/all') {
-    allBookingsPage();
+} else if (currentPage === '/booking') {
+    listBookingsPage();
 } else if (currentPage === '/admin/bookable') {
     manageBookablesPage();
 } else if (currentPage === '/admin/users/create' || editAdminUsersRegex.test(currentPage)) {

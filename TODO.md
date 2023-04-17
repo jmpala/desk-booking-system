@@ -2,17 +2,17 @@
 
 ## VIP Smn`s TODOs (10.02.2023)
 
-1. [ ] Main screen should be more clear on what it is for UX/UI
+31. [x] Main screen should be more clear on what it is for UX/UI
 2. [x] Map should represent the office plan as if (big room)
 3. [x] Map should show which desk is selected
 4. [x] It could be useful to see who booked the desk direct on the "Karte"
 5. [x] Legend of desk states
 6. [x] Table desk easy names
-7. [ ] Table Date German format (no sence for hour)
-8. [ ] Confirmation message not good enought (Reservation Number)
-9. [ ] Filter delete bookings that are in the past
-10. [ ] For Plannning filer should be on the table, it has nothing to do with map
-11. [ ] map can have a list where users can be selected for the new booking
+7. [ ] Table Date German format (no sence for hour) <mark>**Depends on the machine**</mark>
+8. [x] Confirmation message not good enought (Reservation Number)
+9. [x] Filter delete bookings that are in the past
+10. [X] For Plannning filer should be on the table, it has nothing to do with map
+11. [ ] map can have a list where users can be selected for the new booking <mark>**need VUE**</mark>
 12. [x] user availability should be a flag on table (implemented on its own table)
 
 - What if 2 two bookings are made on the same time for the same resource?
@@ -70,11 +70,25 @@ LJ bk
 
 ## Ideas
 
+- user slug instead of ids to search for users
+
 ### Overview Page
 
 - Choose which date to start from. When compliting a new booking, should the user be redirected to the date of the booking?
 - correct the seatmap map displacement when entered for the first time to the page
+- change the date format displayed on the seatmap bookables to dd/mm/yyyy
+- spinloader till the seatmap is loaded
+- make the edit button to redirect to the edit page from selected booking
+
+### Creation Page
+
+- After a booking is created, is it reasobable to redirect the user to the overview page?
 
 ### Delete Booking
 
 - what if the booking is not ended and the user attempts to delete it? Should the user be able to delete it?
+
+
+### BookingAPIController
+
+- Define a way to sanitize the data received from the client

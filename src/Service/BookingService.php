@@ -2,10 +2,8 @@
 
 declare(strict_types=1);
 
-
 namespace App\Service;
 
-use App\Commons\RequestParameters;
 use App\dto\BookableInformationDTO;
 use App\dto\SeatmapStatusDTO;
 use App\Entity\Bookings;
@@ -16,6 +14,7 @@ use App\Repository\BookingsRepository;
 use App\Repository\UnavailableDatesRepository;
 use App\Repository\UserRepository;
 use App\Service\Utilities\PagerService;
+use Doctrine\ORM\EntityManagerInterface;
 use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,14 +29,14 @@ class BookingService
 
     public function __construct(
         private Security $security,
+        private EntityManagerInterface $entityManager,
         private BookableRepository $bookableRepository,
         private BookingsRepository $bookingRepository,
         private UnavailableDatesRepository $unavailableDatesRepository,
         private UserRepository $userRepository,
         private RequestStack $requestStack,
         private PagerService $pagerService,
-    )
-    {
+    ) {
         $this->request = $this->requestStack->getCurrentRequest();
     }
 
@@ -81,9 +80,11 @@ class BookingService
 
         // We set the state of bookables that are booked
         foreach ($bookings as $booking) {
-             foreach ($seatmapStatusDTO->getBookables() as $bookableInformationDTO) {
-                if ($bookableInformationDTO->getBookableId() === $booking->getBookable()->getId()) {
-                    if ($booking->getUser()->getUserIdentifier() === $userIdentifier) {
+            foreach ($seatmapStatusDTO->getBookables() as $bookableInformationDTO) {
+                if ($bookableInformationDTO->getBookableId() === $booking->getBookable()
+                        ->getId()) {
+                    if ($booking->getUser()
+                            ->getUserIdentifier() === $userIdentifier) {
                         $bookableInformationDTO->setIsBookedByLoggedUser(true);
                     }
                     $bookableInformationDTO->populateWithBookingEntity($booking);
@@ -94,7 +95,8 @@ class BookingService
         // We set the state of bookables that are unavailable
         foreach ($unavailableDates as $unavailableDate) {
             foreach ($seatmapStatusDTO->getBookables() as $bookableInformationDTO) {
-                if ($bookableInformationDTO->getBookableId() === $unavailableDate->getBookable()->getId()) {
+                if ($bookableInformationDTO->getBookableId() === $unavailableDate->getBookable()
+                        ->getId()) {
                     $bookableInformationDTO->populateWithUnavailableDatesEntity($unavailableDate);
                 }
             }
@@ -105,20 +107,23 @@ class BookingService
     }
 
     /**
-     * Creates a new bookings for the given as request parameters
-     * bookable and date-range
+     * Creates a new booking for the logged-in user
      *
      * To prevent errors when booking the same bookable with similar dates at
      * the same time, @function isBookableAlreadyBookedByDateRange is called.
      * In case duplicates are found,
      *
+     * The exception is handled by App\EventSubscriber\ExceptionSubscriber
+     *
      * @return \App\Entity\Bookings
      * @throws \App\Exception\BookingOverlapException
      */
-    public function createNewBooking(
-    ): Bookings {
+    public function createNewBooking(Bookings $booking): Bookings
+    {
         return $this->createNewBookingByUserId(
-            $this->security->getUser()->getId()
+            $booking,
+            $this->security->getUser()
+                ->getId(),
         );
     }
 
@@ -136,34 +141,32 @@ class BookingService
      * @throws \App\Exception\BookingOverlapException
      */
     public function createNewBookingByUserId(
-        int $userId
-    ): Bookings
-    {
-        $bookableId = $this->request->request->getInt(RequestParameters::BOOKABLE_ID);
-        $fromDate = new \DateTime($this->request->request->get(RequestParameters::FROM_DATE));
-        $toDate = new \DateTime($this->request->request->get(RequestParameters::TO_DATE));
-
-        if ($this->isBookableAlreadyBookedByDateRange($bookableId, $fromDate, $toDate)) {
+        Bookings $booking,
+        int $userId,
+    ): Bookings {
+        if ($this->isBookableAlreadyBookedByDateRange(
+            $booking->getBookable()
+                ->getId(),
+            $booking->getStartDate(),
+            $booking->getEndDate(),
+        )) {
             throw new BookingOverlapException('The bookable is already booked for the given date range');
         }
 
-        $bookable = $this->bookableRepository->find($bookableId);
+        $user = ($userId === $this->security->getUser()
+                ->getId())
+            ?
+            $this->security->getUser()
+            :
+            $this->userRepository->find($userId); // TODO: Check when the user is admin
 
-        $user = ($userId === $this->security->getUser()->getId())
-            ? $this->security->getUser()
-            : $this->userRepository->find($userId)
-        ;
+        $booking->setUser($user);
+        $booking->setConfirmation(bin2hex(random_bytes(4)));
 
-        $newBooking = new Bookings();
-        $newBooking->setBookable($bookable);
-        $newBooking->setStartDate($fromDate);
-        $newBooking->setEndDate($toDate);
-        $newBooking->setUser($user);
-        $newBooking->setConfirmation(bin2hex(random_bytes(4)));
+        $this->entityManager->persist($booking);
+        $this->entityManager->flush();
 
-        $this->bookingRepository->save($newBooking, true);
-
-        return $newBooking;
+        return $booking;
     }
 
     /**
@@ -176,12 +179,25 @@ class BookingService
      *
      * @return bool
      */
-    public function isBookableAlreadyBookedByDateRange(int $bookableId, \DateTime $from, \DateTime $to, ?Bookings $ignore = null): bool
-    {
-        $bookings = $this->bookingRepository->getAllBookingsByBookableIdAndDateRange($bookableId, $from, $to);
+    public function isBookableAlreadyBookedByDateRange(
+        int $bookableId,
+        \DateTime $from,
+        \DateTime $to,
+        ?Bookings $ignore = null,
+    ): bool {
+        $bookings = $this->bookingRepository->getAllBookingsByBookableIdAndDateRange(
+            $bookableId,
+            $from,
+            $to,
+        );
 
         if ($ignore) {
-            $bookings = array_filter($bookings, static fn (Bookings $booking) => $booking->getId() !== $ignore->getId());
+            $bookings = array_filter(
+                $bookings,
+                static fn (
+                    Bookings $booking,
+                ) => $booking->getId() !== $ignore->getId(),
+            );
         }
 
         return !empty($bookings);
@@ -190,17 +206,17 @@ class BookingService
     /**
      * Returns all bookings for the given user
      *
-     * @param int    $userId
+     * @param int $userId
      *
      * @return \Pagerfanta\Pagerfanta
      * @throws \App\Exception\OutOfIndexPagerException
      */
     public function getAllBookingsPagedByUserID(
-        int $userId
+        int $userId,
     ): Pagerfanta {
         $this->updateSessionShowPastBookings($userId);
-        return  $this->pagerService->createAndConfigurePager(
-            $this->bookingRepository->getAllBookingsByUserIDOrderedByColumnQueryBuilder($userId)
+        return $this->pagerService->createAndConfigurePager(
+            $this->bookingRepository->getAllBookingsByUserIDOrderedByColumnQueryBuilder($userId),
         );
     }
 
@@ -212,20 +228,22 @@ class BookingService
      * @return void
      * @throws \App\Exception\NotAuthorizedException
      */
-    public function deleteBooking(int $bookingId): void
+    public function deleteBooking(Bookings $booking): void
     {
-        $booking = $this->bookingRepository->find($bookingId);
-        if (!$booking) {
-            throw new \RuntimeException('Booking not found');
-        }
-
         $todayDate = new \DateTime();
-        $todayDate->setTime(0, 0, 0);
+        $todayDate->setTime(
+            0,
+            0,
+            0,
+        );
         if ($booking->getEndDate() < $todayDate) {
             throw new NotAuthorizedException('You are not allowed to delete past bookings');
         }
 
-        $this->bookingRepository->remove($booking, true);
+        $this->bookingRepository->remove(
+            $booking,
+            true,
+        );
     }
 
     /**
@@ -267,33 +285,28 @@ class BookingService
     /**
      * Edit an existing booking
      *
-     * @param int       $bookingId
-     * @param int       $bookableId
-     * @param \DateTime $fromDate
-     * @param \DateTime $toDate
+     * @param \App\Entity\Bookings $booking
      *
      * @return \App\Entity\Bookings
      * @throws \App\Exception\BookingOverlapException
      */
     public function editBooking(
-        int $bookingId,
-        int $bookableId,
-        \DateTime $fromDate,
-        \DateTime $toDate
+        Bookings $booking
     ): Bookings {
-
-        $booking = $this->bookingRepository->find($bookingId);
-        $bookable = $this->bookableRepository->find($bookableId);
-
-        if ($this->isBookableAlreadyBookedByDateRange($bookableId, $fromDate, $toDate, $booking)) {
+        if ($this->isBookableAlreadyBookedByDateRange(
+            $booking->getBookable()
+                ->getId(),
+            $booking->getStartDate(),
+            $booking->getEndDate(),
+            $booking,
+        )) {
             throw new BookingOverlapException('The bookable is already booked for the given date range');
         }
 
-        $booking->setBookable($bookable);
-        $booking->setStartDate($fromDate);
-        $booking->setEndDate($toDate);
-
-        $this->bookingRepository->save($booking, true);
+        $this->bookingRepository->save(
+            $booking,
+            true,
+        );
 
         return $booking;
     }
@@ -311,19 +324,25 @@ class BookingService
         $hasBookings = $this->countAllBookingsByUserID($userId) >= 1;
         $hasOngoingBookings = $this->countAllNonPastBookingsByUserID($userId) >= 1;
 
-        $this->requestStack->getSession()->set(
-            $this::HAS_BOOKINGS . $userId,
-            $hasBookings
-        );
+        $this->requestStack->getSession()
+            ->set(
+                $this::HAS_BOOKINGS.$userId,
+                $hasBookings,
+            )
+        ;
 
-        $this->requestStack->getSession()->set(
-            $this::HAS_ONGOING_BOOKINGS . $userId,
-            $hasOngoingBookings
-        );
+        $this->requestStack->getSession()
+            ->set(
+                $this::HAS_ONGOING_BOOKINGS.$userId,
+                $hasOngoingBookings,
+            )
+        ;
 
-        $this->requestStack->getSession()->set(
-            $this::HAS_ONLY_PAST_BOOKINGS . $userId,
-            $hasBookings && !$hasOngoingBookings
-        );
+        $this->requestStack->getSession()
+            ->set(
+                $this::HAS_ONLY_PAST_BOOKINGS.$userId,
+                $hasBookings && !$hasOngoingBookings,
+            )
+        ;
     }
 }
