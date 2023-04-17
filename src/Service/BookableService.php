@@ -60,22 +60,13 @@ class BookableService
      * @return bool[]
      * @throws \JsonException
      */
-    public function checkBookableAvailabilityByDate(): array
+    public function checkBookableAvailabilityByDate(
+        int $bookableId,
+        \DateTime $from,
+        \DateTime $to,
+        Bookings $bookingToIgnore = null,
+    ): array
     {
-        $bookableId = (int) $this->request->get('id');
-        $data = json_decode(
-            $this->request->getContent(),
-            true,
-            512,
-            JSON_THROW_ON_ERROR
-        );
-        $from = new \DateTime($data['from']);
-        $to = new \DateTime($data['to']);
-
-        $bookingToIgnore =  null;
-        if ($data['ignoreBooking']) {
-            $bookingToIgnore = $this->bookingsService->findById((int) $data['ignoreBookingId']);
-        }
 
         /** @var array<\App\Entity\Bookings> $bookings */
         $bookings = $this->bookingsRepository->getAllBookingsByBookableIdAndDateRange(

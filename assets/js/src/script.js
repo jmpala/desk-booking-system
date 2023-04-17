@@ -254,7 +254,7 @@ const newBookingPage = (function() : void {
 
     fromDateDOMElement.addEventListener("change", limitMinimunToDate);
     bookingFrom.addEventListener("change", checkFormSate);
-    submitBtn.addEventListener('click', checkAvailabilityBeforeSubmit);
+    // submitBtn.addEventListener('click', checkAvailabilityBeforeSubmit);
 
     /**
      * Limits the minimum date of "To Date" not to be before "From Date"
@@ -300,26 +300,26 @@ const newBookingPage = (function() : void {
     }
 
 
-    /**
-     * Checks if the selected dates are available before submitting the form
-     */
-    async function checkAvailabilityBeforeSubmit(e: Event): void {
-        e.preventDefault();
-        const id: number = availableBookables.value;
-        const from: Date = new Date(fromDateDOMElement.value);
-        const to: Date = new Date(toDateDOMElement.value);
-
-        const isAvailable: isAvailableAPIData = await checkBookableAvailabilityBySelectedDatesRESTCall(id, from, to);
-
-        if (isAvailable['isAvailable']) {
-            return bookingFrom.submit();
-        }
-
-        showBookingsOrUnavailableDates(isAvailable);
-        selectedUnavailablePeriods = setUnavailablePeriods(isAvailable);
-
-        showErrorsOnInputsIfAny();
-    }
+    // /**
+    //  * Checks if the selected dates are available before submitting the form
+    //  */
+    // async function checkAvailabilityBeforeSubmit(e: Event): void {
+    //     e.preventDefault();
+    //     const id: number = availableBookables.value;
+    //     const from: Date = new Date(fromDateDOMElement.value);
+    //     const to: Date = new Date(toDateDOMElement.value);
+    //
+    //     const isAvailable: isAvailableAPIData = await checkBookableAvailabilityBySelectedDatesRESTCall(id, from, to);
+    //
+    //     if (isAvailable['isAvailable']) {
+    //         return bookingFrom.submit();
+    //     }
+    //
+    //     showBookingsOrUnavailableDates(isAvailable);
+    //     selectedUnavailablePeriods = setUnavailablePeriods(isAvailable);
+    //
+    //     showErrorsOnInputsIfAny();
+    // }
 
 
     /**

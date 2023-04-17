@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\BookingsRepository;
+use App\Validator\SelectedDatesAreAvailable;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 
+#[SelectedDatesAreAvailable]
 #[ORM\Entity(repositoryClass: BookingsRepository::class)]
 class Bookings
 {
