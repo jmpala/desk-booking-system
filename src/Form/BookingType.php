@@ -9,6 +9,8 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class BookingType extends AbstractType
@@ -41,14 +43,42 @@ class BookingType extends AbstractType
                     'attr' => [
                         'min' => (new \DateTime())->format('Y-m-d'),
                     ],
-                ]
+                ],
             )
             ->add(
                 'end_date',
                 DateType::class,
                 [
                     'widget' => 'single_text',
-                ]
+                ],
+            )
+        ;
+
+        $builder->get('start_date')
+            ->addEventListener(
+                FormEvents::PRE_SET_DATA,
+                function (
+                    FormEvent $event,
+                ): void {
+                    $event->setData(
+                        $event->getData()
+                        ?? new \DateTime(),
+                    );
+                },
+            )
+        ;
+
+        $builder->get('end_date')
+            ->addEventListener(
+                FormEvents::PRE_SET_DATA,
+                function (
+                    FormEvent $event,
+                ): void {
+                    $event->setData(
+                        $event->getData()
+                        ?? new \DateTime(),
+                    );
+                },
             )
         ;
     }
