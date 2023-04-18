@@ -24,7 +24,7 @@ class UsersManagementController extends AbstractController
     }
 
     #[Route('/admin/users', name: 'app_usersmanagement_showuserspage')]
-    public function showUsersPage(Request $request): Response
+    public function showAllPaged(Request $request): Response
     {
         return $this->render('admin/users/list.html.twig', [
             'pager' => $this->usersService->getAllUsersPaged(),
