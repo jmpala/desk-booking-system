@@ -1,0 +1,17 @@
+{% extends '_templates/base.html.twig' %}
+{% set module = 'admin' %}
+
+{% block title %}Admin Panel{% endblock %}
+
+{% block main_header %}Create Unavailable Dates{% endblock %}
+
+{% block body %}
+
+    {% include "_parts/breadcrumbs/_create_unavailable_dates_bread_crumb.html.twig" with { 'createStage': 0 } %}
+
+    {% include "_parts/forms/_input_create_unavailable_dates_from.html.twig" with {
+        'action': path('app_unavailabledates_showconfirmcreateunavailabledatespage'),
+        'csrfValue': csrf_token('newUnavailableDates'),
+    } %}
+
+{% endblock %}
