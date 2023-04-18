@@ -127,7 +127,7 @@ class BookingPlanningController extends AbstractController
             ]);
         }
 
-        return $this->render('planning/create.html.twig', [
+        return $this->render('planning/edit.html.twig', [
             'form' => $form->createView(),
             'user' => $bookings->getUser(),
         ]);
