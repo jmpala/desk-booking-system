@@ -8,6 +8,7 @@ use App\Repository\BookableRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -17,13 +18,15 @@ class BookingType extends AbstractType
 {
     public function __construct(
         private BookableRepository $bookableRepository,
-    ) {
+    )
+    {
     }
 
     public function buildForm(
         FormBuilderInterface $builder,
-        array $options,
-    ): void {
+        array                $options,
+    ): void
+    {
         $builder
             ->add(
                 'bookable',
@@ -51,8 +54,18 @@ class BookingType extends AbstractType
                 [
                     'widget' => 'single_text',
                 ],
-            )
-        ;
+            );
+
+        if ($options['planning_mode']) {
+            $builder->add(
+                'user',
+                HiddenType::class,
+                [
+                    'mapped' => false,
+                    'data' => $options['user']->getId(),
+                ],
+            );
+        }
 
         $builder->get('start_date')
             ->addEventListener(
@@ -65,8 +78,7 @@ class BookingType extends AbstractType
                         ?? new \DateTime(),
                     );
                 },
-            )
-        ;
+            );
 
         $builder->get('end_date')
             ->addEventListener(
@@ -79,14 +91,15 @@ class BookingType extends AbstractType
                         ?? new \DateTime(),
                     );
                 },
-            )
-        ;
+            );
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Bookings::class,
+            'planning_mode' => false,
+            'user' => null,
         ]);
     }
 }

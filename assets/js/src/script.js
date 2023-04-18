@@ -5,18 +5,19 @@ import "bootstrap/dist/js/bootstrap.bundle.js";
 
 import '../../sass/style.scss';
 
+
 const selectUserPage = (function () : void {
-    const submitBtn: HTMLButtonElement = document.getElementById('submitBtn');
-    const userSelect: HTMLSelectElement = document.getElementById('userSelect');
-
-    submitBtn.addEventListener('click', onSubmitBtnClick);
-
-    function onSubmitBtnClick(event: Event): void {
-        const target: HTMLButtonElement = event.target;
-        if (target.id !== 'submitBtn') return;
-        const userId = userSelect.value;
-        window.location.href = window.location.origin + `/planning/${userId}`;
-    }
+    // const submitBtn: HTMLButtonElement = document.getElementById('submitBtn');
+    // const userSelect: HTMLSelectElement = document.getElementById('userSelect');
+    //
+    // submitBtn.addEventListener('click', onSubmitBtnClick);
+    //
+    // function onSubmitBtnClick(event: Event): void {
+    //     const target: HTMLButtonElement = event.target;
+    //     if (target.id !== 'submitBtn') return;
+    //     const userId = userSelect.value;
+    //     window.location.href = window.location.origin + `/planning/${userId}`;
+    // }
 });
 
 const planningPage = (function (): void {
@@ -93,6 +94,7 @@ const planningPage = (function (): void {
             const button: HTMLElement = event.relatedTarget;
             const confirmationNumber = button.getAttribute('data-bs-confirmation');
             const bookingId = button.getAttribute('data-bs-booking-id');
+            const userId = button.getAttribute('data-bs-user-id');
             const confirmationLabel = document.getElementById('data-bs-confirmation');
             const deleteConfirmationBtn = document.getElementById('deleteConfirmationBtn');
             const hiddenInput = document.getElementById('delete_booking_bookingId');
@@ -101,7 +103,7 @@ const planningPage = (function (): void {
             deleteConfirmationBtn.setAttribute('data-booking-id', bookingId);
             confirmationLabel.textContent = confirmationNumber;
             hiddenInput.value = bookingId;
-            deleteForm.setAttribute('action', `/booking/${bookingId}/delete`);
+            deleteForm.setAttribute('action', `/planning/${userId}/${bookingId}/delete`);
         }
 
 
@@ -110,26 +112,27 @@ const planningPage = (function (): void {
             if (!target.classList.contains('edit-btn')) return;
             event.stopPropagation();
             const bookingId = target.getAttribute('data-bs-booking-id');
-            window.location.href = window.location.origin + '/planning/booking/edit/' + bookingId;
+            const userId = target.getAttribute('data-bs-user-id');
+            window.location.href = window.location.origin + `/planning/${userId}/${bookingId}/edit/`;
         }
     }
 
 
-    userSelect.addEventListener('change', onUserSelectChange);
-
-
-    function onUserSelectChange(event: Event): void {
-        const target: HTMLElement = event.target;
-
-        if (target.id !== 'userSelect') return;
-
-        const urlParams = new URLSearchParams(window.location.search);
-        const userId = target.value;
-
-        let newUri = `${window.location.origin}/planning/${userId}`;
-
-        window.location.href = newUri;
-    }
+    // userSelect.addEventListener('change', onUserSelectChange);
+    //
+    //
+    // function onUserSelectChange(event: Event): void {
+    //     const target: HTMLElement = event.target;
+    //
+    //     if (target.id !== 'userSelect') return;
+    //
+    //     const urlParams = new URLSearchParams(window.location.search);
+    //     const userId = target.value;
+    //
+    //     let newUri = `${window.location.origin}/planning/${userId}`;
+    //
+    //     window.location.href = newUri;
+    // }
 });
 
 const overviewPage = (function () : void {

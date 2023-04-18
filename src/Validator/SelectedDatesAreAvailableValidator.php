@@ -3,6 +3,7 @@
 namespace App\Validator;
 
 use App\Service\BookableService;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
@@ -10,6 +11,7 @@ class SelectedDatesAreAvailableValidator extends ConstraintValidator
 {
     public function __construct(
         private BookableService $bookableService,
+        private RequestStack $requestStack,
     ) {
     }
 
@@ -20,11 +22,13 @@ class SelectedDatesAreAvailableValidator extends ConstraintValidator
         /* @var \App\Entity\Bookings $value */
         /* @var App\Validator\SelectedDatesAreAvailable $constraint */
 
+
         $isBlockBooked = $this->bookableService->checkBookableAvailabilityByDate(
             $value->getBookable()
                 ->getId(),
             $value->getStartDate(),
             $value->getEndDate(),
+            $value
         );
 
         if ($isBlockBooked['isAvailable']) {

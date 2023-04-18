@@ -55,6 +55,7 @@
             <td class="text-center">
                 <button class="btn btn-outline-warning btn-sm edit-btn"
                         data-bs-booking-id="{{ booking.id }}"
+                        data-bs-user-id="{{ booking.user.id }}"
                         {{ is_past_booking ? 'disabled' : '' }}
                 >Edit
                 </button>
@@ -63,6 +64,8 @@
                         data-bs-target="#deleteConfirmation"
                         data-bs-confirmation="{{ booking.confirmation }}"
                         data-bs-booking-id="{{ booking.id }}"
+                        data-bs-user-id="{{ booking.user.id }}"
+                        {#data-delete-url="{{ path('app_booking_delete', {id: booking.id}) }}"#}
                         {{ is_past_booking ? 'disabled' : '' }}
                 >Delete
                 </button>

@@ -7,23 +7,15 @@
 
     <h1 class="mt-4 mb-3 text-center">Please select a user</h1>
 
-    <form class="form border border-primary bg-light rounded p-3" id="selectUserForm">
-
-        <div class="form-floating m-3">
-            <select class="form-select" name="userid" id="userSelect">
-
-                {% for user in allUsers %}
-                    <option value="{{ user.id }}"> {{ user.userIdentifier }}</option>
-                {% endfor %}
-
-            </select>
-            <label for="allBookables">All users</label>
-        </div>
-
-        <div class="row justify-content-center m-3">
-            <button type="button" class="btn btn-primary btn-lg col-2 bg-primary m-2" id="submitBtn">Select</button>
-        </div>
-
-    </form>
+    <div class="p-3 bg-light rounded border border-primary border-1">
+        {{ form_start(user_selection_form) }}
+            {{ form_errors(user_selection_form) }}
+            {{ form_help(user_selection_form) }}
+            {{ form_row(user_selection_form.user) }}
+            <div class="d-flex justify-content-center">
+                <button class="btn btn-primary m-3" type="submit">Select</button>
+            </div>
+        {{ form_end(user_selection_form) }}
+    </div>
 
 {% endblock %}
