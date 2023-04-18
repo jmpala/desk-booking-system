@@ -6,6 +6,8 @@ namespace App\Controller;
 
 use App\Commons\RequestParameters;
 use App\Entity\UnavailableDates;
+use App\Form\UnavailableDateType;
+use App\Repository\UnavailableDatesRepository;
 use App\Service\AdminService;
 use App\Service\BookableService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -19,8 +21,9 @@ class UnavailableDatesController extends AbstractController
 {
 
     public function __construct(
-        private BookableService $bookableService,
-        private AdminService    $adminService,
+        private BookableService            $bookableService,
+        private AdminService               $adminService,
+        private UnavailableDatesRepository $unavailableDatesRepository,
     )
     {
     }
@@ -33,7 +36,31 @@ class UnavailableDatesController extends AbstractController
         ]);
     }
 
-    #[Route('/admin/unavailableDates/new/create', name: 'app_unavailabledates_showcreateunavailabledatespage', methods: ['GET'])]
+    #[Route('/admin/unavailableDates/new', name: 'app_unavailabledates_showcreateunavailabledatespage', methods: ['GET', 'POST'])]
+    public function showCreate(Request $request): Response
+    {
+        $form = $this->createForm(UnavailableDateType::class);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $unavailableDates = $form->getData();
+            $this->unavailableDatesRepository->save($unavailableDates, true);
+            $this->addFlash(
+                'success',
+                'Unavailable dates created!',
+            );
+            return $this->redirectToRoute('app_admin_showbookablemanagerpage');
+        }
+
+        return $this->render(
+            'admin/unavailable_dates/create.html.twig',
+            [
+                'form' => $form->createView(),
+            ],
+        );
+    }
+
+
     public function showCreateUnavailableDatesPage(): Response
     {
         return $this->render('admin/bookable/unavailableDates/new/create_unavailable_dates.html.twig', [
