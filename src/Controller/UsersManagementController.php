@@ -26,7 +26,7 @@ class UsersManagementController extends AbstractController
     #[Route('/admin/users', name: 'app_usersmanagement_showuserspage')]
     public function showUsersPage(Request $request): Response
     {
-        return $this->render('admin/users/users_management.html.twig', [
+        return $this->render('admin/users/list.html.twig', [
             'pager' => $this->usersService->getAllUsersPaged(),
             'form' => $this->createForm(
                 DeleteUserFormType::class,
@@ -61,7 +61,7 @@ class UsersManagementController extends AbstractController
             return $this->redirectToRoute('app_usersmanagement_showuserspage');
         }
 
-        return $this->render('admin/users/new/create_user.html.twig', [
+        return $this->render('admin/users/create.html.twig', [
             'form' => $form,
         ]);
     }
@@ -81,7 +81,7 @@ class UsersManagementController extends AbstractController
             return $this->redirectToRoute('app_usersmanagement_showuserspage');
         }
 
-        return $this->render('admin/users/edit/edit_user.html.twig', [
+        return $this->render('admin/users/edit.html.twig', [
             'form' => $form,
         ]);
     }
