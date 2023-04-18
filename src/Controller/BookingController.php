@@ -74,7 +74,7 @@ class BookingController extends AbstractController
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->bookingService->editBooking($booking);
+            $this->bookingService->deleteBooking($booking);
             $this->addFlash(
                 'success',
                 'Booking deleted!',
