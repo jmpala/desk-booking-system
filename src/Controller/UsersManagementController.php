@@ -19,10 +19,12 @@ class UsersManagementController extends AbstractController
 {
     public function __construct(
         private UserService $usersService
-    ){}
+    )
+    {
+    }
 
     #[Route('/admin/users', name: 'app_usersmanagement_showuserspage')]
-    public function showUsersPage(Request $request) : Response
+    public function showUsersPage(Request $request): Response
     {
         return $this->render('admin/users/users_management.html.twig', [
             'pager' => $this->usersService->getAllUsersPaged(),
@@ -34,14 +36,15 @@ class UsersManagementController extends AbstractController
     }
 
     #[Route('/admin/users/delete/{id}', name: 'app_usersmanagement_deleteuser')]
-    public function deleteUser(int $id) : Response
+    public function deleteUser(int $id): Response
     {
         $this->usersService->deleteUser($id);
+        $this->addFlash('success', 'User deleted!');
         return $this->redirectToRoute('app_usersmanagement_showuserspage');
     }
 
     #[Route('/admin/users/create', name: 'app_usersmanagement_createuser')]
-    public function createUser(Request $request) : Response
+    public function createUser(Request $request): Response
     {
 
         $form = $this->createForm(
@@ -54,6 +57,7 @@ class UsersManagementController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             $this->usersService->createUser($data);
+            $this->addFlash('success', 'User created!');
             return $this->redirectToRoute('app_usersmanagement_showuserspage');
         }
 
@@ -73,6 +77,7 @@ class UsersManagementController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             $this->usersService->editUser($data);
+            $this->addFlash('success', 'User edited!');
             return $this->redirectToRoute('app_usersmanagement_showuserspage');
         }
 
