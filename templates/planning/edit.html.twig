@@ -3,19 +3,20 @@
 
 {% block title %}Edit Booking{% endblock %}
 
-{% block main_header %}Edit Booking for {{ user.email }}{% endblock %}
-
 {% block body %}
+
+    <h1 class="mt-4 mb-3 text-center">Edit Booking for {{ user.email }}</h1>
 
     <div class="p-3 bg-light rounded border border-primary border-1">
         {{ form_start(form) }}
-            {{ form_errors(form) }}
-            {{ form_help(form) }}
-            {{ form_rest(form) }}
-            <div class="d-flex justify-content-center">
-                <a class="btn btn-primary bg-light m-3" href="{{ path('app_planning_showbookingslistforuser', { id: user.id }) }}">Return</a>
-                <button class="btn btn-primary m-3" type="submit">Edit</button>
-            </div>
+        {{ form_errors(form) }}
+        {{ form_help(form) }}
+        {{ form_rest(form) }}
+        <div class="d-flex justify-content-center">
+            <a class="btn btn-primary bg-light m-3"
+               href="{{ path('app_planning_showbookingslistforuser', { id: user.id }) }}">Return</a>
+            <button class="btn btn-primary m-3" type="submit">Edit</button>
+        </div>
         {{ form_end(form) }}
     </div>
 

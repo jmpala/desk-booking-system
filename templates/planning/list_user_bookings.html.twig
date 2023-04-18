@@ -13,25 +13,27 @@
     {{ form_start(user_selection_form,
         {'label': ''}
     ) }}
-        {{ form_widget(user_selection_form.user,
-            {'label': ''}
-        ) }}
+    {{ form_widget(user_selection_form.user,
+        {'label': ''}
+    ) }}
     {{ form_end(user_selection_form) }}
 
 
     {% if has_bookings %}
 
         {% set optional_message = has_ongoing_bookings ? "Make a" : "No ongoing bookings, make a" %}
-        <p class="mt-4 mb-3 text-center">{{ optional_message }} <a href="{{ path('app_bookingplanning_showcreateforuser', { id: selected_user.id }) }}">new booking</a>
+        <p class="mt-4 mb-3 text-center">{{ optional_message }} <a
+                    href="{{ path('app_bookingplanning_showcreateforuser', { id: selected_user.id }) }}">new booking</a>
 
-        {% include "_parts/tables/_list_all_bookings_table.html.twig" %}
+            {% include "_parts/tables/_list_all_bookings_table.html.twig" %}
 
-        {% if pager.nbPages > 1 %}
-            {% include "_parts/pagers/_list_bookings_pager.html.twig" %}
-        {% endif %}
+            {% if pager.nbPages > 1 %}
+                {% include "_parts/pagers/_list_bookings_pager.html.twig" %}
+            {% endif %}
 
-        <!-- Modal -->
-        <div class="modal fade" id="deleteConfirmation" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <!-- Modal -->
+        <div class="modal fade" id="deleteConfirmation" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+             aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -45,8 +47,8 @@
                         <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
 
                         {{ form_start(delete_form) }}
-                            {{ form_widget(delete_form) }}
-                            <button type="submit" class="btn btn-danger" id="deleteConfirmationBtn">Delete</button>
+                        {{ form_widget(delete_form) }}
+                        <button type="submit" class="btn btn-danger" id="deleteConfirmationBtn">Delete</button>
                         {{ form_end(delete_form) }}
 
                     </div>
@@ -58,7 +60,9 @@
 
     {% if not has_bookings %}
         <div class="mt-4 mb-3 text-center {{ (pager.nbResults > 0) ? 'visually-hidden': '' }}">
-            <p class="text-center">No past or ongoing Booking found, make a <a href="{{ path('app_bookingplanning_showcreateforuser', { id: selected_user.id }) }}">new booking</a>
+            <p class="text-center">No past or ongoing Booking found, make a <a
+                        href="{{ path('app_bookingplanning_showcreateforuser', { id: selected_user.id }) }}">new
+                    booking</a>
         </div>
     {% endif %}
 

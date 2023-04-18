@@ -3,9 +3,9 @@
 
 {% block title %}New Booking{% endblock %}
 
-{% block main_header %}New Booking for {{ user.email }}{% endblock %}
-
 {% block body %}
+
+    <h1 class="mt-4 mb-3 text-center">New Booking for {{ user.email }}</h1>
 
     <div class="p-3 bg-light rounded border border-primary border-1">
         {{ form_start(form) }}
