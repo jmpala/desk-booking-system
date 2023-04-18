@@ -6,8 +6,8 @@ namespace App\Controller;
 
 use App\Commons\RequestParameters;
 use App\Entity\UnavailableDates;
+use App\Service\AdminService;
 use App\Service\BookableService;
-use App\Service\UnavailableDatesService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,8 +20,18 @@ class UnavailableDatesController extends AbstractController
 
     public function __construct(
         private BookableService $bookableService,
-        private UnavailableDatesService $unavailableDatesService,
-    ){}
+        private AdminService    $adminService,
+    )
+    {
+    }
+
+    #[Route('/admin/unavailableDates', name: 'app_admin_showbookablemanagerpage', methods: ['GET'])]
+    public function listAllPaged(): Response
+    {
+        return $this->render('admin/unavailable_dates/list.html.twig', [
+            'pager' => $this->adminService->getAllUnavailableDatesPaged()
+        ]);
+    }
 
     #[Route('/admin/unavailableDates/new/create', name: 'app_unavailabledates_showcreateunavailabledatespage', methods: ['GET'])]
     public function showCreateUnavailableDatesPage(): Response
