@@ -7,7 +7,6 @@ namespace App\Controller;
 use App\Entity\Bookings;
 use App\Form\BookingType;
 use App\Form\DeleteBookingType;
-use App\Service\BookableService;
 use App\Service\BookingService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,9 +16,9 @@ use Symfony\Component\Routing\Annotation\Route;
 class BookingController extends AbstractController
 {
     public function __construct(
-        private BookableService $bookableService,
         private BookingService $bookingService,
-    ) {
+    )
+    {
     }
 
     #[Route('/booking/new', name: 'app_booking_new', methods: [
@@ -68,8 +67,9 @@ class BookingController extends AbstractController
     #[Route('/booking/{id}/delete', name: 'app_booking_delete', methods: ['POST'])]
     public function delete(
         Bookings $booking,
-        Request $request,
-    ): Response {
+        Request  $request,
+    ): Response
+    {
         $form = $this->createForm(DeleteBookingType::class);
 
         $form->handleRequest($request);
@@ -95,8 +95,9 @@ class BookingController extends AbstractController
     ])]
     public function showEdit(
         Bookings $booking,
-        Request $request,
-    ): Response {
+        Request  $request,
+    ): Response
+    {
         $form = $this->createForm(
             BookingType::class,
             $booking,
