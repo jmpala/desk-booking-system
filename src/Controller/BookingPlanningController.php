@@ -84,6 +84,7 @@ class BookingPlanningController extends AbstractController
             $booking->setUser($user);
 
             $this->bookingService->createNewBookingByUserId($booking, $user->getId());
+            $this->addFlash('success', 'Booking created');
             return $this->redirectToRoute('app_planning_showbookingslistforuser', [
                 'id' => $user->getId()
             ]);
