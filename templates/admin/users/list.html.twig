@@ -7,9 +7,9 @@
 
 {% block body %}
 
-    <h1 class="mt-4 mb-3 text-center">Admin Panel</h1>
+    <h1 class="mt-4 mb-3 text-center">User Accounts</h1>
 
-    <p class="text-center">Create a <a href="{{ path('app_usersmanagement_createuser') }}">New User</a></p>
+    <p class="text-center">Create a <a href="{{ path('app_usersmanagement_createuser') }}">New User Account</a></p>
 
     <table id="usersTable" class="table">
         <thead>
@@ -47,7 +47,7 @@
                 <td class="text-center">
                     <button class="btn btn-outline-warning btn-sm edit-btn editUserBtn"
                             data-edit-user-path="{{ path('app_usersmanagement_edituser', { 'id': user.id }) }}"
-                    >Modify</button>
+                    >Edit</button>
                     <button type="button" class="btn btn-outline-danger btn-sm"
                             data-bs-toggle="modal"
                             data-bs-target="#deleteConfirmation"

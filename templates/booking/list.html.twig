@@ -42,8 +42,8 @@
                         <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
 
                         {{ form_start(deleteForm) }}
-                            {{ form_widget(deleteForm) }}
-                            <button type="submit" class="btn btn-danger" id="deleteConfirmationBtn">Delete</button>
+                        {{ form_rest(deleteForm) }}
+                        <button type="submit" class="btn btn-danger" id="deleteConfirmationBtn">Delete</button>
                         {{ form_end(deleteForm) }}
 
                     </div>
