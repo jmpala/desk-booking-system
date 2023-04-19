@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Commons\RequestParameters;
 use App\Entity\UnavailableDates;
 use App\Form\DeleteUnavailableDatesType;
 use App\Form\UnavailableDateType;
@@ -64,7 +63,7 @@ class UnavailableDatesController extends AbstractController
     }
 
     #[Route('/admin/unavailableDates/{id}/delete', name: 'app_unavailabledates_deleteunavailabledateperiod', methods: ['POST'])]
-    public function deleteUnavailableDatePeriod(UnavailableDates $unavailableDates, Request $request): Response
+    public function delete(UnavailableDates $unavailableDates, Request $request): Response
     {
         $deleteForm = $this->createForm(DeleteUnavailableDatesType::class);
         $deleteForm->handleRequest($request);
@@ -83,42 +82,27 @@ class UnavailableDatesController extends AbstractController
         return $this->redirectToRoute('app_admin_showbookablemanagerpage');
     }
 
-    #[Route('/admin/unavailableDates/{id}/edit', name: 'app_unavailabledates_showeditunavailabledatespage', methods: ['GET'])]
-    public function showEditUnavailableDatesPage(UnavailableDates $unavailableDates): Response
+    #[Route('/admin/unavailableDates/{id}/edit', name: 'app_unavailabledates_showeditunavailabledatespage', methods: ['GET', 'POST'])]
+    public function showEdit(UnavailableDates $unavailableDates, Request $request): Response
     {
-        return $this->render('admin/bookable/unavailableDates/edit/edit_unavailable_dates.html.twig', [
-            'unavailableDate' => $unavailableDates
-        ]);
-    }
+        $form = $this->createForm(UnavailableDateType::class, $unavailableDates);
 
-    #[Route('/admin/unavailableDates/{id}/edit/confirm', name: 'app_unavailabledates_showconfirmeditunavailabledatespage', methods: ['POST'])]
-    public function showConfirmEditUnavailableDatesPage(UnavailableDates $unavailableDates, Request $request): Response
-    {
-        // TODO: Erase when symfony forms are implemented
-        if (!$this->isCsrfTokenValid('editUnavailableDates', $request->request->get('_csrf_token'))) {
-            throw new \Exception('Invalid CSRF token');
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $unavailableDates = $form->getData();
+            $this->unavailableDatesRepository->save($unavailableDates, true);
+            $this->addFlash(
+                'success',
+                'Unavailable dates Updated!',
+            );
+            return $this->redirectToRoute('app_admin_showbookablemanagerpage');
         }
 
-        return $this->render('admin/bookable/unavailableDates/edit/confirm_edit_unavailable_dates.html.twig', [
-            'unavailableDate' => $unavailableDates
-        ]);
-    }
-
-    #[Route('/admin/unavailableDates/{id}/edit/confirmation', name: 'app_unavailabledates_showconfirmationeditunavailabledatespage', methods: ['POST'])]
-    public function showConfirmationEditUnavailableDatesPage(Request $request): Response
-    {
-        // TODO: Erase when symfony forms are implemented
-        if (!$this->isCsrfTokenValid('editUnavailableDates', $request->request->get('_csrf_token'))) {
-            throw new \Exception('Invalid CSRF token');
-        }
-
-        return $this->render('admin/bookable/unavailableDates/edit/confirmation_unavailable_dates.html.twig', [
-            'unavailableDates' => $this->bookableService->editUnavailableDates(
-                $request->request->getInt(RequestParameters::UNAVAILABLE_DATE_ID),
-                new \DateTime($request->request->get(RequestParameters::START_DATE)),
-                new \DateTime($request->request->get(RequestParameters::END_DATE)),
-                $request->request->get(RequestParameters::NOTES)
-            ),
-        ]);
+        return $this->render(
+            'admin/unavailable_dates/edit.html.twig',
+            [
+                'form' => $form->createView(),
+            ],
+        );
     }
 }

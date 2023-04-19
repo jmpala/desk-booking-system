@@ -12,7 +12,7 @@
 
     <h1 class="mt-4 mb-3 text-center">Unavailable Dates</h1>
 
-     <p class="text-center">Insert a new <a href="{{ path('app_unavailabledates_showcreateunavailabledatespage') }}">Unavailable Date</a></p>
+    <p class="text-center">Create a new <a href="{{ path('app_unavailabledates_showcreateunavailabledatespage') }}">Unavailable Date</a></p>
 
     <table id="unavailableDatesTable" class="table">
         <thead>
@@ -22,25 +22,33 @@
                 data-col-selected="{{ (selectedCol == 'bookable') ? 'true' : 'false' }}"
                 data-col-order="{{ (selectedCol == 'bookable') ? selectedOder : 'desc' }}"
                 scope="col"
-            >Bookable Code<button class="order-btn mx-3 btn btn-outline-dark btn-sm"><i class="bi bi-arrow-down-up"></i></button></th>
+            >Bookable Code
+                <button class="order-btn mx-3 btn btn-outline-dark btn-sm"><i class="bi bi-arrow-down-up"></i></button>
+            </th>
             <th class="col-table text-center"
                 data-col-name="startdate"
                 data-col-selected="{{ (selectedCol == 'startdate') ? 'true' : 'false' }}"
                 data-col-order="{{ (selectedCol == 'startdate') ? selectedOder : 'desc' }}"
                 scope="col"
-            >Start Date<button class="order-btn mx-3 btn btn-outline-dark btn-sm"><i class="bi bi-arrow-down-up"></i></button></th>
+            >Start Date
+                <button class="order-btn mx-3 btn btn-outline-dark btn-sm"><i class="bi bi-arrow-down-up"></i></button>
+            </th>
             <th class="col-table text-center"
                 data-col-name="enddate"
                 data-col-selected="{{ (selectedCol == 'enddate') ? 'true' : 'false' }}"
                 data-col-order="{{ (selectedCol == 'enddate') ? selectedOder : 'desc' }}"
                 scope="col"
-            >End Date<button class="order-btn mx-3 btn btn-outline-dark btn-sm"><i class="bi bi-arrow-down-up"></i></button></th>
+            >End Date
+                <button class="order-btn mx-3 btn btn-outline-dark btn-sm"><i class="bi bi-arrow-down-up"></i></button>
+            </th>
             <th class="col-table text-center"
                 data-col-name="notes"
                 scope="col"
-            >Notes</th>
+            >Notes
+            </th>
             <th class="col-table text-center" scope="col">Past Unavailable Dates
-                <input id="pastUnavailabledates" class="form-check-input" type="checkbox" {{ (pastUnavailabledates) ? 'checked' : '' }}></th>
+                <input id="pastUnavailabledates" class="form-check-input"
+                       type="checkbox" {{ (pastUnavailabledates) ? 'checked' : '' }}></th>
         </tr>
         </thead>
         <tbody>
@@ -55,13 +63,15 @@
                         <button class="btn btn-outline-warning btn-sm edit-btn"
                                 data-bs-booking-id="{{ unavailableDates.id }}"
                                 {{ (unavailableDates.endDate|date('Y-m-d') < todaysDate ) ? 'disabled' : '' }}
-                        >Modify</button>
+                        >Edit
+                        </button>
                         <button type="button" class="btn btn-outline-danger btn-sm"
                                 data-bs-toggle="modal"
                                 data-bs-target="#deleteConfirmationModal"
                                 data-bs-booking-id="{{ unavailableDates.id }}"
                                 {{ (unavailableDates.endDate|date('Y-m-d') < todaysDate ) ? 'disabled' : '' }}
-                         >Delete</button>
+                        >Delete
+                        </button>
                     </td>
                 </tr>
             {% endfor %}
@@ -78,7 +88,8 @@
     {% endif %}
 
     <!-- Modal -->
-    <div class="modal fade" id="deleteConfirmationModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal fade" id="deleteConfirmationModal" data-bs-backdrop="static" data-bs-keyboard="false"
+         tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -91,7 +102,7 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
                     {{ form_start(deleteForm) }}
-                        <button type="submit" class="btn btn-danger">Delete</button>
+                    <button type="submit" class="btn btn-danger">Delete</button>
                     {{ form_end(deleteForm) }}
                 </div>
             </div>

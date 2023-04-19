@@ -21,6 +21,23 @@ class BookingController extends AbstractController
     {
     }
 
+    #[Route('/booking', name: 'app_booking_showallbookings', methods: ['GET'])]
+    public function listAllPaged(): Response
+    {
+        $deleteForm = $this->createForm(DeleteBookingType::class);
+
+        return $this->render(
+            'booking/list.html.twig',
+            [
+                'pager' => $this->bookingService->getAllBookingsPagedByUserID(
+                    $this->getUser()
+                        ->getId(),
+                ),
+                'deleteForm' => $deleteForm->createView(),
+            ],
+        );
+    }
+
     #[Route('/booking/new', name: 'app_booking_new', methods: [
         'GET',
         'POST',
@@ -43,23 +60,6 @@ class BookingController extends AbstractController
             'booking/create.html.twig',
             [
                 'form' => $form->createView(),
-            ],
-        );
-    }
-
-    #[Route('/booking', name: 'app_booking_showallbookings', methods: ['GET'])]
-    public function showAll(): Response
-    {
-        $deleteForm = $this->createForm(DeleteBookingType::class);
-
-        return $this->render(
-            'booking/list.html.twig',
-            [
-                'pager' => $this->bookingService->getAllBookingsPagedByUserID(
-                    $this->getUser()
-                        ->getId(),
-                ),
-                'deleteForm' => $deleteForm->createView(),
             ],
         );
     }

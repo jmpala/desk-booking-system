@@ -9,11 +9,21 @@ const currentPage = window.location.pathname;
 
     console.log('unavailableDates.js loaded');
 
+    const table = document.querySelector('#unavailableDatesTable');
     const deleteForm: HTMLFormElement = document.querySelector('form[name="delete_unavailable_dates"]');
     const deleteModal: HTMLElement = document.querySelector('#deleteConfirmationModal');
     const idToDeleteLabel: HTMLElement = document.querySelector('#idToDeleteLabel');
 
-    deleteModal.addEventListener('show.bs.modal',prepareFormAction)
+    table.addEventListener('click', editButtonClick);
+    deleteModal.addEventListener('show.bs.modal', prepareFormAction);
+
+    function editButtonClick(event) {
+        if (!event.target.classList.contains('edit-btn')) {
+            return;
+        }
+        const unavailableDatesId = event.target.dataset.bsBookingId;
+        window.location.href = `/admin/unavailableDates/${unavailableDatesId}/edit`;
+    }
 
     function prepareFormAction(event) {
         const unavailableDatesId = event.relatedTarget.dataset.bsBookingId;

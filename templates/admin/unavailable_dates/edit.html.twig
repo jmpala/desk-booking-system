@@ -5,13 +5,18 @@
 
 {% block body %}
 
-    <h1 class="mt-4 mb-3 text-center">Reset Unavailable Dates</h1>
+    <h1 class="mt-4 mb-3 text-center">Edit Unavailable Dates</h1>
 
-    {% include "_parts/breadcrumbs/_edit_unavailable_dates_bread_crumb.html.twig" with { 'createStage': 0 } %}
-
-    {% include "_parts/forms/_input_edit_unavailable_dates_from.html.twig" with {
-        'action': path('app_unavailabledates_showconfirmeditunavailabledatespage', { 'id': unavailableDate.id }),
-        'csrfValue': csrf_token('editUnavailableDates')
-    } %}
+    <div class="p-3 bg-light rounded border border-primary border-1">
+        {{ form_start(form) }}
+        {{ form_errors(form) }}
+        {{ form_help(form) }}
+        {{ form_rest(form) }}
+        <div class="d-flex justify-content-center">
+            <a class="btn btn-primary bg-light m-3" href="{{ path('app_admin_showbookablemanagerpage') }}">Return</a>
+            <button id="submitBtn" class="btn btn-primary m-3" type="submit">Edit</button>
+        </div>
+        {{ form_end(form) }}
+    </div>
 
 {% endblock %}
