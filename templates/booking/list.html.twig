@@ -8,14 +8,14 @@
 
 {% block body %}
 
-    <h1 class="mt-4 mb-3 text-center">All Bookings</h1>
+    <h1 class="mt-4 mb-3 text-center">Your Bookings</h1>
 
     {% if has_bookings %}
 
         {% if has_ongoing_bookings %}
-            <p class="text-center">Make a <a href="{{ path('app_booking_new') }}">new booking</a>
+            <p class="text-center">Make a <a href="{{ path('app_booking_new') }}">New Booking</a>
         {% else %}
-            <p class="text-center">No ongoing bookings, make a <a href="{{ path('app_booking_new') }}">new booking</a>
+            <p class="text-center">No ongoing bookings, make a <a href="{{ path('app_booking_new') }}">New Booking</a>
         {% endif %}
 
         {% include "_parts/tables/_list_all_bookings_table.html.twig" %}

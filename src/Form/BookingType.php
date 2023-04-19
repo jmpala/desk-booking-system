@@ -35,7 +35,8 @@ class BookingType extends AbstractType
                     'class' => Bookable::class,
                     'choice_label' => 'code',
                     'choices' => $this->bookableRepository->findAll(),
-                    'placeholder' => 'Choose a bookable',
+                    'label' => 'Bookable Resource',
+                    'placeholder' => 'Choose a resource',
                 ],
             )
             ->add(
