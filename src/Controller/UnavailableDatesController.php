@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\Commons\RequestParameters;
 use App\Entity\UnavailableDates;
+use App\Form\DeleteUnavailableDatesType;
 use App\Form\UnavailableDateType;
 use App\Repository\UnavailableDatesRepository;
 use App\Service\AdminService;
@@ -29,9 +30,11 @@ class UnavailableDatesController extends AbstractController
     }
 
     #[Route('/admin/unavailableDates', name: 'app_admin_showbookablemanagerpage', methods: ['GET'])]
-    public function listAllPaged(): Response
+    public function listAllPaged(Request $request): Response
     {
+        $deleteForm = $this->createForm(DeleteUnavailableDatesType::class);
         return $this->render('admin/unavailable_dates/list.html.twig', [
+            'deleteForm' => $deleteForm->createView(),
             'pager' => $this->adminService->getAllUnavailableDatesPaged()
         ]);
     }
@@ -60,57 +63,22 @@ class UnavailableDatesController extends AbstractController
         );
     }
 
-
-    public function showCreateUnavailableDatesPage(): Response
+    #[Route('/admin/unavailableDates/{id}/delete', name: 'app_unavailabledates_deleteunavailabledateperiod', methods: ['POST'])]
+    public function deleteUnavailableDatePeriod(UnavailableDates $unavailableDates, Request $request): Response
     {
-        return $this->render('admin/bookable/unavailableDates/new/create_unavailable_dates.html.twig', [
-            'allBookables' => $this->bookableService->getAllBookableAndRelatedCategories(),
-        ]);
-    }
-
-    #[Route('/admin/unavailableDates/new/confirm', name: 'app_unavailabledates_showconfirmcreateunavailabledatespage', methods: ['POST'])]
-    public function showConfirmCreateUnavailableDatesPage(Request $request): Response
-    {
-        // TODO: Erase when symfony forms are implemented
-        if (!$this->isCsrfTokenValid('newUnavailableDates', $request->request->get('_csrf_token'))) {
-            throw new \Exception('Invalid CSRF token');
+        $deleteForm = $this->createForm(DeleteUnavailableDatesType::class);
+        $deleteForm->handleRequest($request);
+        if ($deleteForm->isSubmitted() && $deleteForm->isValid()) {
+            $this->bookableService->deleteUnavailableDate($unavailableDates->getId());
+            $this->addFlash(
+                'success',
+                'Unavailable dates deleted!',
+            );
+            return $this->redirectToRoute('app_admin_showbookablemanagerpage');
         }
-
-        return $this->render('admin/bookable/unavailableDates/new/confirm_new_unavailable_dates.html.twig', [
-            'bookable' => $this->bookableService->findById(
-                $request->request->getInt(RequestParameters::BOOKABLE_ID)
-            ),
-        ]);
-    }
-
-    #[Route('/admin/unavailableDates/new/confirmation', name: 'app_unavailabledates_showconfirmationunavailabledatespage', methods: ['POST'])]
-    public function showConfirmationUnavailableDatesPage(Request $request): Response
-    {
-        // TODO: Erase when symfony forms are implemented
-        if (!$this->isCsrfTokenValid('newUnavailableDates', $request->request->get('_csrf_token'))) {
-            throw new \Exception('Invalid CSRF token');
-        }
-
-        return $this->render('admin/bookable/unavailableDates/new/confirmation_unavailable_dates.html.twig', [
-            'unavailableDates' => $this->bookableService->createUnavailableDates(
-                $request->request->getInt(RequestParameters::BOOKABLE_ID),
-                $request->request->get(RequestParameters::FROM_DATE),
-                $request->request->get(RequestParameters::TO_DATE),
-                $request->request->get(RequestParameters::NOTES),
-            ),
-        ]);
-    }
-
-    #[Route('/admin/unavailableDates/delete', name: 'app_unavailabledates_deleteunavailabledateperiod', methods: ['POST'])]
-    public function deleteUnavailableDatePeriod(Request $request): Response
-    {
-        // TODO: Erase when symfony forms are implemented
-        if (!$this->isCsrfTokenValid('deleteUnavailableDate', $request->request->get('_csrf_token'))) {
-            throw new \Exception('Invalid CSRF token');
-        }
-
-        $this->bookableService->deleteUnavailableDate(
-            $request->request->getInt(RequestParameters::UNAVAILABLE_DATE_ID)
+        $this->addFlash(
+            'danger',
+            'Could not delete unavailable dates!',
         );
         return $this->redirectToRoute('app_admin_showbookablemanagerpage');
     }

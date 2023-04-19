@@ -58,7 +58,7 @@
                         >Modify</button>
                         <button type="button" class="btn btn-outline-danger btn-sm"
                                 data-bs-toggle="modal"
-                                data-bs-target="#deleteConfirmation"
+                                data-bs-target="#deleteConfirmationModal"
                                 data-bs-booking-id="{{ unavailableDates.id }}"
                                 {{ (unavailableDates.endDate|date('Y-m-d') < todaysDate ) ? 'disabled' : '' }}
                          >Delete</button>
@@ -78,7 +78,7 @@
     {% endif %}
 
     <!-- Modal -->
-    <div class="modal fade" id="deleteConfirmation" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal fade" id="deleteConfirmationModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -86,15 +86,13 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    Are you sure you want to delete the Unavailable-Dates id #<span id="data-bs-confirmation"></span>?
+                    Are you sure you want to delete the Unavailable-Dates id <span id="idToDeleteLabel"></span>?
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
-                    <form action="{{ path('app_unavailabledates_deleteunavailabledateperiod') }}" method="post">
-                        <input type="hidden" name="unavailable_date" id="unavailableId" value="">
-                        <input type="hidden" name="_csrf_token" value="{{ csrf_token('deleteUnavailableDate') }}">
-                        <button id="deleteConfirmationBtn" type="submit" class="btn btn-danger" data-booking-id="">DELETE</button>
-                    </form>
+                    {{ form_start(deleteForm) }}
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    {{ form_end(deleteForm) }}
                 </div>
             </div>
         </div>

@@ -5,6 +5,7 @@ import "bootstrap/dist/js/bootstrap.bundle.js";
 
 import '../../sass/style.scss';
 
+import './frontend/unavailabledates_list';
 
 const selectUserPage = (function () : void {
     // const submitBtn: HTMLButtonElement = document.getElementById('submitBtn');
