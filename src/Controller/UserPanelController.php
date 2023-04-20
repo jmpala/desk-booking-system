@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-
 namespace App\Controller;
 
 use App\Form\ChangePasswordFormType;
@@ -20,8 +19,7 @@ class UserPanelController extends AbstractController
 {
     public function __construct(
         private EntityManagerInterface $entityManager,
-    )
-    {
+    ) {
     }
 
     #[Route('/', name: 'app_userpanel_showpanel')]
@@ -31,27 +29,38 @@ class UserPanelController extends AbstractController
     }
 
     #[Route('/change-password', name: 'app_userpanel_changepassword')]
-    public function changePassword(Request $request, UserPasswordHasherInterface $passwordHasher): Response
-    {
-        $form = $this->createForm(ChangePasswordFormType::class,
+    public function changePassword(
+        Request $request,
+        UserPasswordHasherInterface $passwordHasher,
+    ): Response {
+        $form = $this->createForm(
+            ChangePasswordFormType::class,
             null,
             [
                 'add_current_password' => true,
-            ]);
+            ],
+        );
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $user = $this->getUser();
             $encodedPassword = $passwordHasher->hashPassword(
                 $user,
-                $form->get('plainPassword')->getData()
+                $form->get('plainPassword')
+                    ->getData(),
             );
             $user->setPassword($encodedPassword);
             $this->entityManager->flush();
-            $this->addFlash('success', 'Password changed successfully');
+            $this->addFlash(
+                'success',
+                'Password changed successfully',
+            );
             return $this->redirectToRoute('app_userpanel_showpanel');
         }
-        return $this->render('user_panel/change_password.html.twig', [
-            'form' => $form->createView(),
-        ]);
+        return $this->render(
+            'user_panel/change_password.html.twig',
+            [
+                'form' => $form->createView(),
+            ],
+        );
     }
 }
