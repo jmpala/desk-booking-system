@@ -86,4 +86,16 @@ class UserService
         );
         $this->emailService->sendPasswordChanged($user);
     }
+
+    public function changeEmail(
+        User $user,
+        string $newEmail,
+    ) {
+        $user->setEmail($newEmail);
+        $this->userRepository->save(
+            $user,
+            true,
+        );
+        $this->emailService->sendEmailChanged($user);
+    }
 }

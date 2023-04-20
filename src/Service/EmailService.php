@@ -18,8 +18,27 @@ class EmailService
 
     public function sendPasswordChanged(UserInterface $user): void
     {
-        $subject = 'Your password change request';
-        $templatePath = '_templates/emails/user_panel/password_changed_email.html.twig';
+        $this->sendEmail(
+            $user,
+            'Your password change request',
+            '_templates/emails/user_panel/password_changed.html.twig',
+        );
+    }
+
+    public function sendEmailChanged(UserInterface $user)
+    {
+        $this->sendEmail(
+            $user,
+            'Your password change request',
+            '_templates/emails/user_panel/email_changed.html.twig',
+        );
+    }
+
+    private function sendEmail(
+        UserInterface $user,
+        string $subject,
+        string $templatePath,
+    ) {
         $email = (new TemplatedEmail())
             ->from(
                 new Address(

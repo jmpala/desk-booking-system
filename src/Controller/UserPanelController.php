@@ -68,17 +68,16 @@ class UserPanelController extends AbstractController
         $form = $this->createForm(ChangeEmailFormType::class);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-//            $this->userService->changeEmail(
-//                $this->getUser(),
-//                $form->get('email')
-//                    ->getData(),
-//            );
-//            $this->addFlash(
-//                'success',
-//                'Email changed successfully',
-//            );
-//            return $this->redirectToRoute('app_userpanel_showpanel');
-            dd($form);
+            $this->userService->changeEmail(
+                $this->getUser(),
+                $form->get('newEmail')
+                    ->getData(),
+            );
+            $this->addFlash(
+                'success',
+                'Email changed successfully',
+            );
+            return $this->redirectToRoute('app_userpanel_showpanel');
         }
         return $this->render('user_panel/change_email.html.twig',[
             'form' => $form->createView(),
