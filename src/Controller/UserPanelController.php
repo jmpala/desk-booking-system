@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Form\ChangeEmailFormType;
 use App\Form\ChangePasswordFormType;
 use App\Service\UserService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -62,8 +63,25 @@ class UserPanelController extends AbstractController
     }
 
     #[Route('/change-email', name: 'app_userpanel_changeemail')]
-    public function changeEmail(): Response
+    public function changeEmail(Request $request): Response
     {
-        return $this->render('user_panel/change_email.html.twig');
+        $form = $this->createForm(ChangeEmailFormType::class);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+//            $this->userService->changeEmail(
+//                $this->getUser(),
+//                $form->get('email')
+//                    ->getData(),
+//            );
+//            $this->addFlash(
+//                'success',
+//                'Email changed successfully',
+//            );
+//            return $this->redirectToRoute('app_userpanel_showpanel');
+            dd($form);
+        }
+        return $this->render('user_panel/change_email.html.twig',[
+            'form' => $form->createView(),
+        ]);
     }
 }

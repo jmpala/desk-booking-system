@@ -8,7 +8,13 @@
     <h1 class="mt-4 mb-3 text-center">Change Email</h1>
 
     <div class="p-3 bg-light rounded border border-primary border-1">
-        <p>Change email page!</p>
+        {{ form_start(form) }}
+        {{ form_errors(form) }}
+        {{ form_help(form) }}
+        {{ form_rest(form) }}
+        <a class="btn btn-primary bg-light m-3" href="{{ path('app_userpanel_showpanel') }}">Return</a>
+        <button class="btn btn-primary m-3" type="submit">Change Email</button>
+        {{ form_end(form) }}
     </div>
 
 {% endblock %}
