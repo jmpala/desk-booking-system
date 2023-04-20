@@ -60,4 +60,10 @@ class UserPanelController extends AbstractController
             ],
         );
     }
+
+    #[Route('/change-email', name: 'app_userpanel_changeemail')]
+    public function changeEmail(): Response
+    {
+        return $this->render('user_panel/change_email.html.twig');
+    }
 }
