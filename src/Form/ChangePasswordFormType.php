@@ -44,10 +44,27 @@ class ChangePasswordFormType extends AbstractType
                 // this is read and encoded in the controller
                 'mapped' => false,
             ]);
+
+        if ($options['add_current_password']) {
+            $builder->add('currentPassword', PasswordType::class, [
+                'label' => 'Current password',
+                'attr' => [
+                    'autocomplete' => 'current-password',
+                ],
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Please enter your current password',
+                    ]),
+                ],
+                'mapped' => false,
+            ]);
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults([]);
+        $resolver->setDefaults([
+            'add_current_password' => false,
+        ]);
     }
 }
