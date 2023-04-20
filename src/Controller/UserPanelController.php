@@ -6,9 +6,12 @@ namespace App\Controller;
 
 use App\Form\ChangePasswordFormType;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Address;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -32,6 +35,7 @@ class UserPanelController extends AbstractController
     public function changePassword(
         Request $request,
         UserPasswordHasherInterface $passwordHasher,
+        MailerInterface $mailer,
     ): Response {
         $form = $this->createForm(
             ChangePasswordFormType::class,
@@ -50,6 +54,21 @@ class UserPanelController extends AbstractController
             );
             $user->setPassword($encodedPassword);
             $this->entityManager->flush();
+
+            $email = (new TemplatedEmail())
+                ->from(
+                    new Address(
+                        'desk-sharing-app@outlook.de',
+                        'Desk App'
+                    ),
+                )
+                ->to($user->getEmail())
+                ->subject('Your password change request')
+                ->htmlTemplate('_templates/emails/user_panel/password_changed_email.html.twig')
+            ;
+
+            $mailer->send($email);
+
             $this->addFlash(
                 'success',
                 'Password changed successfully',
