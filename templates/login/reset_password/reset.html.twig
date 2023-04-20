@@ -1,0 +1,16 @@
+{% extends 'login/_parts/_login_template.html.twig' %}
+
+{% block form %}
+    {{ form_start(resetForm,
+        {
+            'attr': {
+            'class': 'loginform__form py-3 px-1 p-md-3 rounded-3'
+        }
+        }
+    ) }}
+    <p>Reset your password</p>
+    {{ form_row(resetForm.plainPassword) }}
+    <a class="btn btn-primary bg-light m-3" href="{{ path('app_login') }}">To Login</a>
+    <button class="btn btn-primary">Reset password</button>
+    {{ form_end(resetForm) }}
+{% endblock %}

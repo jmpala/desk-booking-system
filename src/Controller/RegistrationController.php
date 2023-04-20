@@ -13,15 +13,26 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 
 class RegistrationController extends AbstractController
 {
     #[Route('/register', name: 'app_register')]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, AppCustomAuthenticator $authenticator, EntityManagerInterface $entityManager): Response
+    #[IsGranted('ROLE_ADMIN')]
+    public function register(
+        Request                     $request,
+        UserPasswordHasherInterface $userPasswordHasher,
+        UserAuthenticatorInterface  $userAuthenticator,
+        AppCustomAuthenticator      $authenticator,
+        EntityManagerInterface      $entityManager,
+    ): Response
     {
         $user = new User();
-        $form = $this->createForm(RegistrationFormType::class, $user);
+        $form = $this->createForm(
+            RegistrationFormType::class,
+            $user,
+        );
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -29,8 +40,9 @@ class RegistrationController extends AbstractController
             $user->setPassword(
                 $userPasswordHasher->hashPassword(
                     $user,
-                    $form->get('plainPassword')->getData()
-                )
+                    $form->get('plainPassword')
+                        ->getData(),
+                ),
             );
 
             $entityManager->persist($user);
@@ -40,12 +52,15 @@ class RegistrationController extends AbstractController
             return $userAuthenticator->authenticateUser(
                 $user,
                 $authenticator,
-                $request
+                $request,
             );
         }
 
-        return $this->render('registration/register.html.twig', [
-            'registrationForm' => $form->createView(),
-        ]);
+        return $this->render(
+            'registration/register.html.twig',
+            [
+                'registrationForm' => $form->createView(),
+            ],
+        );
     }
 }

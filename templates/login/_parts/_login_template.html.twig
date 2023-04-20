@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    {{ encore_entry_link_tags('app') }}
+    {{ encore_entry_script_tags('app') }}
+
+    <title>Login Page</title>
+</head>
+<body>
+
+<main>
+    <div class="container-md">
+        <div class="container">
+            {% for type, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ type }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endfor %}
+        </div>
+
+        <div class="row vh-100 justify-cqontent-center align-content-center">
+            <h1 class="text-center">LBX Desk Sharing</h1>
+            {% block form %}{% endblock %}
+        </div>
+    </div>
+</main>
+
+</body>
+</html>
