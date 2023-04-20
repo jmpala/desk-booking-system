@@ -5,13 +5,10 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Form\ChangePasswordFormType;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use App\Service\UserService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Address;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -21,7 +18,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class UserPanelController extends AbstractController
 {
     public function __construct(
-        private EntityManagerInterface $entityManager,
+        private UserService $userService,
     ) {
     }
 
@@ -35,7 +32,6 @@ class UserPanelController extends AbstractController
     public function changePassword(
         Request $request,
         UserPasswordHasherInterface $passwordHasher,
-        MailerInterface $mailer,
     ): Response {
         $form = $this->createForm(
             ChangePasswordFormType::class,
@@ -46,29 +42,11 @@ class UserPanelController extends AbstractController
         );
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $user = $this->getUser();
-            $encodedPassword = $passwordHasher->hashPassword(
-                $user,
+            $this->userService->changePassword(
+                $this->getUser(),
                 $form->get('plainPassword')
                     ->getData(),
             );
-            $user->setPassword($encodedPassword);
-            $this->entityManager->flush();
-
-            $email = (new TemplatedEmail())
-                ->from(
-                    new Address(
-                        'desk-sharing-app@outlook.de',
-                        'Desk App'
-                    ),
-                )
-                ->to($user->getEmail())
-                ->subject('Your password change request')
-                ->htmlTemplate('_templates/emails/user_panel/password_changed_email.html.twig')
-            ;
-
-            $mailer->send($email);
-
             $this->addFlash(
                 'success',
                 'Password changed successfully',
