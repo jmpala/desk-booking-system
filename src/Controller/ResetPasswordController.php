@@ -134,8 +134,10 @@ class ResetPasswordController extends AbstractController
             'email' => $emailFormData,
         ]);
 
+        $isDisabled = $user->getDeletedAt() !== null;
+
         // Do not reveal whether a user account was found or not.
-        if (!$user) {
+        if (!$user || $isDisabled) {
             return $this->redirectToRoute('app_check_email');
         }
 
