@@ -7,8 +7,10 @@ namespace App\Service;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use App\Service\Utilities\PagerService;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityNotFoundException;
 use Pagerfanta\Pagerfanta;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserService
@@ -16,11 +18,14 @@ class UserService
     private int $usersPerPage = 10;
 
     public function __construct(
-        private UserRepository $userRepository,
-        private PagerService $pagerService,
+        private UserRepository              $userRepository,
+        private PagerService                $pagerService,
         private UserPasswordHasherInterface $passwordHasher,
-        private EmailService $emailService,
-    ) {
+        private EmailService                $emailService,
+        private RequestStack                $requestStack,
+        private EntityManagerInterface      $entityManager,
+    )
+    {
     }
 
     /**
@@ -71,9 +76,10 @@ class UserService
     }
 
     public function changePassword(
-        User $user,
+        User   $user,
         string $newPassword,
-    ): void {
+    ): void
+    {
         $user->setPassword(
             $this->passwordHasher->hashPassword(
                 $user,
@@ -88,14 +94,23 @@ class UserService
     }
 
     public function changeEmail(
-        User $user,
+        User   $user,
         string $newEmail,
-    ) {
+    )
+    {
         $user->setEmail($newEmail);
         $this->userRepository->save(
             $user,
             true,
         );
         $this->emailService->sendEmailChanged($user);
+    }
+
+    public function deleteAccount(User $user)
+    {
+        $user->setDeletedAt(new \DateTimeImmutable());
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
+        $this->emailService->sendAccountDeleted($user);
     }
 }

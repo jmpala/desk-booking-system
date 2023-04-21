@@ -13,7 +13,8 @@ class EmailService
 {
     public function __construct(
         private MailerInterface $mailer,
-    ) {
+    )
+    {
     }
 
     public function sendPasswordChanged(UserInterface $user): void
@@ -36,9 +37,10 @@ class EmailService
 
     private function sendEmail(
         UserInterface $user,
-        string $subject,
-        string $templatePath,
-    ) {
+        string        $subject,
+        string        $templatePath,
+    )
+    {
         $email = (new TemplatedEmail())
             ->from(
                 new Address(
@@ -48,8 +50,16 @@ class EmailService
             )
             ->to($user->getEmail())
             ->subject($subject)
-            ->htmlTemplate($templatePath)
-        ;
+            ->htmlTemplate($templatePath);
         $this->mailer->send($email);
+    }
+
+    public function sendAccountDeleted(UserInterface $user)
+    {
+        $this->sendEmail(
+            $user,
+            'Your account has been deleted',
+            '_templates/emails/user_panel/account_deleted.html.twig',
+        );
     }
 }

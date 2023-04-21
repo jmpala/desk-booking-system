@@ -12,8 +12,31 @@
         <ul>
             <li><a href="{{ path('app_userpanel_changepassword') }}">Change password</a></li>
             <li><a href="{{ path('app_userpanel_changeemail') }}">Change email</a></li>
-            <li><a href="#">Delete account</a></li>
+            <li><a href="#" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Delete account</a></li>
         </ul>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade modal-dialog modal-dialog-centered" id="staticBackdrop" data-bs-backdrop="static"
+         data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content bg-light rounded border border-primary border-1">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Are you sure you want to delete your
+                        account?</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Confirm entering your password</p>
+                    {{ form_start(form) }}
+                    {{ form_errors(form) }}
+                    {{ form_help(form) }}
+                    {{ form_rest(form) }}
+                    <button type="submit" class="btn btn-danger">Delete Account</button>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
     </div>
 
 {% endblock %}

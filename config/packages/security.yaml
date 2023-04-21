@@ -18,6 +18,7 @@ security:
             provider: app_user_provider
             entry_point: form_login
             # custom_authenticator: App\Security\AppCustomAuthenticator
+            user_checker: App\Security\SoftDeleteUserChecker
             form_login:
                 login_path: app_login
                 check_path: app_login
