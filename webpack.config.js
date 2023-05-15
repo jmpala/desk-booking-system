@@ -1,5 +1,6 @@
 const Encore = require('@symfony/webpack-encore');
-const {watch} = require("@babel/cli/lib/babel/watcher");
+const { watch } = require('@babel/cli/lib/babel/watcher');
+const path = require('path');
 
 // Manually configure the runtime environment if not already configured yet by the "encore" command.
 // It's useful when you use tools that rely on webpack.config.js file.
@@ -13,8 +14,8 @@ Encore
         options.allowedHosts = 'all';
         options.liveReload = true;
         options.watchFiles = {
-          paths: ['templates/**/*'],
-        }
+            paths: ['templates/**/*'],
+        };
     })
 
     // directory where compiled assets will be stored
@@ -32,8 +33,16 @@ Encore
      */
     .addEntry('app', './assets/app.js')
 
+    // Vue components
+    .addEntry('mapComponent', './assets/pages/office-map.js')
+
     // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
     .enableStimulusBridge('./assets/controllers.json')
+
+    .addAliases({
+        '@': path.resolve(__dirname, 'assets'),
+        style: path.resolve(__dirname, 'assets', 'styles'),
+    })
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()
@@ -69,18 +78,20 @@ Encore
     // enables Sass/SCSS support
     .enableSassLoader()
 
-    // uncomment if you use TypeScript
-    //.enableTypeScriptLoader()
+    .enableVueLoader()
 
-    // uncomment if you use React
-    //.enableReactPreset()
+// uncomment if you use TypeScript
+//.enableTypeScriptLoader()
 
-    // uncomment to get integrity="..." attributes on your script & link tags
-    // requires WebpackEncoreBundle 1.4 or higher
-    //.enableIntegrityHashes(Encore.isProduction())
+// uncomment if you use React
+//.enableReactPreset()
 
-    // uncomment if you're having problems with a jQuery plugin
-    // .autoProvidejQuery()
+// uncomment to get integrity="..." attributes on your script & link tags
+// requires WebpackEncoreBundle 1.4 or higher
+//.enableIntegrityHashes(Encore.isProduction())
+
+// uncomment if you're having problems with a jQuery plugin
+// .autoProvidejQuery()
 ;
 
 module.exports = Encore.getWebpackConfig();

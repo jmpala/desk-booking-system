@@ -1,6 +1,16 @@
 {% extends '_templates/base.html.twig' %}
 {% set module = 'overview' %}
 
+{% block scripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('mapComponent') }}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('mapComponent') }}
+{% endblock %}
+
 {% block title %}Overview{% endblock %}
 
 {% block body %}
@@ -20,4 +30,6 @@
             <a type="button" id="konva-submit" class="col-4 btn btn-lg btn-primary text-black" value=""></a>
         </div>
     </div>
+
+    <div id="officeMapapp"></div>
 {% endblock %}
