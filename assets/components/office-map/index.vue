@@ -27,6 +27,7 @@
                 />
             </l-marker>
 
+            <status-legends/>
         </l-map>
         <p>Lat:{{ mouseLat }} Long:{{ mouseLon }}</p>
     </div>
@@ -36,6 +37,7 @@
 import { getOfficeStateByDate } from '@/services/loadBookablesService';
 import { CRS } from 'leaflet';
 import { LMap, LImageOverlay, LMarker, LIcon } from 'vue2-leaflet';
+import StatusLegends from './status-legends';
 
 export default {
     components: {
@@ -43,6 +45,7 @@ export default {
         LImageOverlay,
         LMarker,
         LIcon,
+        StatusLegends,
     },
     data() {
         return {
