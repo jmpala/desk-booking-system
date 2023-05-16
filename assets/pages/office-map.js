@@ -1,7 +1,9 @@
-'use strict';
-
-import { createApp } from 'vue';
+import Vue from 'vue';
 import App from '@/components/office-map';
+import 'leaflet/dist/leaflet.css';
 
-const app = createApp(App)
-    .mount('#officeMapapp');
+new Vue({
+  el: '#app',
+  template: '<App/>',
+  components: { App },
+});

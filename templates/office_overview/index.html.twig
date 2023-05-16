@@ -6,7 +6,7 @@
     {{ encore_entry_script_tags('mapComponent') }}
 {% endblock %}
 
-{% block stylesheets %}
+{% block styles %}
     {{ parent() }}
     {{ encore_entry_link_tags('mapComponent') }}
 {% endblock %}
@@ -31,5 +31,8 @@
         </div>
     </div>
 
-    <div id="officeMapapp"></div>
+    <div class="container">
+        <div id="app"></div>
+    </div>
+
 {% endblock %}
