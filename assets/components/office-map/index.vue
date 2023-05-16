@@ -18,7 +18,7 @@
 
             <l-marker
                 v-for="b in bookables"
-                :lat-lng="[b.lat, b.lon]"
+                :lat-lng="[b.shapeY, b.shapeX]"
                 :key="b.id"
             >
                 <l-icon
@@ -54,89 +54,19 @@ export default {
             zoom: -1,
             maxZoom: 0,
             crs: CRS.Simple,
-            bookables: [
-                { // left down corner
-                    id: 9991,
-                    lat: 0,
-                    lon: 0,
-                },
-                { // right upper corner
-                    id: 9992,
-                    lat: 1095,
-                    lon: 1899,
-                },
-                {
-                    id: 1,
-                    lat: 918,
-                    lon: 180,
-                },
-                {
-                    id: 2,
-                    lat: 918,
-                    lon: 419,
-                },
-                {
-                    id: 3,
-                    lat: 918,
-                    lon: 613,
-                },
-                {
-                    id: 4,
-                    lat: 918,
-                    lon: 1243,
-                },
-                {
-                    id: 5,
-                    lat: 918,
-                    lon: 1474,
-                },
-                {
-                    id: 6,
-                    lat: 918,
-                    lon: 1673,
-                },
-                {
-                    id: 7,
-                    lat: 640,
-                    lon: 180,
-                },
-                {
-                    id: 8,
-                    lat: 640,
-                    lon: 419,
-                },
-                {
-                    id: 9,
-                    lat: 640,
-                    lon: 1243,
-                },
-                {
-                    id: 10,
-                    lat: 640,
-                    lon: 1474,
-                },
-                {
-                    id: 11,
-                    lat: 640,
-                    lon: 1673,
-                },
-                {
-                    id: 12,
-                    lat: 490,
-                    lon: 280,
-                },
-                {
-                    id: 13,
-                    lat: 462,
-                    lon: 490,
-                },
-            ],
+            bookables: [],
             mouseLat: 0,
             mouseLon: 0,
         };
     },
     async mounted() {
-        console.log(await getOfficeStateByDate('2020-01-01'));
+        const res = await getOfficeStateByDate(new Date());
+        if (!res) {
+            console.error('Error, response: ', res);
+            return;
+        }
+        console.log('Response: ', res.data);
+        this.bookables = res.data.bookables;
     },
     methods: {
         handleMouseMove(event) {

@@ -3,15 +3,14 @@
 import axios from 'axios';
 import { extractDateFromDateIsoString } from '@/js/src/components/seatmap/utils/utils';
 
-export async function getOfficeStateByDate(date: Date) {
-    const temp = new Date();
+export async function getOfficeStateByDate(date: Date): Promise<any> {
     let res = null;
     try {
-        res = await axios.get('/api/booking/overview/' + extractDateFromDateIsoString(temp));
+        res = await axios.get('/api/booking/overview/' + extractDateFromDateIsoString(date));
     } catch (e) {
         console.error(e);
     }
-    console.log(res);
+    return res;
 }
 
 export default {
