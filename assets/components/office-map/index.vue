@@ -33,6 +33,7 @@
 </template>
 
 <script>
+import { getOfficeStateByDate } from '@/services/loadBookablesService';
 import { CRS } from 'leaflet';
 import { LMap, LImageOverlay, LMarker, LIcon } from 'vue2-leaflet';
 
@@ -133,6 +134,9 @@ export default {
             mouseLat: 0,
             mouseLon: 0,
         };
+    },
+    async mounted() {
+        console.log(await getOfficeStateByDate('2020-01-01'));
     },
     methods: {
         handleMouseMove(event) {
