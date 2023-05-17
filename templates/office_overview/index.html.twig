@@ -18,20 +18,6 @@
     <h1 class="mt-4 mb-3 text-center">Overview</h1>
 
     <div class="container">
-        <div class="d-flex">
-            <button class="btn btn-outline-primary" id="moveBack"><i class="bi bi-chevron-double-left"></i></button>
-            <input id="datePicker" type="date" value="{{ 'now'|date_modify('midnight')|date('d-m-y') }}">
-            <button class="btn btn-outline-primary" id="moveForward"><i class="bi bi-chevron-double-right"></i></button>
-        </div>
-        <div class="border border-primary border-2 rounded-2 overflow-auto">
-            <div id="konva-container"></div>
-        </div>
-        <div class="row mt-2 mb-3 justify-content-center">
-            <a type="button" id="konva-submit" class="col-4 btn btn-lg btn-primary text-black" value=""></a>
-        </div>
-    </div>
-
-    <div class="container">
         <div id="app"></div>
     </div>
 
