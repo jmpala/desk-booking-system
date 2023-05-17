@@ -44,6 +44,7 @@
                 v-if="isOverlayOpen"
                 :isOverlayOpen="isOverlayOpen"
                 :selectedBookable="selectedBookable"
+                :isPastDate="isPastDate"
             />
         </div>
         <p>Lat:{{ mouseLat }} Long:{{ mouseLon }}</p>
@@ -92,6 +93,7 @@ export default {
             },
             selectedDate: extractDateFromDateIsoString(new Date()),
             isOverlayOpen: false,
+            isPastDate: false,
         };
     },
     async mounted() {
@@ -103,7 +105,10 @@ export default {
             this.mouseLon = event.latlng.lng;
         },
         handleDateChanged(event) {
+            const today = new Date(extractDateFromDateIsoString(new Date()));
             this.selectedDate = extractDateFromDateIsoString(event);
+            this.isPastDate = new Date(this.selectedDate) < today;
+            this.closeOverlay();
         },
         handleMapClick(event) {
             if (this.$refs.map.$el === event.originalEvent.target) return this.closeOverlay();
