@@ -6,6 +6,7 @@
             ]"
         :fill-color="statusColor"
         :color="statusColor"
+        @click="onClick"
     />
 </template>
 
@@ -27,6 +28,11 @@ export default {
         statusColors: {
             type: Object,
             required: true,
+        },
+    },
+    methods: {
+        onClick() {
+            this.$emit('click', this.bookable);
         },
     },
     computed: {
