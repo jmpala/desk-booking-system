@@ -7,7 +7,7 @@
 
         <l-map
             ref="map"
-            style="height: 350px"
+            style="height: 600px"
             :max-bounds="mapBoundaries"
             :zoom="zoom"
             :min-zoom="minZoom"
@@ -59,7 +59,7 @@ export default {
         return {
             url: './images/bigroom.png',
             bounds: [[0, 0], [1095, 1899]],
-            mapBoundaries: [[-20, -20], [1115, 1919]],
+            mapBoundaries: [[-1095, -1899], [2190, 3798]],
             center: [547, 945],
             minZoom: -1,
             zoom: -1,
