@@ -1,5 +1,10 @@
 <template>
     <div>
+        <date-picker
+            :selectedDate="selectedDate"
+            @dateChanged="handleDateChanged"
+        />
+
         <l-map
             ref="map"
             style="height: 350px"
@@ -35,18 +40,20 @@
 <script>
 import { getOfficeStateByDate } from '@/services/loadBookablesService';
 import { CRS } from 'leaflet';
-import { LMap, LImageOverlay, LMarker, LIcon } from 'vue2-leaflet';
+import { LMap, LImageOverlay } from 'vue2-leaflet';
 import StatusLegends from '@/components/office-map/status-legends';
 import SeatMarker from '@/components/office-map/seat-marker';
+import DatePicker from '@/components/office-map/date-picker';
+
+import { extractDateFromDateIsoString } from '@/js/src/components/seatmap/utils/utils';
 
 export default {
     components: {
         LMap,
         LImageOverlay,
-        LMarker,
-        LIcon,
         StatusLegends,
         SeatMarker,
+        DatePicker,
     },
     data() {
         return {
@@ -67,23 +74,35 @@ export default {
                 bookedByYou: '#3399ff',
                 disabled: '#5a5a5a',
             },
+            selectedDate: extractDateFromDateIsoString(new Date()),
         };
     },
     async mounted() {
-        const res = await getOfficeStateByDate(new Date());
-        if (!res) {
-            console.error('Error, response: ', res);
-            return;
-        }
-        console.log('Response: ', res.data);
-        this.bookables = res.data.bookables;
+        await this.load();
     },
     methods: {
         handleMouseMove(event) {
             this.mouseLat = event.latlng.lat;
             this.mouseLon = event.latlng.lng;
         },
+        handleDateChanged(event) {
+            this.selectedDate = extractDateFromDateIsoString(event);
+        },
+        async load() {
+            const res = await getOfficeStateByDate(new Date(this.selectedDate));
+            if (!res) {
+                console.error('Error, response: ', res);
+                return;
+            }
+            console.log('Response: ', res.data);
+            this.bookables = res.data.bookables;
+        }
     },
+    watch: {
+        async selectedDate() {
+            await this.load();
+        }
+    }
 };
 </script>
 
