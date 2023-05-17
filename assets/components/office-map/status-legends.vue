@@ -10,25 +10,29 @@
         <ul>
             <li>
                 <span
-                    :class="[$style.circle, $style.available]"
+                    :style="{'background-color': statusColors.available}"
+                    :class="$style.circle"
                 />
                 Available
             </li>
             <li>
                 <span
-                    :class="[$style.circle, $style.booked]"
+                    :style="{'background-color': statusColors.booked}"
+                    :class="$style.circle"
                 />
                 Booked
             </li>
             <li>
                 <span
-                    :class="[$style.circle, $style.bookedByYou]"
+                    :style="{'background-color': statusColors.bookedByYou}"
+                    :class="$style.circle"
                 />
                 Booked by you
             </li>
             <li>
                 <span
-                    :class="[$style.circle, $style.disabled]"
+                    :style="{'background-color': statusColors.disabled}"
+                    :class="$style.circle"
                 />
                 Disabled
             </li>
@@ -43,6 +47,12 @@ export default {
         return {
             mouseOver: false,
         };
+    },
+    props: {
+        statusColors: {
+            type: Object,
+            required: true,
+        },
     },
 };
 </script>
@@ -76,21 +86,5 @@ ul {
   display: inline-block;
   height: 1.3rem;
   width: 1.3rem;
-
-  &.available {
-    background: #bada55;
-  }
-
-  &.booked {
-    background: #5a5a5a;
-  }
-
-  &.bookedByYou {
-    background: #3399ff;
-  }
-
-  &.disabled {
-    background: #d51961;
-  }
 }
 </style>

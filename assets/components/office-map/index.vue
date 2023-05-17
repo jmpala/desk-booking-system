@@ -16,18 +16,16 @@
                 :bounds="bounds"
             />
 
-            <l-marker
+            <seat-marker
                 v-for="b in bookables"
-                :lat-lng="[b.shapeY, b.shapeX]"
+                :bookable="b"
                 :key="b.id"
-            >
-                <l-icon
-                    :icon-url="'./images/available.png'"
-                    :icon-size="[30, 30]"
-                />
-            </l-marker>
+                :statusColors="statusColors"
+            />
 
-            <status-legends/>
+            <status-legends
+                :statusColors="statusColors"
+            />
         </l-map>
         <p>Lat:{{ mouseLat }} Long:{{ mouseLon }}</p>
     </div>
@@ -37,7 +35,8 @@
 import { getOfficeStateByDate } from '@/services/loadBookablesService';
 import { CRS } from 'leaflet';
 import { LMap, LImageOverlay, LMarker, LIcon } from 'vue2-leaflet';
-import StatusLegends from './status-legends';
+import StatusLegends from '@/components/office-map/status-legends';
+import SeatMarker from '@/components/office-map/seat-marker';
 
 export default {
     components: {
@@ -46,6 +45,7 @@ export default {
         LMarker,
         LIcon,
         StatusLegends,
+        SeatMarker,
     },
     data() {
         return {
@@ -60,6 +60,12 @@ export default {
             bookables: [],
             mouseLat: 0,
             mouseLon: 0,
+            statusColors: {
+                available: '#bada55',
+                booked: '#d51961',
+                bookedByYou: '#3399ff',
+                disabled: '#5a5a5a',
+            },
         };
     },
     async mounted() {
@@ -80,5 +86,6 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
+
 </style>
