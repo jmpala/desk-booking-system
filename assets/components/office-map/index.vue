@@ -9,6 +9,7 @@
             :max-zoom="maxZoom"
             :center="center"
             :crs="crs"
+            :options="{ attributionControl: false }"
             @mousemove="handleMouseMove"
         >
             <l-image-overlay
