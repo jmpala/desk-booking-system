@@ -7,7 +7,10 @@
 
     <div
         class="border border-primary border-2 rounded-2"
-        :class="$style.mapContainer"
+        :class="{
+          [$style.mapContainer]: true,
+          [$style.pastDateBorder]: isPastDate,
+        }"
     >
       <l-map
           ref="map"
@@ -55,6 +58,20 @@
             :isPastDate="isPastDate"
         />
       </transition>
+
+      <transition
+          name="fade-past-booking-overlay"
+          :enter-class="$style['fade-past-booking-overlay-enter']"
+          :enter-active-class="$style['fade-past-booking-overlay-enter-active']"
+          :leave-class="$style['fade-past-booking-overlay-leave']"
+          :leave-active-class="$style['fade-past-booking-overlay-leave-active']"
+          appear
+      >
+        <past-date-overlay
+            v-if="isPastDate"
+        />
+      </transition>
+
     </div>
     <p>Lat:{{ mouseLat }} Long:{{ mouseLon }}</p>
   </div>
@@ -68,6 +85,7 @@ import StatusLegends from '@/components/office-map/status-legends';
 import SeatMarker from '@/components/office-map/seat-marker';
 import DatePicker from '@/components/office-map/date-picker';
 import InformationOverlay from '@/components/office-map/information-overlay';
+import PastDateOverlay from '@/components/office-map/past-date-overlay';
 
 import { extractDateFromDateIsoString } from '@/js/src/components/seatmap/utils/utils';
 
@@ -79,6 +97,7 @@ export default {
     SeatMarker,
     DatePicker,
     InformationOverlay,
+    PastDateOverlay,
   },
   data() {
     return {
@@ -153,12 +172,27 @@ export default {
   overflow: hidden;
 }
 
+.pastDateBorder {
+  border: 2px solid #d51961 !important;
+}
+
 .fade-enter, .fade-leave-to, .fade-leave-active {
   left: -50%;
 }
 
 .fade-enter-active, .fade-leave-active {
   transition: left 0.4s ease-in-out;
+}
+
+.fade-past-booking-overlay-enter,
+.fade-past-booking-overlay-leave-to,
+.fade-past-booking-overlay-leave-active {
+  bottom: -10%;
+}
+
+.fade-past-booking-overlay-enter-active,
+.fade-past-booking-overlay-leave-active {
+  transition: bottom 0.5s ease-in-out;
 }
 
 </style>
