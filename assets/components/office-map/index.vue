@@ -22,7 +22,6 @@
           :center="center"
           :crs="crs"
           :options="{ attributionControl: false }"
-          @mousemove="handleMouseMove"
           @click="handleMapClick"
       >
         <l-image-overlay
@@ -74,7 +73,6 @@
       </transition>
 
     </div>
-    <p>Lat:{{ mouseLat }} Long:{{ mouseLon }}</p>
   </div>
 </template>
 
@@ -112,8 +110,6 @@ export default {
       crs: CRS.Simple,
       bookables: [],
       selectedBookable: null,
-      mouseLat: 0,
-      mouseLon: 0,
       statusColors: {
         available: '#bada55',
         booked: '#d51961',
@@ -129,10 +125,6 @@ export default {
     await this.load();
   },
   methods: {
-    handleMouseMove(event) {
-      this.mouseLat = event.latlng.lat;
-      this.mouseLon = event.latlng.lng;
-    },
     handleDateChanged(event) {
       const today = new Date(extractDateFromDateIsoString(new Date()));
       this.selectedDate = extractDateFromDateIsoString(event);
