@@ -1,54 +1,63 @@
 <template>
-    <div class="office-map-component">
-        <date-picker
-            :selectedDate="selectedDate"
-            @dateChanged="handleDateChanged"
+  <div class="office-map-component">
+    <date-picker
+        :selectedDate="selectedDate"
+        @dateChanged="handleDateChanged"
+    />
+
+    <div
+        class="border border-primary border-2 rounded-2"
+        :class="$style.mapContainer"
+    >
+      <l-map
+          ref="map"
+          style="height: 600px"
+          :max-bounds="mapBoundaries"
+          :zoom="zoom"
+          :min-zoom="minZoom"
+          :max-zoom="maxZoom"
+          :center="center"
+          :crs="crs"
+          :options="{ attributionControl: false }"
+          @mousemove="handleMouseMove"
+          @click="handleMapClick"
+      >
+        <l-image-overlay
+            :url="url"
+            :bounds="bounds"
         />
 
-        <div
-            class="border border-primary border-2 rounded-2"
-            :class="$style.mapContainer"
-        >
-            <l-map
-                ref="map"
-                style="height: 600px"
-                :max-bounds="mapBoundaries"
-                :zoom="zoom"
-                :min-zoom="minZoom"
-                :max-zoom="maxZoom"
-                :center="center"
-                :crs="crs"
-                :options="{ attributionControl: false }"
-                @mousemove="handleMouseMove"
-                @click="handleMapClick"
-            >
-                <l-image-overlay
-                    :url="url"
-                    :bounds="bounds"
-                />
+        <seat-marker
+            v-for="b in bookables"
+            :bookable="b"
+            :key="b.id"
+            :statusColors="statusColors"
+            @click="openOverlay"
+        />
 
-                <seat-marker
-                    v-for="b in bookables"
-                    :bookable="b"
-                    :key="b.id"
-                    :statusColors="statusColors"
-                    @click="openOverlay"
-                />
+        <status-legends
+            :statusColors="statusColors"
+        />
+      </l-map>
 
-                <status-legends
-                    :statusColors="statusColors"
-                />
-            </l-map>
-
-            <information-overlay
-                v-if="isOverlayOpen"
-                :isOverlayOpen="isOverlayOpen"
-                :selectedBookable="selectedBookable"
-                :isPastDate="isPastDate"
-            />
-        </div>
-        <p>Lat:{{ mouseLat }} Long:{{ mouseLon }}</p>
+      <transition
+          name="fade"
+          :enter-class="$style['fade-enter']"
+          :enter-active-class="$style['fade-enter-active']"
+          :leave-class="$style['fade-leave']"
+          :leave-active-class="$style['fade-leave-active']"
+          appear
+      >
+        <information-overlay
+            v-if="isOverlayOpen"
+            :isOverlayOpen="isOverlayOpen"
+            :selectedBookable="selectedBookable"
+            :isPastDate="isPastDate"
+        />
+      </transition>
     </div>
+    <p>Lat:{{ mouseLat }} Long:{{ mouseLon }}</p>
+  </div>
 </template>
 
 <script>
@@ -63,78 +72,78 @@ import InformationOverlay from '@/components/office-map/information-overlay';
 import { extractDateFromDateIsoString } from '@/js/src/components/seatmap/utils/utils';
 
 export default {
-    components: {
-        LMap,
-        LImageOverlay,
-        StatusLegends,
-        SeatMarker,
-        DatePicker,
-        InformationOverlay,
+  components: {
+    LMap,
+    LImageOverlay,
+    StatusLegends,
+    SeatMarker,
+    DatePicker,
+    InformationOverlay,
+  },
+  data() {
+    return {
+      url: './images/bigroom.png',
+      bounds: [[0, 0], [1095, 1899]],
+      mapBoundaries: [[-1095, -1899], [2190, 3798]],
+      center: [547, 945],
+      minZoom: -1,
+      zoom: -1,
+      maxZoom: 0,
+      crs: CRS.Simple,
+      bookables: [],
+      selectedBookable: null,
+      mouseLat: 0,
+      mouseLon: 0,
+      statusColors: {
+        available: '#bada55',
+        booked: '#d51961',
+        bookedByYou: '#3399ff',
+        disabled: '#5a5a5a',
+      },
+      selectedDate: extractDateFromDateIsoString(new Date()),
+      isOverlayOpen: false,
+      isPastDate: false,
+    };
+  },
+  async mounted() {
+    await this.load();
+  },
+  methods: {
+    handleMouseMove(event) {
+      this.mouseLat = event.latlng.lat;
+      this.mouseLon = event.latlng.lng;
     },
-    data() {
-        return {
-            url: './images/bigroom.png',
-            bounds: [[0, 0], [1095, 1899]],
-            mapBoundaries: [[-1095, -1899], [2190, 3798]],
-            center: [547, 945],
-            minZoom: -1,
-            zoom: -1,
-            maxZoom: 0,
-            crs: CRS.Simple,
-            bookables: [],
-            selectedBookable: null,
-            mouseLat: 0,
-            mouseLon: 0,
-            statusColors: {
-                available: '#bada55',
-                booked: '#d51961',
-                bookedByYou: '#3399ff',
-                disabled: '#5a5a5a',
-            },
-            selectedDate: extractDateFromDateIsoString(new Date()),
-            isOverlayOpen: false,
-            isPastDate: false,
-        };
+    handleDateChanged(event) {
+      const today = new Date(extractDateFromDateIsoString(new Date()));
+      this.selectedDate = extractDateFromDateIsoString(event);
+      this.isPastDate = new Date(this.selectedDate) < today;
+      this.closeOverlay();
     },
-    async mounted() {
-        await this.load();
+    handleMapClick(event) {
+      if (this.$refs.map.$el === event.originalEvent.target) return this.closeOverlay();
     },
-    methods: {
-        handleMouseMove(event) {
-            this.mouseLat = event.latlng.lat;
-            this.mouseLon = event.latlng.lng;
-        },
-        handleDateChanged(event) {
-            const today = new Date(extractDateFromDateIsoString(new Date()));
-            this.selectedDate = extractDateFromDateIsoString(event);
-            this.isPastDate = new Date(this.selectedDate) < today;
-            this.closeOverlay();
-        },
-        handleMapClick(event) {
-            if (this.$refs.map.$el === event.originalEvent.target) return this.closeOverlay();
-        },
-        async load() {
-            const res = await getOfficeStateByDate(new Date(this.selectedDate));
-            if (!res) {
-                console.error('Error, response: ', res);
-                return;
-            }
-            console.log('Response: ', res.data);
-            this.bookables = res.data.bookables;
-        },
-        openOverlay(event) {
-            this.selectedBookable = event;
-            this.isOverlayOpen = true;
-        },
-        closeOverlay() {
-            this.isOverlayOpen = false;
-        },
+    async load() {
+      const res = await getOfficeStateByDate(new Date(this.selectedDate));
+      if (!res) {
+        console.error('Error, response: ', res);
+        return;
+      }
+      console.log('Response: ', res.data);
+      this.bookables = res.data.bookables;
     },
-    watch: {
-        async selectedDate() {
-            await this.load();
-        }
+    openOverlay(event) {
+      this.selectedBookable = event;
+      this.isOverlayOpen = true;
+    },
+    closeOverlay() {
+      this.isOverlayOpen = false;
+    },
+  },
+  watch: {
+    async selectedDate() {
+      await this.load();
     }
+  }
 };
 </script>
 
@@ -143,4 +152,13 @@ export default {
   position: relative;
   overflow: hidden;
 }
+
+.fade-enter, .fade-leave-to, .fade-leave-active {
+  left: -50%;
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: left 0.4s ease-in-out;
+}
+
 </style>

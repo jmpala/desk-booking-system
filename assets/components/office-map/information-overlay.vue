@@ -134,10 +134,6 @@ export default {
   border: 1px solid #ccc;
   -webkit-box-shadow: 2px 0px 5px 0px rgba(0, 0, 0, 0.59);
   box-shadow: 2px 0px 5px 0px rgba(0, 0, 0, 0.59);
-  transition: left 3s linear;
 }
 
-.hidden {
-  left: -500px;
-}
 </style>
