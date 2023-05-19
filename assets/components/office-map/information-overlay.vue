@@ -30,7 +30,7 @@
                     <a
                         v-if="!isPastDate"
                         class="btn btn-primary"
-                        :href="'/booking/' + this.selectedBookable.bookingId + '/edit'"
+                        :href="`/booking/${this.selectedBookable.bookingId}/edit`"
                     >
                         Edit Booking
                     </a>
@@ -53,6 +53,7 @@
                     <a
                         v-if="!isPastDate"
                         class="btn btn-primary"
+                        :href="`/booking/new?id=${this.selectedBookable.bookableId}&date=${selectedDate}`"
                     >Book</a>
                 </li>
             </ul>
@@ -85,6 +86,10 @@ export default {
             type: Boolean,
             required: true,
         },
+        selectedDate: {
+            type: String,
+            required: true,
+        }
     },
     methods: {
         extractDateFromDateIsoString,

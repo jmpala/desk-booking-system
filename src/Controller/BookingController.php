@@ -44,7 +44,10 @@ class BookingController extends AbstractController
     ])]
     public function showCreate(Request $request): Response
     {
-        $form = $this->createForm(BookingType::class);
+        $form = $this->createForm(BookingType::class, null, [
+            'selected_bookable_id' => $request->query->get('id'),
+            'selected_date' => $request->query->get('date'),
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

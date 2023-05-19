@@ -68,16 +68,29 @@ class BookingType extends AbstractType
             );
         }
 
+        $builder->get('bookable')
+            ->addEventListener(
+                FormEvents::PRE_SET_DATA,
+                function (
+                    FormEvent $event,
+                ) use ($options): void {
+                    $event->setData($this->selectBookableToDisplay(
+                        $event,
+                        $options['selected_bookable_id'],
+                    ));
+                },
+            );
+
         $builder->get('start_date')
             ->addEventListener(
                 FormEvents::PRE_SET_DATA,
                 function (
                     FormEvent $event,
-                ): void {
-                    $event->setData(
-                        $event->getData()
-                        ?? new \DateTime(),
-                    );
+                ) use ($options): void {
+                    $event->setData($this->selectDateToDisplay(
+                        $event,
+                        $options['selected_date'],
+                    ));
                 },
             );
 
@@ -86,11 +99,11 @@ class BookingType extends AbstractType
                 FormEvents::PRE_SET_DATA,
                 function (
                     FormEvent $event,
-                ): void {
-                    $event->setData(
-                        $event->getData()
-                        ?? new \DateTime(),
-                    );
+                ) use ($options): void {
+                    $event->setData($this->selectDateToDisplay(
+                        $event,
+                        $options['selected_date'],
+                    ));
                 },
             );
     }
@@ -101,6 +114,35 @@ class BookingType extends AbstractType
             'data_class' => Bookings::class,
             'planning_mode' => false,
             'user' => null,
+            'selected_bookable_id' => null,
+            'selected_date' => null,
         ]);
+    }
+
+    private function selectDateToDisplay(
+        FormEvent $event,
+        ?string   $date,
+    ): \DateTime
+    {
+        if ($event->getData()) {
+            return $event->getData();
+        }
+        if ($date) {
+            return new \DateTime($date);
+        }
+        return new \DateTime();
+    }
+
+    private function selectBookableToDisplay(
+        FormEvent $event,
+        ?int      $selected_bookable_id)
+    {
+        if ($event->getData()) {
+            return $event->getData();
+        }
+        if ($selected_bookable_id) {
+            return $this->bookableRepository->find($selected_bookable_id);
+        }
+        return null;
     }
 }

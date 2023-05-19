@@ -56,6 +56,7 @@
             :isOverlayOpen="isOverlayOpen"
             :selectedBookable="selectedBookable"
             :isPastDate="isPastDate"
+            :selectedDate="selectedDate"
         />
       </transition>
 
