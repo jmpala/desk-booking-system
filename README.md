@@ -32,6 +32,7 @@ yarn run dev-server # or 'npm run dev-server' (run on local, no on ddev docker)
 ddev php bin/console doctrine:database:create
 ddev php bin/console doctrine:migrations:migrate
 ddev php bin/console doctrine:fixtures:load
+ddev php bin/console app:create-user-admin
 ddev status # and copy the url to the browser
 
 ```
