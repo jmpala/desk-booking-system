@@ -6,25 +6,23 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\RegistrationFormType;
-use App\Security\AppCustomAuthenticator;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 
 class RegistrationController extends AbstractController
 {
     #[Route('/register', name: 'app_register')]
-    #[IsGranted('ROLE_ADMIN')]
+    #[IsGranted('PUBLIC_ACCESS')]
     public function register(
         Request                     $request,
         UserPasswordHasherInterface $userPasswordHasher,
-        UserAuthenticatorInterface  $userAuthenticator,
-        AppCustomAuthenticator      $authenticator,
+        Security                    $security,
         EntityManagerInterface      $entityManager,
     ): Response
     {
@@ -44,16 +42,14 @@ class RegistrationController extends AbstractController
                         ->getData(),
                 ),
             );
+            $user->setRoles(['ROLE_USER']);
 
             $entityManager->persist($user);
             $entityManager->flush();
             // do anything else you need here, like send an email
 
-            return $userAuthenticator->authenticateUser(
-                $user,
-                $authenticator,
-                $request,
-            );
+            $security->login($user, 'form_login');
+            return $this->redirectToRoute('app_office_overview');
         }
 
         return $this->render(

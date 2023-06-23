@@ -12,10 +12,12 @@
         </div>
 
         <input type="text" id="email" name="email" value="{{ last_username }}"
-               class="loginform__username rounded-2 w-100" required>
+               class="loginform__username rounded-2 w-100" required
+        >
         <label for="email" class="loginform__usernameLbl w-100">User Name</label>
         <input type="password" id="password" name="password" class="loginform__password rounded-2 w-100"
-               required>
+               required
+        >
         <label for="password" class="loginform__passwordLbl w-100">Password</label>
         <input type="hidden" name="_csrf_token"
                value="{{ csrf_token('authenticate') }}"
@@ -23,5 +25,6 @@
 
         <button id="submit-btn" type="submit" class="btn btn-primary loginform__btn">Submit</button>
         <a class="" href="{{ path('app_forgot_password_request') }}">Recover password</a>
+        <a class="" href="{{ path('app_register') }}">Register account</a>
     </form>
 {% endblock %}
