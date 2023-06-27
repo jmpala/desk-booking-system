@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\Entity\User;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -22,6 +23,7 @@ class CreateUserAdminCommand extends Command
     public function __construct(
         private UserPasswordHasherInterface $passwordHasher,
         private EntityManagerInterface      $entityManager,
+        private UserRepository              $userRepository,
         string                              $name = null
     )
     {
@@ -40,6 +42,11 @@ class CreateUserAdminCommand extends Command
             $io->ask('Please enter the email for the admin user'),
             FILTER_VALIDATE_EMAIL
         );
+
+        if ($this->userRepository->findBy(['email' => $email])) {
+            $io->error('The email is already in use');
+            return Command::FAILURE;
+        }
 
         $clearPassword = $io->ask('Please enter the password for the admin user');
 
